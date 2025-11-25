@@ -367,14 +367,14 @@ Template Name: Homepage Template
 		</div>
 	</section> -->
 	<section id="hed6" class="base-container faq">
-		<div class="wrap d-flex-wrap">
+		<div class="wrap d-flex-wrap pt-13 md:pt-30">
 			<div class="faq__left">
-				<div class="mdb">
-					<h2>
-						Часто задаваемые<br>
-						<span><img src="<?php bloginfo('template_url'); ?>/img/faq-title.webp" alt=""> вопросы</span>
-	       			</h2>
-       			</div>
+
+				<div class="md:w-xl flex items-start justify-between md:block md:leading-12">
+					<h2 class="inline leading-8 tracking-[.035em] text-6xl text-white md:leading-none"> Часто задаваемые вопросы </h2>
+					<img class="h-14 md:h-auto md:float-left md:mr-8" src="<?php bloginfo('template_url'); ?>/img/faq-title.webp" alt="">
+				</div>
+
        			<div class="faq__left-bt">
        				<span class="span-d">Не нашли ответ?</span>
        				<span class="span-k">Задайте вопрос, заполнив форму</span>
