@@ -19,7 +19,7 @@
   --second-family: 'Inter Tight', sans-serif;
 }
 html {
-  font-size: 14px;
+  font-size: 16px;
 }
 body {
   min-width: 320px;
@@ -106,26 +106,6 @@ input[type='email']:focus {
   content: '';
   display: block;
   clear: both;
-}
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: var(--font-family);
-  font-weight: 500;
-  color: var(--black);
-}
-p {
-  margin-bottom: 15px;
-  font-family: var(--font-family);
-  font-weight: 400;
-  font-size: 18px;
-  color: var(--black);
-}
-p:last-child {
-  margin-bottom: 0;
 }
 .d-flex,
 .d-flex-wrap,
@@ -1030,32 +1010,22 @@ time {
   margin-bottom: 20px;
 }
 .faq {
-  background: url('img/bg-faq2.webp') left top no-repeat;
+  background-color: #1a1a1a;
+  background-image:
+    url('img/green.png'), url('img/yellow.png'), url('img/d-green.png');
+  background-position:
+    left top,
+    left 400px bottom,
+    left bottom;
+  background-repeat: no-repeat;
+}
+.faq-container {
+  max-width: 1680px;
 }
 .faq .wrap {
   padding-bottom: 100px;
   box-sizing: border-box;
   min-height: 830px;
-}
-.faq__left {
-  width: 53%;
-  box-sizing: border-box;
-  padding-right: 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-.faq__left h2 {
-  font-size: 48px;
-  color: var(--white);
-}
-.faq__left h2 span {
-  display: flex;
-  align-items: center;
-}
-.faq__left h2 span img {
-  flex-shrink: 0;
-  margin-right: 10px;
 }
 .span-d {
   display: block;
@@ -1071,10 +1041,6 @@ time {
   font-size: 16px;
   color: var(--grey-1);
 }
-.faq__right {
-  width: 47%;
-  box-sizing: border-box;
-}
 .faq-list > li {
   border-bottom: 1px solid #636371;
 }
@@ -1083,7 +1049,6 @@ time {
   font-weight: 600;
   font-size: 36px;
   color: var(--white);
-  padding: 32px 10px;
   padding-right: 55px;
   position: relative;
   box-sizing: border-box;
@@ -1111,23 +1076,11 @@ time {
 .faq-list .active .faq-click span svg + svg {
   display: block;
 }
-.faq-wrap {
-  padding-left: 10px;
-  padding-bottom: 30px;
-  line-height: 1.3;
-  display: none;
-}
-.faq-wrap,
-.faq-wrap p {
-  font-weight: 400;
-  font-size: 18px;
-  color: var(--grey-2);
-  margin-bottom: 20px;
-}
 .faq-wrap p span {
   color: #fff;
 }
 .faq-wrap ul {
+  margin-top: 20px;
   padding-left: 10px;
 }
 .faq-wrap li {
@@ -2419,20 +2372,9 @@ h3.h3-sfd {
   }
   .faq-click {
     font-size: 30px;
-    padding-top: 26px;
-    padding-bottom: 26px;
-  }
-  .faq__left {
-    width: 44%;
-  }
-  .faq__right {
-    width: 56%;
   }
   .block-rezult {
     padding: 40px 30px;
-  }
-  .faq {
-    background-position: center top;
   }
 }
 @media screen and (max-width: 1199px) {
@@ -2493,9 +2435,6 @@ h3.h3-sfd {
   .news__item-more {
     font-size: 18px;
   }
-  .faq__left h2 {
-    font-size: 39px;
-  }
   .footer {
     padding-top: 30px;
     padding-bottom: 30px;
@@ -2516,12 +2455,6 @@ h3.h3-sfd {
   }
   .email-foot {
     margin-left: 35px;
-  }
-  .faq__left {
-    justify-content: normal;
-  }
-  .faq__left-bt {
-    padding-top: 100px;
   }
   .mob-menu {
     display: block;
@@ -2738,7 +2671,6 @@ h3.h3-sfd {
   .insurance__item h3,
   .h2-style h2,
   .selection h3,
-  .faq__left h2,
   .faq-click,
   .foot-title {
     font-size: 28px;
@@ -2769,10 +2701,6 @@ h3.h3-sfd {
   }
   .cases__item {
     min-height: 275px;
-  }
-  .faq-click {
-    padding-top: 18px;
-    padding-bottom: 18px;
   }
   .insurance__item {
     padding: 30px;
@@ -2850,26 +2778,10 @@ h3.h3-sfd {
     margin: 0 auto;
     max-width: 100%;
   }
-  .faq {
-    flex-wrap: wrap;
-  }
-  .faq__left,
-  .faq__right {
-    width: 100%;
-    padding: 0;
-  }
-  .faq__left {
-    margin-bottom: 30px;
-  }
   .faq .wrap {
     min-height: auto;
     position: relative;
     padding-bottom: 185px;
-  }
-  .faq__left-bt {
-    padding-top: 0;
-    position: absolute;
-    bottom: 30px;
   }
   .cases__row {
     grid-template-columns: repeat(1, 1fr);
@@ -3062,7 +2974,6 @@ h3.h3-sfd {
   .insurance__item h3,
   .h2-style h2,
   .selection h3,
-  .faq__left h2,
   .faq-click,
   .foot-title {
     font-size: 26px;
@@ -3187,7 +3098,6 @@ h3.h3-sfd {
   .insurance__item h3,
   .h2-style h2,
   .selection h3,
-  .faq__left h2,
   .faq-click,
   .foot-title {
     font-size: 24px;
@@ -3436,41 +3346,24 @@ h3.h3-sfd {
     padding-bottom: 50px;
   }
   .faq {
-    background: url('img/mob-bg-faq.png') no-repeat;
-    background-size: cover;
+    background-color: #1a1a1a;
+    background-image:
+      url('img/green-mobile.png'), url('img/yellow-mobile.png'),
+      url('img/d-green-mobile.png');
+    background-position:
+      left top,
+      right bottom,
+      left bottom;
+    background-repeat: no-repeat;
   }
-  .faq__left h2 {
+  .md:h-autofaq__left h2 {
     max-width: 200px;
-  }
-  .faq__left h2 img {
-    position: absolute;
-    right: 0;
-    top: 50%;
-    max-width: 104px;
-    transform: translate(0, -50%);
   }
   .faq-click {
     font-size: 16px;
   }
   .faq .wrap {
     padding-bottom: 193px;
-  }
-  .faq-click {
-    padding-top: 25px;
-    padding-bottom: 25px;
-    padding-left: 0;
-  }
-  .faq-list > li {
-    margin-left: -10px;
-    margin-right: -10px;
-    padding-left: 10px;
-    padding-right: 10px;
-  }
-  .faq-wrap {
-    overflow: auto;
-  }
-  .faq-wrap-in {
-    width: 600px;
   }
   .faq .btn3 {
     background: #fff;
@@ -3585,10 +3478,6 @@ h3.h3-sfd {
   .faq .btn3 {
     width: 100%;
     max-width: 100%;
-  }
-  .faq__left-bt {
-    left: 0;
-    right: 0;
   }
   .rezult-top {
     display: flex;

@@ -1,7 +1,11 @@
 module.exports = {
   content: ['./**/*.php', './**/*.html', './**/*.js'],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        black: '#1a1a1a',
+      },
+    },
   },
   plugins: [],
 };
