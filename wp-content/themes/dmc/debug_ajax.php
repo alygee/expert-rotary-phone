@@ -53,6 +53,7 @@ header('Content-Type: text/html; charset=utf-8');
         <h2>2. Проверка CSV файла</h2>
         <?php
         $csv = get_field('csv_file', 2);
+            wp_die($csv);
         if ($csv) {
             echo '<p class="success">✅ CSV путь: <code>' . esc_html($csv) . '</code></p>';
             
