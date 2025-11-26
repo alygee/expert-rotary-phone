@@ -149,7 +149,7 @@ header('Content-Type: text/html; charset=utf-8');
                         
                         if ($file_exists) {
                             echo '<p><strong>Размер:</strong> ' . size_format(filesize($file_path)) . '</p>';
-                            echo '<p><strong>Доступен для чтения:</strong> ' . (is_readable($file_path) . '</p>';
+                            echo '<p><strong>Доступен для чтения:</strong> ' . (is_readable($file_path) ? '<span class="success">✅ Да</span>' : '<span class="error">❌ Нет</span>') . '</p>';
                         } else {
                             // Пробуем найти файл
                             echo '<p class="warning">⚠️ Пробуем найти файл...</p>';
