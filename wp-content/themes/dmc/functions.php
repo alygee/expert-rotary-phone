@@ -458,7 +458,7 @@ function filterData2(array $data, $cities = [], $levels = [], int $employeesCoun
                 } else continue;
             }
 
-            $grouped['Другой город'][] = $row;
+            $grouped['fallback'][] = $row;
         }
     }
 
@@ -613,7 +613,21 @@ function filter_callback(){
   ?>
   <?php foreach ($results as $key=>$value2) { $ir++ ?>
 
-    <?php echo '<h3 class="h3-sfd">'.$key.'</h3>'; ?>
+    <?php if ($key === 'fallback') {
+	if (is_array($region)) {
+	  $r = implode(', ', $region);
+	  $c = count($region) > 1 ? 'Для регионов ' : 'Для региона ';
+	} else {
+	  $r = $region;
+	  $c = 'Для региона ';
+	}
+	echo '<div class="text-4xl mt-3 font-semibold tracking-wide">Примерные цены по соседним регионам</div>';
+	echo '<div class="mt-3 mb-6 text-xl">' . $c . $r . ' не удалось произвести расчет</div>';
+      } else {
+	echo '<h3 class="h3-sfd mt-3">'.$key.'</h3>';
+      }
+    ?>
+
     <div class="block-rezult__grid grid ghd-grid">
       <?php foreach ($value2 as $value) { ?>
         <div class="block-rezult__item">
