@@ -321,18 +321,24 @@ var control = true;
 		let ajaxurl = $('.footer').attr('data-home')+'wp-admin/admin-ajax.php';
 		let count = $('.kviz-wrap .input-wrp2 input').val();
 		let level = $('.kviz-wrap .input-wrp4 .main-select').val();
-		let region  = $('.kviz-wrap .input-wrp5 .region-select').val();
+		let region  = $('.kviz-wrap .input-wrp5 .region-select').val(); // Может быть массивом для множественного select
 		control = false;
+		
+		// Подготавливаем данные для отправки
+		// jQuery автоматически сериализует массивы в формат region[]=value1&region[]=value2
+		let ajaxData = {
+			'count': count,
+			'level': level,
+			'region': region, // Поддерживается как массив, так и строка
+			action: 'action'
+		};
+		
 		$.ajax({
 			type: 'POST',
 			url: ajaxurl,
 			dataType: "html",
-			data: {
-				'count': count,
-				'level': level,
-				'region': region,
-				action: 'action'
-			},
+			data: ajaxData,
+			traditional: false, // false = массивы отправляются как param[]=value, true = param=value&param=value
 			success: function(data) {
 				//alert(data)
 				

@@ -413,11 +413,38 @@ function filter_callback(){
   if(isset($_POST['count']) && !empty($_POST['count'])){
     $count = (int) $_POST['count'];
   }
+  
+  // Обработка level (может быть массивом или строкой)
   if(isset($_POST['level']) && !empty($_POST['level'])){
-    $level = is_array($_POST['level']) ? $_POST['level'] : explode(',', $_POST['level']);
+    if(is_array($_POST['level'])){
+      $level = $_POST['level'];
+    } else {
+      // Если строка, разбиваем по запятой
+      $level = array_filter(array_map('trim', explode(',', $_POST['level'])));
+    }
   }
-  if(isset($_POST['region']) && !empty($_POST['region'])){
-    $region = is_array($_POST['region']) ? $_POST['region'] : explode(',', $_POST['region']);
+  
+  // Обработка region (может быть массивом, строкой или region[])
+  if(isset($_POST['region'])){
+    if(is_array($_POST['region'])){
+      // Массив городов (например, из множественного select)
+      $region = $_POST['region'];
+    } elseif(!empty($_POST['region'])) {
+      // Если строка, разбиваем по запятой (например, "Москва,СПб,Барнаул")
+      $region = array_filter(array_map('trim', explode(',', $_POST['region'])));
+    }
+  }
+  
+  // Очищаем массивы от пустых значений и нормализуем
+  $level = array_values(array_filter(array_map('trim', $level), function($v) { return $v !== ''; }));
+  $region = array_values(array_filter(array_map('trim', $region), function($v) { return $v !== ''; }));
+  
+  // Логирование для отладки (только если WP_DEBUG включен)
+  if (defined('WP_DEBUG') && WP_DEBUG && function_exists('error_log')) {
+    error_log('filter_callback - count: ' . ($count ?? 'null'));
+    error_log('filter_callback - level: ' . print_r($level, true));
+    error_log('filter_callback - region: ' . print_r($region, true));
+    error_log('filter_callback - $_POST[region] type: ' . (isset($_POST['region']) ? (is_array($_POST['region']) ? 'array' : 'string') : 'not set'));
   }
 
   // Получаем данные из CSV

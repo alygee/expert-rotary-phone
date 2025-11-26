@@ -136,7 +136,8 @@ header('Content-Type: text/html; charset=utf-8');
     <div class="section">
         <h2>7. Тест AJAX запроса</h2>
         <p>Нажмите кнопку для тестового AJAX запроса:</p>
-        <button class="test-btn" onclick="testAjax()">Тест AJAX</button>
+        <button class="test-btn" onclick="testAjax()">Тест AJAX (один город)</button>
+        <button class="test-btn" onclick="testAjaxMultiple()">Тест AJAX (массив городов)</button>
         <div id="ajax-result"></div>
     </div>
 
@@ -154,7 +155,7 @@ error_reporting: <?php echo error_reporting(); ?>
     <script>
     function testAjax() {
         const resultDiv = document.getElementById('ajax-result');
-        resultDiv.innerHTML = '<p>Отправка запроса...</p>';
+        resultDiv.innerHTML = '<p>Отправка запроса (один город)...</p>';
         
         const ajaxUrl = '<?php echo admin_url('admin-ajax.php'); ?>';
         
@@ -172,13 +173,57 @@ error_reporting: <?php echo error_reporting(); ?>
         })
         .then(response => response.text())
         .then(data => {
-            resultDiv.innerHTML = '<h3>Результат:</h3><pre>' + data.substring(0, 1000) + (data.length > 1000 ? '... (обрезано)' : '') + '</pre>';
+            resultDiv.innerHTML = '<h3>Результат (один город):</h3><pre>' + data.substring(0, 1000) + (data.length > 1000 ? '... (обрезано)' : '') + '</pre>';
             resultDiv.innerHTML += '<p>Длина ответа: ' + data.length + ' символов</p>';
             
             if (data.length === 0) {
                 resultDiv.innerHTML += '<p class="error">❌ Получен пустой ответ!</p>';
             } else {
                 resultDiv.innerHTML += '<p class="success">✅ Ответ получен</p>';
+            }
+        })
+        .catch(error => {
+            resultDiv.innerHTML = '<p class="error">❌ Ошибка: ' + error.message + '</p>';
+        });
+    }
+    
+    function testAjaxMultiple() {
+        const resultDiv = document.getElementById('ajax-result');
+        resultDiv.innerHTML = '<p>Отправка запроса (массив городов)...</p>';
+        
+        const ajaxUrl = '<?php echo admin_url('admin-ajax.php'); ?>';
+        
+        // Создаем FormData для отправки массива
+        const formData = new FormData();
+        formData.append('action', 'action');
+        formData.append('count', '5');
+        formData.append('level', 'Стандарт');
+        // Добавляем несколько городов как массив
+        formData.append('region[]', 'Москва');
+        formData.append('region[]', 'Барнаул');
+        formData.append('region[]', 'Архангельск');
+        
+        fetch(ajaxUrl, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.text())
+        .then(data => {
+            resultDiv.innerHTML = '<h3>Результат (массив городов):</h3><pre>' + data.substring(0, 1000) + (data.length > 1000 ? '... (обрезано)' : '') + '</pre>';
+            resultDiv.innerHTML += '<p>Длина ответа: ' + data.length + ' символов</p>';
+            
+            if (data.length === 0) {
+                resultDiv.innerHTML += '<p class="error">❌ Получен пустой ответ!</p>';
+            } else {
+                resultDiv.innerHTML += '<p class="success">✅ Ответ получен</p>';
+                // Проверяем, есть ли в ответе несколько городов
+                const hasMoscow = data.includes('Москва');
+                const hasBarnaul = data.includes('Барнаул');
+                const hasArkhangelsk = data.includes('Архангельск');
+                resultDiv.innerHTML += '<p>Города в ответе: ' + 
+                    (hasMoscow ? '✅ Москва ' : '❌ Москва ') +
+                    (hasBarnaul ? '✅ Барнаул ' : '❌ Барнаул ') +
+                    (hasArkhangelsk ? '✅ Архангельск' : '❌ Архангельск') + '</p>';
             }
         })
         .catch(error => {
