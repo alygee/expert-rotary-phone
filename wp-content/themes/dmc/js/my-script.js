@@ -322,6 +322,25 @@ var control = true;
 		let count = $('.kviz-wrap .input-wrp2 input').val();
 		let level = $('.kviz-wrap .input-wrp4 .main-select').val();
 		let region  = $('.kviz-wrap .input-wrp5 .region-select').val(); // Может быть массивом для множественного select
+		
+		// Отладка: выводим в консоль что получаем из формы
+		console.log('AJAX Debug - Полученные значения:');
+		console.log('count:', count, typeof count);
+		console.log('level:', level, typeof level, Array.isArray(level));
+		console.log('region:', region, typeof region, Array.isArray(region));
+		console.log('ajaxurl:', ajaxurl);
+		
+		// Проверяем, что значения не пустые
+		if (!count || count === '' || count === null || count === undefined) {
+			console.warn('⚠️ count пустой или не определен');
+		}
+		if (!level || (Array.isArray(level) && level.length === 0) || level === '' || level === null || level === undefined) {
+			console.warn('⚠️ level пустой или не определен');
+		}
+		if (!region || (Array.isArray(region) && region.length === 0) || region === '' || region === null || region === undefined) {
+			console.warn('⚠️ region пустой или не определен');
+		}
+		
 		control = false;
 		
 		// Подготавливаем данные для отправки
@@ -333,6 +352,9 @@ var control = true;
 			action: 'action'
 		};
 		
+		// Отладка: выводим данные которые будут отправлены
+		console.log('AJAX Debug - Данные для отправки:', ajaxData);
+		
 		$.ajax({
 			type: 'POST',
 			url: ajaxurl,
@@ -340,6 +362,13 @@ var control = true;
 			data: ajaxData,
 			traditional: false, // false = массивы отправляются как param[]=value, true = param=value&param=value
 			success: function(data) {
+				console.log('AJAX Debug - Успешный ответ, длина:', data.length, 'символов');
+				if (data.length === 0) {
+					console.error('❌ Получен пустой ответ от сервера!');
+				} else if (data.includes('Нет результатов') || data.includes('Ошибка')) {
+					console.warn('⚠️ Сервер вернул сообщение об ошибке или отсутствии результатов');
+					console.log('Ответ сервера:', data.substring(0, 200));
+				}
 				//alert(data)
 				
 				setTimeout(function() {
@@ -359,8 +388,13 @@ var control = true;
 			beforeSend: function(data) {
 				$('.block-process').css('display', 'block');
 			},
-			error: function() {
-				alert("Возникла ошибка при отправке");
+			error: function(xhr, status, error) {
+				console.error('AJAX Debug - Ошибка запроса:');
+				console.error('Status:', status);
+				console.error('Error:', error);
+				console.error('Response:', xhr.responseText);
+				console.error('Status Code:', xhr.status);
+				alert("Возникла ошибка при отправке: " + error);
 			}
 		});
 

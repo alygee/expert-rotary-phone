@@ -441,10 +441,14 @@ function filter_callback(){
   
   // Логирование для отладки (только если WP_DEBUG включен)
   if (defined('WP_DEBUG') && WP_DEBUG && function_exists('error_log')) {
-    error_log('filter_callback - count: ' . ($count ?? 'null'));
-    error_log('filter_callback - level: ' . print_r($level, true));
-    error_log('filter_callback - region: ' . print_r($region, true));
-    error_log('filter_callback - $_POST[region] type: ' . (isset($_POST['region']) ? (is_array($_POST['region']) ? 'array' : 'string') : 'not set'));
+    error_log('=== filter_callback DEBUG ===');
+    error_log('$_POST содержимое: ' . print_r($_POST, true));
+    error_log('count: ' . ($count ?? 'null') . ' (type: ' . gettype($count) . ')');
+    error_log('level: ' . print_r($level, true) . ' (type: ' . gettype($level) . ', is_array: ' . (is_array($level) ? 'yes' : 'no') . ')');
+    error_log('region: ' . print_r($region, true) . ' (type: ' . gettype($region) . ', is_array: ' . (is_array($region) ? 'yes' : 'no') . ')');
+    error_log('$_POST[region] type: ' . (isset($_POST['region']) ? (is_array($_POST['region']) ? 'array' : 'string') : 'not set'));
+    error_log('$_POST[level] type: ' . (isset($_POST['level']) ? (is_array($_POST['level']) ? 'array' : 'string') : 'not set'));
+    error_log('$_POST[count] value: ' . (isset($_POST['count']) ? $_POST['count'] : 'not set'));
   }
 
   // Получаем данные из CSV
@@ -472,8 +476,24 @@ function filter_callback(){
   
   // Проверяем результат фильтрации
   if(empty($results)){
+    // Логирование для отладки
+    if (defined('WP_DEBUG') && WP_DEBUG && function_exists('error_log')) {
+      error_log('filter_callback - Нет результатов по критериям:');
+      error_log('  - count: ' . ($count ?? 'null'));
+      error_log('  - level: ' . print_r($level, true));
+      error_log('  - region: ' . print_r($region, true));
+      error_log('  - Количество данных в CSV: ' . count($data));
+    }
     echo '<!-- Нет результатов по заданным критериям -->';
     wp_die('Нет результатов');
+  }
+  
+  // Логирование успешного результата
+  if (defined('WP_DEBUG') && WP_DEBUG && function_exists('error_log')) {
+    error_log('filter_callback - Найдено результатов: ' . count($results) . ' городов');
+    foreach ($results as $city => $rows) {
+      error_log('  - ' . $city . ': ' . count($rows) . ' записей');
+    }
   }
   $ir=0;
   ?>
