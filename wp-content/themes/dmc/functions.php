@@ -621,7 +621,7 @@ function filter_callback(){
 	  $r = $region;
 	  $c = 'Для региона ';
 	}
-	echo '<div class="text-4xl mt-3 font-semibold tracking-wide">Примерные цены по соседним регионам</div>';
+	echo '<div class="text-4xl mt-3 font-semibold tracking-wide">Цены по соседним регионам</div>';
 	echo '<div class="mt-3 mb-6 text-xl">' . $c . $r . ' не удалось произвести расчет</div>';
       } else {
 	echo '<h3 class="h3-sfd mt-3">'.$key.'</h3>';
