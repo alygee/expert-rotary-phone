@@ -398,27 +398,56 @@ function get_insurer_logo(string $insurer): void {
 add_action('wp_ajax_action', 'filter_callback');
 add_action('wp_ajax_nopriv_action', 'filter_callback');
 function filter_callback(){
-  if(empty(rez())){
-    return false;
+  // Включаем отображение ошибок для отладки (на тестовом сервере)
+  if (defined('WP_DEBUG') && WP_DEBUG) {
+    error_reporting(E_ALL);
+    ini_set('display_errors', 1);
   }
- if(isset($_POST['count'])){
-    $count = $_POST['count'];
+  
+  // Инициализируем переменные
+  $count = null;
+  $level = [];
+  $region = [];
+  
+  // Получаем данные из POST
+  if(isset($_POST['count']) && !empty($_POST['count'])){
+    $count = (int) $_POST['count'];
   }
-  if(isset($_POST['level'])){
-    $level = $_POST['level'];
-    $level = explode(',', $level);
+  if(isset($_POST['level']) && !empty($_POST['level'])){
+    $level = is_array($_POST['level']) ? $_POST['level'] : explode(',', $_POST['level']);
+  }
+  if(isset($_POST['region']) && !empty($_POST['region'])){
+    $region = is_array($_POST['region']) ? $_POST['region'] : explode(',', $_POST['region']);
+  }
 
-  }
-  if(isset($_POST['region'])){
-    $region = $_POST['region'];
+  // Получаем данные из CSV
+  $data = rez();
+  
+  // Проверяем, что данные получены
+  if(empty($data) || $data === false){
+    // Логируем ошибку для отладки
+    if (function_exists('error_log')) {
+      error_log('filter_callback: rez() вернул пустой результат или false');
+      $csv = get_field('csv_file', 2);
+      error_log('filter_callback: CSV путь: ' . ($csv ? $csv : 'не установлен'));
+    }
+    echo '<!-- Ошибка: данные не загружены -->';
+    wp_die('Ошибка загрузки данных');
   }
 
+  // Фильтруем данные
   $results = filterData2(
-      rez(),
+      $data,
       $region,
       $level,
       $count
   );
+  
+  // Проверяем результат фильтрации
+  if(empty($results)){
+    echo '<!-- Нет результатов по заданным критериям -->';
+    wp_die('Нет результатов');
+  }
   $ir=0;
   ?>
   <?php foreach ($results as $key=>$value2) { $ir++ ?>
@@ -458,11 +487,6 @@ function filter_callback(){
           <div class="rezult-data">
             <ul>
               <?php 
-                $clas1 = '';
-                $clas2 = '';
-                $clas3 = '';
-                $clas4 = '';
-                $clas5 = '';
                 $bs1 = '';
                 $bs2 = '';
                 $bs3 = '';
@@ -474,21 +498,6 @@ function filter_callback(){
                 $y4 = $value["Вызов_врача_на_дом"];
                 $y5 = $value["Поликлиника"];
 
-                /*if($y1 == 0 || empty($y1)){
-                  $clas1 = ' class="no-r"';
-                }
-                if($y2 == 0 || empty($y2)){
-                  $clas2 = ' class="no-r"';
-                }
-                if($y3 == 0 || empty($y3)){
-                  $clas3 = ' class="no-r"';
-                }
-                if($y4 == 0 || empty($y4)){
-                  $clas4 = ' class="no-r"';
-                }
-                if($y5 == 0 || empty($y5)){
-                  $clas5 = ' class="no-r"';
-                }*/
                 if($y1 == 0){
                   $bs1 = 'беспл.';
                 }
@@ -507,7 +516,6 @@ function filter_callback(){
 
               ?>
 
-              <?php //echo $value["Город"]; ?>
               <?php if($y5 != '' && $y5 != '#Н/Д'){ ?>
                 <li> 
                   Поликлиника
@@ -583,8 +591,6 @@ function filter_callback(){
                   </div>
                 </li>
               <?php } ?>
-             
-
             </ul>
           </div>
           <a class="btn4 btn-style-new active-modal active-modal2" href="#modal-window2">Оформить</a>
@@ -593,7 +599,7 @@ function filter_callback(){
       <?php if(count($results) == $ir){ ?>
         <div class="block-rezult__item block-rezult__item-last">
           <div class="r-last-wrp">
-            <h2>Оставьте свои  <br>контакты</h2>
+            <h2>Оставьте свои <br>контакты</h2>
             <span class="block-rezult__desc">Не нашли, что хотели? Мы перезвоним вам</span>
           </div>
           <a class="btn2 btn-style active-modal" href="#modal-window">Заказать обратный звонок</a>
@@ -604,5 +610,5 @@ function filter_callback(){
   <?php } ?>
 
   <?php
-  exit();
+  wp_die(); // Правильный способ завершения AJAX запроса в WordPress
 }

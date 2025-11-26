@@ -1012,11 +1012,11 @@ time {
 .faq {
   background-color: #1a1a1a;
   background-image:
-    url('img/green.png'), url('img/yellow.png'), url('img/d-green.png');
+    url('img/yellow.png'), url('img/d-green.png'), url('img/green.png');
   background-position:
-    left top,
     left 400px bottom,
-    left bottom;
+    left bottom,
+    left top;
   background-repeat: no-repeat;
 }
 .faq-container {

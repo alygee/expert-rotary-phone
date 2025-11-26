@@ -370,8 +370,10 @@ Template Name: Homepage Template
 		<div class="relative flex flex-col pt-10 faq-container md:mx-auto md:flex-row md:flex-wrap">
 
 			<div class="md:w-1/2">
-				<div class="flex items-start justify-between px-2.5 md:px-0 md:w-xl md:block md:leading-12">
-					<h2 class="font-semibold inline leading-[1.25] tracking-[.035em] text-2xl md:text-5xl md:font-medium md:leading-none"> Часто задаваемые вопросы </h2>
+				<div class="flex items-start justify-between px-2.5 md:w-xl md:block md:leading-12">
+					<h2 class="font-semibold inline leading-[1.25] tracking-[.035em] text-2xl md:text-5xl md:font-medium md:leading-none">
+						Часто задаваемые вопросы
+					</h2>
 					<img class="h-12 md:h-auto md:float-left md:mr-8" src="<?php bloginfo('template_url'); ?>/img/faq-title.webp" alt="">
 				</div>
 			</div>
