@@ -168,8 +168,7 @@ function filterData2(array $data, $cities = [], $levels = [], int $employeesCoun
 }
 
 function get_insurer_logo(string $insurer): void {
-  $array_logo = ['Зетта', 'Ингос', 'РГС', 'СБЕР', 'пари', 'ресо', 'Капитал life', 'ООО «Капитал Лайф Страхование Жизни»', 'Ренессанс', 'Согласие', 'Т-страхование', 'АльфаСтрахование', 'Allianz', 'СОГАЗ'
-  ];
+  $array_logo = ['Зетта', 'Ингос', 'РГС', 'СБЕР', 'пари', 'ресо', 'ООО «Капитал Лайф Страхование Жизни»', 'Ренессанс', 'Согласие', 'Т-страхование', 'АльфаСтрахование', 'Allianz', 'СОГАЗ'];
   $insurer_lower = mb_strtolower(trim($insurer), 'UTF-8');
   $array_logo_lower = array_map(fn($v) => mb_strtolower($v, 'UTF-8'), $array_logo);
 
@@ -177,7 +176,7 @@ function get_insurer_logo(string $insurer): void {
 
   if ($index !== false) {
       $img_index = $index + 1;
-      echo '<img src="' . get_bloginfo('template_url') . '/img/logotypes' . $img_index . '.svg" alt="">';
+      echo '<img src="' . get_bloginfo('template_url') . '/img/logotypes/logotypes' . $img_index . '.svg" alt="">';
   }
 }
 

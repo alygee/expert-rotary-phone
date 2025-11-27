@@ -45,12 +45,18 @@ foreach ($results as $key => $value2) {
                 if($value["Страховщик"] == 'Сбербанк страхование'){
                     $cl_w = ' cl-width';
                 }
+                
+                // Заменяем длинное название страховщика на короткое
+                $insurer_display_name = $value["Страховщик"];
+                if($insurer_display_name == 'ООО «Капитал Лайф Страхование Жизни»'){
+                    $insurer_display_name = 'Капитал Лайф';
+                }
                 ?>
                 
                 <div class="rezult-top d-flex d-jm">
                     <h5 class="flex-logotypes d-flex<?php echo $cl_w; ?>">
                         <?php get_insurer_logo($value["Страховщик"]); ?>
-                        <?php echo esc_html($value["Страховщик"]); ?>
+                        <?php echo esc_html($insurer_display_name); ?>
                     </h5>
                     <div class="rezult-top__price">
                         <span class="price-r"><?php echo number_format($suma_price, 0, ' ', ' '); ?> ₽</span>
