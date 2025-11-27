@@ -19,6 +19,7 @@
 # Ignore everything in the "wp-content" directory, except the "plugins"
 # and "themes" directories.
 wp-content/*
+!wp-content/uploads/2025/10/list.csv
 !wp-content/plugins/
 !wp-content/themes/
 node_modules
