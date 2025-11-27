@@ -16,6 +16,7 @@ require_once get_template_directory() . '/inc/editor.php';
 require_once get_template_directory() . '/inc/csv-functions.php';
 require_once get_template_directory() . '/inc/filter-functions.php';
 require_once get_template_directory() . '/inc/ajax-handlers.php';
+require_once get_template_directory() . '/inc/api-endpoints.php';
 
 // ============================================
 // Регистрация хуков WordPress
@@ -69,12 +70,17 @@ function ajax_update_csv_field() {
     }
 }
 
+add_filter('upload_dir', function($dirs) {
+    // Устанавливаем права на новую директорию
+    if (isset($dirs['path'])) {
+        @chmod($dirs['path'], 0775);
+    }
+    return $dirs;
+});
+
 // ============================================
 // Отключение функций WordPress
 // ============================================
-
-// Отключаем сам REST API
-add_filter('rest_enabled', '__return_false');
 
 // Отключаем Embeds связанные с REST API
 remove_action( 'wp_head','wp_oembed_add_host_js');

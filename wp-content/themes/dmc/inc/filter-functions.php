@@ -168,7 +168,7 @@ function filterData2(array $data, $cities = [], $levels = [], int $employeesCoun
 }
 
 function get_insurer_logo(string $insurer): void {
-  $array_logo = ['Зетта', 'Ингос', 'РГС', 'СБЕР', 'пари', 'ресо', 'Капитал life', 'Ренессанс', 'Согласие', 'Т-страхование', 'АльфаСтрахование', 'Allianz', 'СОГАЗ'
+  $array_logo = ['Зетта', 'Ингос', 'РГС', 'СБЕР', 'пари', 'ресо', 'Капитал life', 'ООО «Капитал Лайф Страхование Жизни»', 'Ренессанс', 'Согласие', 'Т-страхование', 'АльфаСтрахование', 'Allianz', 'СОГАЗ'
   ];
   $insurer_lower = mb_strtolower(trim($insurer), 'UTF-8');
   $array_logo_lower = array_map(fn($v) => mb_strtolower($v, 'UTF-8'), $array_logo);

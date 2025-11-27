@@ -83,6 +83,12 @@ function сity(){
 
 function rez(){
   //$csv = get_bloginfo('template_url')."/list.csv"; 
+  
+  // Очищаем кеш ACF перед получением поля (на случай обновления файла)
+  if (function_exists('acf_get_store')) {
+    acf_get_store('values')->reset();
+  }
+  
   $csv_field = get_field('csv_file', 2);
   
   // Обработка разных форматов возвращаемых ACF значений

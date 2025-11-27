@@ -103,8 +103,16 @@ function filter_callback() {
   if (defined('WP_DEBUG') && WP_DEBUG && function_exists('error_log')) {
     error_log('filter_callback - Найдено результатов: ' . count($results) . ' городов');
     foreach ($results as $city => $rows) {
-      error_log('  - ' . $city . ': ' . count($rows) . ' записей');
+      $insurers = array_unique(array_column($rows, 'Страховщик'));
+      error_log('  - ' . $city . ': ' . count($rows) . ' записей, страховщики: ' . implode(', ', $insurers));
     }
+    // Логируем все уникальные страховщики в результатах
+    $all_insurers = [];
+    foreach ($results as $rows) {
+      $all_insurers = array_merge($all_insurers, array_column($rows, 'Страховщик'));
+    }
+    $unique_insurers = array_unique($all_insurers);
+    error_log('filter_callback - Всего уникальных страховщиков в результатах: ' . implode(', ', $unique_insurers));
   }
   $ir=0;
   ?>
