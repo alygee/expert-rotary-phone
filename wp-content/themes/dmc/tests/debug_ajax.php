@@ -38,7 +38,7 @@ header('Content-Type: text/html; charset=utf-8');
         <?php
         $checks = [
             'get_field' => function_exists('get_field'),
-            'filterData2' => function_exists('filterData2'),
+            'filterInsuranceData' => function_exists('filterInsuranceData'),
             'rez' => function_exists('rez'),
             'filter_callback' => function_exists('filter_callback'),
         ];
@@ -118,18 +118,18 @@ header('Content-Type: text/html; charset=utf-8');
     </div>
 
     <div class="section">
-        <h2>6. Тест функции filterData2</h2>
+        <h2>6. Тест функции filterInsuranceData</h2>
         <?php
-        if (function_exists('filterData2') && !empty($data)) {
-            $test_result = filterData2($data, ['Москва'], ['Стандарт'], 5);
+        if (function_exists('filterInsuranceData') && !empty($data)) {
+            $test_result = filterInsuranceData($data, ['Москва'], ['Стандарт'], 5);
             if (!empty($test_result)) {
-                echo '<p class="success">✅ filterData2 работает корректно</p>';
+                echo '<p class="success">✅ filterInsuranceData работает корректно</p>';
                 echo '<p>Найдено городов: ' . count($test_result) . '</p>';
             } else {
-                echo '<p class="warning">⚠️ filterData2 вернул пустой результат (возможно, нет данных по критериям)</p>';
+                echo '<p class="warning">⚠️ filterInsuranceData вернул пустой результат (возможно, нет данных по критериям)</p>';
             }
         } else {
-            echo '<p class="error">❌ Невозможно протестировать filterData2</p>';
+            echo '<p class="error">❌ Невозможно протестировать filterInsuranceData</p>';
         }
         ?>
     </div>

@@ -95,7 +95,9 @@ function filter_api_callback($request) {
     }
     
     // Фильтруем данные
-    $results = filterData2($data, $cities, $levels, $count);
+    $filter_result = filterInsuranceData($data, $cities, $levels, $count);
+    $results = $filter_result['data'];
+    $not_found_cities = $filter_result['not_found_cities'];
     
     // Формируем ответ
     if ($format === 'html') {
@@ -108,6 +110,7 @@ function filter_api_callback($request) {
             'success' => true,
             'data' => $html,
             'count' => count($results),
+            'not_found_cities' => $not_found_cities,
         ), 200);
     } else {
         // JSON формат
@@ -115,6 +118,7 @@ function filter_api_callback($request) {
             'success' => true,
             'count' => count($results),
             'cities_count' => count($results),
+            'not_found_cities' => $not_found_cities,
             'filters' => array(
                 'cities' => $cities,
                 'levels' => $levels,

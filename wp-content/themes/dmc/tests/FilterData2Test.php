@@ -1,6 +1,6 @@
 <?php
 /**
- * Unit-тесты для функции filterData2
+ * Unit-тесты для функции filterInsuranceData
  * 
  * Требования:
  * - PHPUnit установлен (composer require --dev phpunit/phpunit)
@@ -11,15 +11,15 @@
 
 use PHPUnit\Framework\TestCase;
 
-// Подключаем functions.php с функцией filterData2
+// Подключаем functions.php с функцией filterInsuranceData
 require_once __DIR__ . '/../functions.php';
 
 // Проверяем, что функция существует
-if (!function_exists('filterData2')) {
-    throw new \RuntimeException('Функция filterData2 не найдена в functions.php');
+if (!function_exists('filterInsuranceData')) {
+    throw new \RuntimeException('Функция filterInsuranceData не найдена в functions.php');
 }
 
-class FilterData2Test extends TestCase
+class FilterInsuranceDataTest extends TestCase
 {
     private $mockData;
 
@@ -103,7 +103,7 @@ class FilterData2Test extends TestCase
      */
     public function testFilterBySingleCity()
     {
-        $result = filterData2($this->mockData, ['Москва']);
+        $result = filterInsuranceData($this->mockData, ['Москва']);
         
         $this->assertArrayHasKey('Москва', $result);
         $this->assertCount(2, $result['Москва']);
@@ -116,7 +116,7 @@ class FilterData2Test extends TestCase
      */
     public function testFilterByMultipleCities()
     {
-        $result = filterData2($this->mockData, ['Москва', 'Барнаул']);
+        $result = filterInsuranceData($this->mockData, ['Москва', 'Барнаул']);
         
         $this->assertArrayHasKey('Москва', $result);
         $this->assertArrayHasKey('Барнаул', $result);
@@ -129,7 +129,7 @@ class FilterData2Test extends TestCase
      */
     public function testFilterByLevel()
     {
-        $result = filterData2($this->mockData, [], ['Комфорт']);
+        $result = filterInsuranceData($this->mockData, [], ['Комфорт']);
         
         foreach ($result as $city => $rows) {
             foreach ($rows as $row) {
@@ -143,7 +143,7 @@ class FilterData2Test extends TestCase
      */
     public function testFilterByEmployeesCount()
     {
-        $result = filterData2($this->mockData, [], [], 5);
+        $result = filterInsuranceData($this->mockData, [], [], 5);
         
         foreach ($result as $city => $rows) {
             foreach ($rows as $row) {
@@ -157,7 +157,7 @@ class FilterData2Test extends TestCase
      */
     public function testCombinedFilter()
     {
-        $result = filterData2($this->mockData, ['Москва'], ['Комфорт'], 5);
+        $result = filterInsuranceData($this->mockData, ['Москва'], ['Комфорт'], 5);
         
         $this->assertArrayHasKey('Москва', $result);
         $this->assertCount(1, $result['Москва']);
@@ -170,7 +170,7 @@ class FilterData2Test extends TestCase
      */
     public function testFallbackToOtherCity()
     {
-        $result = filterData2($this->mockData, ['НесуществующийГород'], ['Стандарт'], 5);
+        $result = filterInsuranceData($this->mockData, ['НесуществующийГород'], ['Стандарт'], 5);
         
         $this->assertArrayHasKey('Другой город', $result);
         $this->assertCount(1, $result['Другой город']);
@@ -182,7 +182,7 @@ class FilterData2Test extends TestCase
      */
     public function testCityAsString()
     {
-        $result = filterData2($this->mockData, 'Москва');
+        $result = filterInsuranceData($this->mockData, 'Москва');
         
         $this->assertArrayHasKey('Москва', $result);
         $this->assertCount(2, $result['Москва']);
@@ -193,7 +193,7 @@ class FilterData2Test extends TestCase
      */
     public function testNoFilters()
     {
-        $result = filterData2($this->mockData);
+        $result = filterInsuranceData($this->mockData);
         
         $totalRows = 0;
         foreach ($result as $rows) {
@@ -208,7 +208,7 @@ class FilterData2Test extends TestCase
      */
     public function testCityOrderPreservation()
     {
-        $result = filterData2($this->mockData, ['Барнаул', 'Москва']);
+        $result = filterInsuranceData($this->mockData, ['Барнаул', 'Москва']);
         
         $cities = array_keys($result);
         $this->assertEquals('Барнаул', $cities[0]);
@@ -220,7 +220,7 @@ class FilterData2Test extends TestCase
      */
     public function testTrimWhitespace()
     {
-        $result = filterData2($this->mockData, [' Москва ', '  Барнаул  ']);
+        $result = filterInsuranceData($this->mockData, [' Москва ', '  Барнаул  ']);
         
         $this->assertArrayHasKey('Москва', $result);
         $this->assertArrayHasKey('Барнаул', $result);
@@ -231,7 +231,7 @@ class FilterData2Test extends TestCase
      */
     public function testEmptyStringsIgnored()
     {
-        $result = filterData2($this->mockData, ['Москва', '', '  ']);
+        $result = filterInsuranceData($this->mockData, ['Москва', '', '  ']);
         
         $this->assertArrayHasKey('Москва', $result);
         $this->assertCount(2, $result['Москва']);
@@ -242,7 +242,7 @@ class FilterData2Test extends TestCase
      */
     public function testEmployeesCountOutOfRange()
     {
-        $result = filterData2($this->mockData, [], [], 100);
+        $result = filterInsuranceData($this->mockData, [], [], 100);
         
         $totalRows = 0;
         foreach ($result as $rows) {
@@ -258,7 +258,7 @@ class FilterData2Test extends TestCase
      */
     public function testEmptyData()
     {
-        $result = filterData2([]);
+        $result = filterInsuranceData([]);
         
         $this->assertIsArray($result);
         $this->assertEmpty($result);
@@ -269,7 +269,7 @@ class FilterData2Test extends TestCase
      */
     public function testMultipleLevels()
     {
-        $result = filterData2($this->mockData, [], ['Стандарт', 'Комфорт']);
+        $result = filterInsuranceData($this->mockData, [], ['Стандарт', 'Комфорт']);
         
         $totalRows = 0;
         foreach ($result as $rows) {

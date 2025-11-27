@@ -1,10 +1,10 @@
 <?php
 /**
- * Тестовый скрипт для функции filterData2
+ * Тестовый скрипт для функции filterInsuranceData
  * 
  * Использование:
- * php test_filterData2.php
- * или через браузер: http://your-site.com/wp-content/themes/dmc/test_filterData2.php
+ * php test_filterInsuranceData.php
+ * или через браузер: http://your-site.com/wp-content/themes/dmc/test_filterInsuranceData.php
  */
 
 // Подключаем WordPress функции (если запускается через браузер)
@@ -16,8 +16,8 @@ if (file_exists('../../../wp-load.php')) {
 }
 
 // Проверяем, что функция существует
-if (!function_exists('filterData2')) {
-    die("Ошибка: функция filterData2 не найдена. Убедитесь, что functions.php подключен.\n");
+if (!function_exists('filterInsuranceData')) {
+    die("Ошибка: функция filterInsuranceData не найдена. Убедитесь, что functions.php подключен.\n");
 }
 
 // ============================================
@@ -131,24 +131,24 @@ function printTestResult($testName, $result, $expected = null) {
 // Тест 1: Фильтрация по одному городу
 echo "\n\n";
 echo "╔══════════════════════════════════════════════════════════════════════════════╗\n";
-echo "║                    ТЕСТИРОВАНИЕ ФУНКЦИИ filterData2                         ║\n";
+echo "║                    ТЕСТИРОВАНИЕ ФУНКЦИИ filterInsuranceData                         ║\n";
 echo "╚══════════════════════════════════════════════════════════════════════════════╝\n";
 
 // Тест 1: Фильтрация по одному городу
-$result1 = filterData2($mockData, ['Москва']);
+$result1 = filterInsuranceData($mockData, ['Москва']);
 printTestResult("Тест 1: Фильтрация по городу 'Москва'", $result1);
 assert(isset($result1['Москва']), "Должен быть найден город Москва");
 assert(count($result1['Москва']) === 2, "Должно быть 2 записи для Москвы");
 
 // Тест 2: Фильтрация по нескольким городам
-$result2 = filterData2($mockData, ['Москва', 'Барнаул', 'Архангельск']);
+$result2 = filterInsuranceData($mockData, ['Москва', 'Барнаул', 'Архангельск']);
 printTestResult("Тест 2: Фильтрация по нескольким городам", $result2);
 assert(isset($result2['Москва']), "Должен быть найден город Москва");
 assert(isset($result2['Барнаул']), "Должен быть найден город Барнаул");
 assert(isset($result2['Архангельск']), "Должен быть найден город Архангельск");
 
 // Тест 3: Фильтрация по уровню
-$result3 = filterData2($mockData, [], ['Комфорт']);
+$result3 = filterInsuranceData($mockData, [], ['Комфорт']);
 printTestResult("Тест 3: Фильтрация по уровню 'Комфорт'", $result3);
 foreach ($result3 as $city => $rows) {
     foreach ($rows as $row) {
@@ -157,7 +157,7 @@ foreach ($result3 as $city => $rows) {
 }
 
 // Тест 4: Фильтрация по количеству сотрудников
-$result4 = filterData2($mockData, [], [], 5);
+$result4 = filterInsuranceData($mockData, [], [], 5);
 printTestResult("Тест 4: Фильтрация по количеству сотрудников (5 человек, диапазон 1-10)", $result4);
 foreach ($result4 as $city => $rows) {
     foreach ($rows as $row) {
@@ -166,14 +166,14 @@ foreach ($result4 as $city => $rows) {
 }
 
 // Тест 5: Комбинированная фильтрация (город + уровень + количество)
-$result5 = filterData2($mockData, ['Москва'], ['Комфорт'], 5);
+$result5 = filterInsuranceData($mockData, ['Москва'], ['Комфорт'], 5);
 printTestResult("Тест 5: Комбинированная фильтрация (Москва, Комфорт, 5 сотрудников)", $result5);
 assert(isset($result5['Москва']), "Должен быть найден город Москва");
 assert(count($result5['Москва']) === 1, "Должна быть 1 запись для Москвы с уровнем Комфорт");
 assert($result5['Москва'][0]['Уровень'] === 'Комфорт', "Уровень должен быть 'Комфорт'");
 
 // Тест 6: Фильтрация по несуществующему городу (fallback на "Другой город")
-$result6 = filterData2($mockData, ['НесуществующийГород'], ['Стандарт'], 5);
+$result6 = filterInsuranceData($mockData, ['НесуществующийГород'], ['Стандарт'], 5);
 printTestResult("Тест 6: Фильтрация по несуществующему городу (fallback на 'Другой город')", $result6);
 if (isset($result6['Другой город'])) {
     echo "✅ Fallback сработал: найдены записи для 'Другой город'\n";
@@ -182,12 +182,12 @@ if (isset($result6['Другой город'])) {
 }
 
 // Тест 7: Фильтрация по городу как строке (не массив)
-$result7 = filterData2($mockData, 'Москва');
+$result7 = filterInsuranceData($mockData, 'Москва');
 printTestResult("Тест 7: Фильтрация по городу как строке (не массив)", $result7);
 assert(isset($result7['Москва']), "Должен работать с строковым параметром");
 
 // Тест 8: Пустые параметры (должны вернуть все данные)
-$result8 = filterData2($mockData);
+$result8 = filterInsuranceData($mockData);
 printTestResult("Тест 8: Без фильтров (должны вернуться все данные)", $result8);
 $totalRows = 0;
 foreach ($result8 as $rows) {
@@ -196,7 +196,7 @@ foreach ($result8 as $rows) {
 assert($totalRows === count($mockData), "Должны вернуться все записи");
 
 // Тест 9: Проверка порядка городов
-$result9 = filterData2($mockData, ['Архангельск', 'Барнаул', 'Москва']);
+$result9 = filterInsuranceData($mockData, ['Архангельск', 'Барнаул', 'Москва']);
 printTestResult("Тест 9: Проверка сохранения порядка городов", $result9);
 $citiesOrder = array_keys($result9);
 $expectedOrder = ['Архангельск', 'Барнаул', 'Москва'];
@@ -204,7 +204,7 @@ $actualOrder = array_intersect($expectedOrder, $citiesOrder);
 echo "Порядок городов: " . implode(', ', array_keys($result9)) . "\n";
 
 // Тест 10: Фильтрация по количеству сотрудников вне диапазона
-$result10 = filterData2($mockData, [], [], 100);
+$result10 = filterInsuranceData($mockData, [], [], 100);
 printTestResult("Тест 10: Фильтрация по количеству сотрудников (100, вне всех диапазонов)", $result10);
 $totalRows10 = 0;
 foreach ($result10 as $rows) {
@@ -213,12 +213,12 @@ foreach ($result10 as $rows) {
 echo "Найдено записей: $totalRows10 (ожидается 0 или записи без фильтра по количеству)\n";
 
 // Тест 11: Фильтрация с пробелами в параметрах
-$result11 = filterData2($mockData, [' Москва ', '  Барнаул  '], [' Комфорт ']);
+$result11 = filterInsuranceData($mockData, [' Москва ', '  Барнаул  '], [' Комфорт ']);
 printTestResult("Тест 11: Фильтрация с пробелами в параметрах (должны быть обрезаны)", $result11);
 assert(isset($result11['Москва']) || isset($result11['Барнаул']), "Пробелы должны быть обрезаны");
 
 // Тест 12: Пустые строки в массивах
-$result12 = filterData2($mockData, ['Москва', '', '  ', 'Барнаул'], ['Комфорт', '']);
+$result12 = filterInsuranceData($mockData, ['Москва', '', '  ', 'Барнаул'], ['Комфорт', '']);
 printTestResult("Тест 12: Фильтрация с пустыми строками в массивах", $result12);
 
 echo "\n\n";

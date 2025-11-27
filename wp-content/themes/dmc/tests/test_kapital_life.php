@@ -107,7 +107,7 @@ $test_level = $levels[0];
 $test_employee_count = 5; // Тестируем с 5 сотрудниками
 
 echo "Тест 1: Фильтрация по городу '{$test_city}'\n";
-$result1 = filterData2($data, [$test_city], [], null);
+$result1 = filterInsuranceData($data, [$test_city], [], null);
 if (isset($result1[$test_city])) {
     $insurers_in_result = array_unique(array_column($result1[$test_city], 'Страховщик'));
     $has_kapital = in_array($target_insurer, $insurers_in_result);
@@ -120,7 +120,7 @@ if (isset($result1[$test_city])) {
 echo "\n";
 
 echo "Тест 2: Фильтрация по городу '{$test_city}' и уровню '{$test_level}'\n";
-$result2 = filterData2($data, [$test_city], [$test_level], null);
+$result2 = filterInsuranceData($data, [$test_city], [$test_level], null);
 if (isset($result2[$test_city])) {
     $insurers_in_result = array_unique(array_column($result2[$test_city], 'Страховщик'));
     $has_kapital = in_array($target_insurer, $insurers_in_result);
@@ -147,7 +147,7 @@ foreach ($employee_ranges as $range) {
 
 if ($suitable_range) {
     echo "Тест 3: Фильтрация по городу '{$test_city}', уровню '{$test_level}', {$test_employee_count} сотрудников (диапазон: {$suitable_range})\n";
-    $result3 = filterData2($data, [$test_city], [$test_level], $test_employee_count);
+    $result3 = filterInsuranceData($data, [$test_city], [$test_level], $test_employee_count);
     if (isset($result3[$test_city])) {
         $insurers_in_result = array_unique(array_column($result3[$test_city], 'Страховщик'));
         $has_kapital = in_array($target_insurer, $insurers_in_result);

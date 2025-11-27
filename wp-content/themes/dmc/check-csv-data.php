@@ -70,7 +70,9 @@ $test_cases = [
 
 foreach ($test_cases as $test) {
     list($city, $levels, $count) = $test;
-    $results = filterData2($data, [$city], $levels, $count);
+    $filter_result = filterInsuranceData($data, [$city], $levels, $count);
+    $results = $filter_result['data'];
+    $not_found_cities = $filter_result['not_found_cities'];
     
     echo "Город: {$city}, Уровень: " . implode(', ', $levels) . ", Сотрудников: {$count}\n";
     if (empty($results)) {
@@ -80,6 +82,9 @@ foreach ($test_cases as $test) {
             $insurers_in_result = array_unique(array_column($rows, 'Страховщик'));
             echo "  ✓ {$result_city}: " . count($rows) . " записей, страховщики: " . implode(', ', $insurers_in_result) . "\n";
         }
+    }
+    if (!empty($not_found_cities)) {
+        echo "  ⚠ Города без данных: " . implode(', ', $not_found_cities) . "\n";
     }
     echo "\n";
 }

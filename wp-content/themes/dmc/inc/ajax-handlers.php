@@ -78,12 +78,14 @@ function filter_callback() {
   }
 
   // Фильтруем данные
-  $results = filterData2(
+  $filter_result = filterInsuranceData(
       $data,
       $region,
       $level,
       $count
   );
+  $results = $filter_result['data'];
+  $not_found_cities = $filter_result['not_found_cities'];
   
   // Проверяем результат фильтрации
   if(empty($results)) {
