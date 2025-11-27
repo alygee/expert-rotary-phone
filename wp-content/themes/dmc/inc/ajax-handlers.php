@@ -86,50 +86,27 @@ function filter_callback() {
   );
   
   // Проверяем результат фильтрации
-  if(empty($results)){
-    // Логирование для отладки
-    if (defined('WP_DEBUG') && WP_DEBUG && function_exists('error_log')) {
-      error_log('filter_callback - Нет результатов по критериям:');
-      error_log('  - count: ' . ($count ?? 'null'));
-      error_log('  - level: ' . print_r($level, true));
-      error_log('  - region: ' . print_r($region, true));
-      error_log('  - Количество данных в CSV: ' . count($data));
-    }
+  if(empty($results)) {
     echo '<!-- Нет результатов по заданным критериям -->';
     wp_die('Нет результатов');
   }
-  
-  // Логирование успешного результата
-  if (defined('WP_DEBUG') && WP_DEBUG && function_exists('error_log')) {
-    error_log('filter_callback - Найдено результатов: ' . count($results) . ' городов');
-    foreach ($results as $city => $rows) {
-      $insurers = array_unique(array_column($rows, 'Страховщик'));
-      error_log('  - ' . $city . ': ' . count($rows) . ' записей, страховщики: ' . implode(', ', $insurers));
-    }
-    // Логируем все уникальные страховщики в результатах
-    $all_insurers = [];
-    foreach ($results as $rows) {
-      $all_insurers = array_merge($all_insurers, array_column($rows, 'Страховщик'));
-    }
-    $unique_insurers = array_unique($all_insurers);
-    error_log('filter_callback - Всего уникальных страховщиков в результатах: ' . implode(', ', $unique_insurers));
-  }
+
   $ir=0;
   ?>
   <?php foreach ($results as $key=>$value2) { $ir++ ?>
 
     <?php if ($key === 'fallback') {
-	if (is_array($region)) {
-	  $r = implode(', ', $region);
-	  $c = count($region) > 1 ? 'Для регионов ' : 'Для региона ';
-	} else {
-	  $r = $region;
-	  $c = 'Для региона ';
-	}
-	echo '<div class="text-4xl mt-3 font-semibold tracking-wide">Цены по соседним регионам</div>';
-	echo '<div class="mt-3 mb-6 text-xl">' . $c . $r . ' не удалось произвести расчет</div>';
-      } else {
-	echo '<h3 class="h3-sfd mt-3">'.$key.'</h3>';
+        if (is_array($region)) {
+          $r = implode(', ', $region);
+          $c = count($region) > 1 ? 'Для регионов ' : 'Для региона ';
+        } else {
+          $r = $region;
+          $c = 'Для региона ';
+        }
+        echo '<div class="text-4xl mt-3 font-semibold tracking-wide">Цены по соседним регионам</div>';
+        echo '<div class="mt-3 mb-6 text-xl">' . $c . $r . ' не удалось произвести расчет</div>';
+            } else {
+        echo '<h3 class="h3-sfd mt-3">'.$key.'</h3>';
       }
     ?>
 
