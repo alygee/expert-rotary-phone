@@ -99,6 +99,20 @@ function filter_api_callback($request) {
     $results = $filter_result['data'];
     $not_found_cities = $filter_result['not_found_cities'];
     
+    // Убираем fallback из результатов, если он там есть (он будет показан отдельно для not_found_cities)
+    if (isset($results['fallback'])) {
+        unset($results['fallback']);
+    }
+    
+    // Получаем fallback данные для городов, для которых не найдено данных
+    $fallback_data = [];
+    if (!empty($not_found_cities)) {
+        $fallback_rows = getFallbackData($data, $levels, $count);
+        if (!empty($fallback_rows)) {
+            $fallback_data = $fallback_rows;
+        }
+    }
+    
     // Формируем ответ
     if ($format === 'html') {
         // HTML формат (как в AJAX обработчике)
