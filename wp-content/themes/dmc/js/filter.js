@@ -77,7 +77,7 @@ jQuery(document).ready(function($) {
 						$select.trigger('tokenize:clear');
 						// Добавляем новые токены
 						citiesArray.forEach(function(city) {
-							$select.trigger('tokenize:add', [city]);
+							$select.tokenize2().trigger('tokenize:tokens:add', [city, city, true]);
 						});
 					}
 				}, 100);
