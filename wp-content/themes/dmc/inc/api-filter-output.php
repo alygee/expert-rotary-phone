@@ -33,14 +33,10 @@ foreach ($results as $key => $value2) {
             <div class="block-rezult__item">
                 
                 <?php 
-                $fields = ["Стоматология", "Скорая_помощь", "Госпитализация", "Вызов_врача_на_дом", "Поликлиника"];
-                $suma_price = 0;
-                foreach ($fields as $field) {
-                    $num = (float) str_replace(',', '.', $value[$field]);
-                    if (isset($num) && is_numeric($num) && $num > 0) {
-                        $suma_price += $value[$field];
-                    }
-                }
+                // Используем функцию calculate_total_price из api-endpoints.php
+                $suma_price = function_exists('calculate_total_price') 
+                    ? calculate_total_price($value) 
+                    : 0;
                 $cl_w = '';
                 if($value["Страховщик"] == 'Сбербанк страхование'){
                     $cl_w = ' cl-width';
@@ -93,7 +89,7 @@ foreach ($results as $key => $value2) {
                                     <div class="li-val__wrp">
                                         <span>
                                             <?php if($bs5 == ''){ ?>
-                                            <?php echo number_format((float) str_replace(',', '.', $value["Поликлиника"]), 0, ' ', ' '); ?> ₽
+                                            <?php echo number_format((float) str_replace([' ', ','], ['', '.'], $value["Поликлиника"]), 0, ' ', ' '); ?> ₽
                                             <?php }else{ echo $bs5; } ?>
                                         </span>
                                     </div>
@@ -108,7 +104,7 @@ foreach ($results as $key => $value2) {
                                     <div class="li-val__wrp">
                                         <span>
                                             <?php if($bs1 == ''){ ?>
-                                            <?php echo number_format((float) str_replace(',', '.', $value["Стоматология"]), 0, ' ', ' '); ?> ₽
+                                            <?php echo number_format((float) str_replace([' ', ','], ['', '.'], $value["Стоматология"]), 0, ' ', ' '); ?> ₽
                                             <?php }else{ echo $bs1; } ?>
                                         </span>
                                     </div>
@@ -123,7 +119,7 @@ foreach ($results as $key => $value2) {
                                     <div class="li-val__wrp">
                                         <span>
                                             <?php if($bs2 == ''){ ?>
-                                            <?php echo number_format((float) str_replace(',', '.', $value["Скорая_помощь"]), 0, ' ', ' '); ?> ₽
+                                            <?php echo number_format((float) str_replace([' ', ','], ['', '.'], $value["Скорая_помощь"]), 0, ' ', ' '); ?> ₽
                                             <?php }else{ echo $bs2; } ?>
                                         </span>
                                     </div>
@@ -138,7 +134,7 @@ foreach ($results as $key => $value2) {
                                     <div class="li-val__wrp">
                                         <span>
                                             <?php if($bs3 == ''){ ?>
-                                            <?php echo number_format((float) str_replace(',', '.', $value["Госпитализация"]), 0, ' ', ' '); ?> ₽
+                                            <?php echo number_format((float) str_replace([' ', ','], ['', '.'], $value["Госпитализация"]), 0, ' ', ' '); ?> ₽
                                             <?php }else{ echo $bs3; } ?>
                                         </span>
                                     </div>
@@ -153,7 +149,7 @@ foreach ($results as $key => $value2) {
                                     <div class="li-val__wrp">
                                         <span>
                                             <?php if($bs4 == ''){ ?>
-                                            <?php echo number_format((float) str_replace(',', '.', $value["Вызов_врача_на_дом"]), 0, ' ', ' '); ?> ₽
+                                            <?php echo number_format((float) str_replace([' ', ','], ['', '.'], $value["Вызов_врача_на_дом"]), 0, ' ', ' '); ?> ₽
                                             <?php }else{ echo $bs4; } ?>
                                         </span>
                                     </div>

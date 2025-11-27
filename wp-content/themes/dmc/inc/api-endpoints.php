@@ -176,9 +176,10 @@ function calculate_total_price($row) {
     $total = 0;
     
     foreach ($fields as $field) {
-        if (isset($row[$field])) {
-            $value = str_replace(',', '.', $row[$field]);
-            $num = (float) $value;
+        if (isset($row[$field]) && $row[$field] !== '') {
+            // Убираем пробелы и заменяем запятую на точку
+            $cleaned = str_replace([' ', ','], ['', '.'], $row[$field]);
+            $num = (float) $cleaned;
             if (is_numeric($num) && $num > 0) {
                 $total += $num;
             }
