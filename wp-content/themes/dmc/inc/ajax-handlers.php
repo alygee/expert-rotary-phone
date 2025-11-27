@@ -3,7 +3,7 @@
  * AJAX обработчики
  */
 
-function filter_callback(){
+function filter_callback() {
   // Включаем отображение ошибок для отладки (на тестовом сервере)
   if (defined('WP_DEBUG') && WP_DEBUG) {
     error_reporting(E_ALL);

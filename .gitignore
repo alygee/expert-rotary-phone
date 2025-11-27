@@ -22,6 +22,7 @@ wp-content/*
 !wp-content/uploads/2025/10/list.csv
 !wp-content/plugins/
 !wp-content/themes/
+wp-content/themes/.obsidian
 node_modules
  
 # Ignore everything in the "plugins" directory, except the plugins you

@@ -43,6 +43,32 @@ add_filter('tiny_mce_before_init', 'my_adds_alls_elements', 20);
 add_action('wp_ajax_action', 'filter_callback');
 add_action('wp_ajax_nopriv_action', 'filter_callback');
 
+// Подключаем утилиту для обновления CSV поля (только для админов)
+if (is_admin()) {
+    require_once get_template_directory() . '/inc/update-csv-field.php';
+    add_action('wp_ajax_update_csv_field', 'ajax_update_csv_field');
+}
+
+/**
+ * AJAX обработчик для обновления CSV поля
+ */
+function ajax_update_csv_field() {
+    check_ajax_referer('update_csv_field_nonce', 'nonce');
+    
+    if (!current_user_can('manage_options')) {
+        wp_send_json_error(array('message' => 'Недостаточно прав'));
+        return;
+    }
+    
+    $result = update_csv_field();
+    
+    if ($result['success']) {
+        wp_send_json_success($result);
+    } else {
+        wp_send_json_error($result);
+    }
+}
+
 // ============================================
 // Отключение функций WordPress
 // ============================================
