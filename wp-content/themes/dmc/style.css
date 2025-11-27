@@ -1777,7 +1777,6 @@ h3.prdl-dlvs {
   font-weight: 600;
   font-size: 24px;
   color: var(--black);
-  text-transform: uppercase;
   max-width: 60%;
   word-break: break-all;
 }

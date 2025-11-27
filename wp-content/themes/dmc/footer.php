@@ -131,7 +131,7 @@
 
 				<div class="modal-top">
 
-					<h3>Получите индивидуальную консультацию  <br>по лучшим условиям медицинского страхования</h3>
+					<h3>Получите индивидуальную консультацию <br>по лучшим условиям медицинского страхования</h3>
 
 					<span>Введите корректно свои контактные данные, чтобы наш менеджер мог подобрать оптимальные условия для вас</span>
 
@@ -161,7 +161,8 @@
 
 	<script src="<?php bloginfo('template_url'); ?>/js/jquery.maskedinput.min.js"></script>
 
-	<script src="<?php bloginfo('template_url'); ?>/js/my-script.js"></script> 
+	<script src="<?php bloginfo('template_url'); ?>/js/my-script.js"></script>
+	<script src="<?php bloginfo('template_url'); ?>/js/filter.js"></script>
 
 </body>
 
