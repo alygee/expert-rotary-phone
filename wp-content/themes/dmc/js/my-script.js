@@ -318,17 +318,23 @@ var control = true;
 		if($(this).hasClass('click-step1')){
 			$(this).css('display', 'none');
 		}
-		let ajaxurl = $('.footer').attr('data-home')+'wp-admin/admin-ajax.php';
+		
+		// Получаем базовый URL сайта
+		// Пытаемся получить из атрибута data-home, иначе используем текущий origin
+		let baseUrl = $('.footer').attr('data-home') || window.location.origin;
+		// Убираем завершающий слэш если есть
+		baseUrl = baseUrl.replace(/\/$/, '');
+		
+		// Получаем значения из формы
 		let count = $('.kviz-wrap .input-wrp2 input').val();
 		let level = $('.kviz-wrap .input-wrp4 .main-select').val();
-		let region  = $('.kviz-wrap .input-wrp5 .region-select').val(); // Может быть массивом для множественного select
+		let region = $('.kviz-wrap .input-wrp5 .region-select').val(); // Может быть массивом для множественного select
 		
 		// Отладка: выводим в консоль что получаем из формы
-		console.log('AJAX Debug - Полученные значения:');
+		console.log('REST API Debug - Полученные значения:');
 		console.log('count:', count, typeof count);
 		console.log('level:', level, typeof level, Array.isArray(level));
 		console.log('region:', region, typeof region, Array.isArray(region));
-		console.log('ajaxurl:', ajaxurl);
 		
 		// Проверяем, что значения не пустые
 		if (!count || count === '' || count === null || count === undefined) {
@@ -343,40 +349,91 @@ var control = true;
 		
 		control = false;
 		
-		// Подготавливаем данные для отправки
-		// jQuery автоматически сериализует массивы в формат region[]=value1&region[]=value2
-		let ajaxData = {
-			'count': count,
-			'level': level,
-			'region': region, // Поддерживается как массив, так и строка
-			action: 'action'
+		// Подготавливаем параметры для REST API
+		// REST API использует: cities (вместо region), levels (вместо level), count, format
+		let params = {
+			format: 'html'
 		};
 		
-		// Отладка: выводим данные которые будут отправлены
-		console.log('AJAX Debug - Данные для отправки:', ajaxData);
+		// Добавляем count если есть
+		if (count && count !== '') {
+			params.count = count;
+		}
 		
+		// Обрабатываем level -> levels
+		if (level) {
+			if (Array.isArray(level) && level.length > 0) {
+				params.levels = level.join(',');
+			} else if (typeof level === 'string' && level !== '') {
+				params.levels = level;
+			}
+		}
+		
+		// Обрабатываем region -> cities
+		if (region) {
+			if (Array.isArray(region) && region.length > 0) {
+				params.cities = region.join(',');
+			} else if (typeof region === 'string' && region !== '') {
+				params.cities = region;
+			}
+		}
+		
+		// Формируем URL для REST API
+		let apiUrl = baseUrl + '/wp-json/dmc/v1/filter';
+		let queryString = $.param(params);
+		let fullUrl = apiUrl + '?' + queryString;
+		
+		// Отладка: выводим данные которые будут отправлены
+		console.log('REST API Debug - URL:', fullUrl);
+		console.log('REST API Debug - Параметры:', params);
+		
+		// Выполняем запрос к REST API
 		$.ajax({
-			type: 'POST',
-			url: ajaxurl,
-			dataType: "html",
-			data: ajaxData,
-			traditional: false, // false = массивы отправляются как param[]=value, true = param=value&param=value
-			success: function(data) {
-				console.log('AJAX Debug - Успешный ответ, длина:', data.length, 'символов');
-				if (data.length === 0) {
-					console.error('❌ Получен пустой ответ от сервера!');
-				} else if (data.includes('Нет результатов') || data.includes('Ошибка')) {
-					console.warn('⚠️ Сервер вернул сообщение об ошибке или отсутствии результатов');
-					console.log('Ответ сервера:', data.substring(0, 200));
+			type: 'GET',
+			url: apiUrl,
+			dataType: "json",
+			data: params,
+			success: function(response) {
+				console.log('REST API Debug - Успешный ответ:', response);
+				
+				// Проверяем, не является ли ответ ошибкой WordPress REST API
+				if (response && response.code && response.message) {
+					// Это WP_Error в формате REST API
+					console.error('❌ REST API вернул ошибку:', response.code, response.message);
+					control = true;
+					$('.block-process').css('display', 'none');
+					alert('Ошибка: ' + (response.message || response.code));
+					return;
 				}
-				//alert(data)
+				
+				// REST API возвращает JSON объект с полем data, содержащим HTML
+				let htmlData = '';
+				if (response && response.success && response.data) {
+					htmlData = response.data;
+				} else if (response && response.data) {
+					htmlData = response.data;
+				} else {
+					console.error('❌ Неожиданный формат ответа от REST API');
+					control = true;
+					$('.block-process').css('display', 'none');
+					alert('Ошибка: не удалось получить данные от сервера');
+					return;
+				}
+				
+				if (htmlData.length === 0) {
+					console.error('❌ Получен пустой HTML от сервера!');
+					htmlData = 'Нет результатов по заданным критериям';
+				} else if (htmlData.includes('Нет результатов') || htmlData.includes('Ошибка')) {
+					console.warn('⚠️ Сервер вернул сообщение об ошибке или отсутствии результатов');
+					console.log('Ответ сервера:', htmlData.substring(0, 200));
+				}
 				
 				setTimeout(function() {
 					control = true;
 					$('.click-step1').removeClass('active');
 					$('.block-process').css('display', 'none');
 					$('.block-rezult__grid').html('');
-					$('.block-rezult__grid').html(data);
+					$('.block-rezult__grid').html(htmlData);
 					$('.block-rezult').css('display', 'block');
 					var anchor = $(this);
 				  	$('html, body').stop().animate({
@@ -385,16 +442,43 @@ var control = true;
 
 				}, 10);
 			},
-			beforeSend: function(data) {
+			beforeSend: function() {
 				$('.block-process').css('display', 'block');
 			},
 			error: function(xhr, status, error) {
-				console.error('AJAX Debug - Ошибка запроса:');
+				console.error('REST API Debug - Ошибка запроса:');
 				console.error('Status:', status);
 				console.error('Error:', error);
 				console.error('Response:', xhr.responseText);
 				console.error('Status Code:', xhr.status);
-				alert("Возникла ошибка при отправке: " + error);
+				
+				// Сбрасываем флаг контроля и скрываем индикатор загрузки
+				control = true;
+				$('.block-process').css('display', 'none');
+				
+				// Пытаемся извлечь сообщение об ошибке из ответа
+				let errorMessage = "Возникла ошибка при отправке запроса";
+				try {
+					if (xhr.responseText) {
+						let errorResponse = JSON.parse(xhr.responseText);
+						if (errorResponse && errorResponse.message) {
+							errorMessage = errorResponse.message;
+						} else if (errorResponse && errorResponse.code) {
+							errorMessage = errorResponse.code + (errorResponse.message ? ': ' + errorResponse.message : '');
+						}
+					}
+				} catch(e) {
+					// Если не удалось распарсить JSON, используем стандартное сообщение
+					if (xhr.status === 0) {
+						errorMessage = "Ошибка сети. Проверьте подключение к интернету.";
+					} else if (xhr.status >= 500) {
+						errorMessage = "Ошибка сервера. Попробуйте позже.";
+					} else if (xhr.status === 404) {
+						errorMessage = "Эндпоинт не найден. Обратитесь к администратору.";
+					}
+				}
+				
+				alert(errorMessage);
 			}
 		});
 
