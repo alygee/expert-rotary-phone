@@ -1270,8 +1270,8 @@ time {
 .modal-tn__close {
   color: #2f1e1e;
   position: absolute;
-  right: 0;
-  top: -13px;
+  right: 20px;
+  top: 30px;
   text-decoration: none;
   text-align: center;
   opacity: 1;
@@ -1982,6 +1982,7 @@ h3.prdl-dlvs {
   color: #000;
   max-width: 800px;
   line-height: 1;
+  margin-right: 32px;
 }
 .prepend-title .sub-zag {
   color: #01a34f;
@@ -3419,7 +3420,7 @@ h3.h3-sfd {
     padding-right: 0;
   }
   .modal-tn__close {
-    right: 0;
+    right: 15px;
   }
   .modal-bg {
     background: url('img/bg-popap-mob.webp') no-repeat;
@@ -3517,8 +3518,8 @@ h3.h3-sfd {
     background: url('img/close-btn-mob.svg') no-repeat;
     width: 50px;
     height: 52px;
-    top: -24px;
-    right: -10px;
+    top: 30px;
+    right: 15px;
   }
   .modal-open {
     background: url('img/call_back_fon-mob.webp') no-repeat;
