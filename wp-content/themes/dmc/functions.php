@@ -17,6 +17,7 @@ require_once get_template_directory() . '/inc/csv-functions.php';
 require_once get_template_directory() . '/inc/filter-functions.php';
 require_once get_template_directory() . '/inc/ajax-handlers.php';
 require_once get_template_directory() . '/inc/api-endpoints.php';
+require_once get_template_directory() . '/inc/cf7-database.php';
 
 // ============================================
 // Регистрация хуков WordPress
