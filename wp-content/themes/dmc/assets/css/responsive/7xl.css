@@ -1,0 +1,6 @@
+/* Responsive styles for 7xl (max-width: 1705px) */
+@media screen and (max-width: 1705px) {
+.pl-wrap2 {
+    z-index: 1;
+  }
+}

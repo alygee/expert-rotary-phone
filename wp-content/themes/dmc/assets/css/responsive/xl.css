@@ -1,0 +1,98 @@
+/* Responsive styles for xl (max-width: 920px) */
+@media screen and (max-width: 920px) {
+.news__list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .insurance__item h3,
+  .h2-style h2,
+  .selection h3,
+  .faq-click,
+  .foot-title {
+    font-size: 28px;
+  }
+  .title-url {
+    font-size: 26px;
+  }
+  .img-new-wrp img {
+    width: 100%;
+    max-width: none;
+  }
+  .control-img {
+    max-width: 450px;
+    width: 100%;
+  }
+  .txt-int {
+    font-size: 35px;
+  }
+  .about-list__desc {
+    width: 60%;
+    margin-left: 0;
+    padding-left: 11px;
+    box-sizing: border-box;
+  }
+  .about-list-name {
+    width: 40%;
+    font-size: 27px;
+  }
+  .cases__item {
+    min-height: 275px;
+  }
+  .insurance__item {
+    padding: 30px;
+    min-height: 410px;
+  }
+  .insurance__item-wrp {
+    position: relative;
+    z-index: 2;
+  }
+  .insurance__item:first-child {
+    min-height: auto;
+  }
+  .insurance__item:first-child .insurance__item-wrp {
+    max-width: 50%;
+  }
+  .insurance__item:nth-child(2) {
+    background-position: 40% top;
+  }
+  .foot-top__item1 {
+    width: 100%;
+    max-width: 100%;
+  }
+  .foot-top__item2 {
+    width: 100%;
+    max-width: 100%;
+    padding-left: 0;
+  }
+  .modal-top h3 br {
+    display: none;
+  }
+  .label {
+    font-size: 16px;
+  }
+  .block-large h2 {
+    font-size: 36px;
+  }
+  .block-large .form-wrap {
+    display: block;
+  }
+  .block-large .checkbox-wrp {
+    position: static;
+  }
+  .block-large__forma {
+    padding: 59px 30px;
+  }
+  .block-large__forma .input-wrp {
+    width: 100%;
+    margin-bottom: 16px;
+  }
+  .block-large__forma .input-wrp:last-child {
+    margin-bottom: 0;
+  }
+  .block-large__forma .wpcf7-response-output {
+    bottom: 0;
+  }
+  .block-large h2 br,
+  .block-large > span br {
+    display: none;
+  }
+}

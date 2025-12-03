@@ -1,0 +1,36 @@
+/* Responsive styles for 6xl (max-width: 1640px) */
+@media screen and (max-width: 1640px) {
+.menu-top > li {
+    margin-right: 15px;
+  }
+  .menu-top {
+    flex: 1;
+    justify-content: space-between;
+  }
+  .menu-top > li > a {
+    font-size: 16px;
+  }
+  .control-img {
+    max-width: 45vw;
+  }
+  .control__right {
+    max-width: 50vw;
+  }
+  .pl-wrap2 {
+    gap: 20px;
+  }
+  .pl-item {
+    max-width: none;
+    width: calc(33.333% - 20px);
+    padding: 15px;
+  }
+  .pl-item__title {
+    font-size: 20px;
+  }
+  .about-img {
+    zoom: 0.8;
+  }
+  .menu-top {
+    margin-right: 25px;
+  }
+}

@@ -1,0 +1,45 @@
+/* Responsive styles for 4xl (max-width: 1365px) */
+@media screen and (max-width: 1365px) {
+.search-block {
+    max-width: 260px;
+  }
+  .menu-top > li > a {
+    font-size: 14px;
+  }
+  .header__logo-txt {
+    font-size: 16px;
+  }
+  .tel,
+  .mail {
+    font-size: 16px;
+  }
+  .pl-item__title {
+    font-size: 18px;
+  }
+  .txt-int {
+    right: 12vw;
+    font-size: 41px;
+  }
+  .about-img {
+    zoom: 0.6;
+  }
+  .about-list__desc {
+    max-width: 575px;
+  }
+  .about-list-name {
+    font-size: 35px;
+  }
+  .h2-style h2,
+  .title-url {
+    font-size: 41px;
+  }
+  .news__item-more {
+    font-size: 21px;
+  }
+  .faq-click {
+    font-size: 30px;
+  }
+  .block-rezult {
+    padding: 40px 30px;
+  }
+}

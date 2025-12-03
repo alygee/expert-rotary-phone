@@ -124,7 +124,7 @@ function getFallbackData(array $data, array $levels = [], ?int $employeesCount =
     return $fallback_rows;
 }
 
-function filterInsuranceData(array $data, $cities = [], $levels = [], int $employeesCount = null): array {
+function filterInsuranceData(array $data, $cities = [], $levels = [], ?int $employeesCount = null): array {
     // Нормализация параметров
     if (!is_array($cities)) $cities = [$cities];
     if (!is_array($levels)) $levels = [$levels];
@@ -187,7 +187,7 @@ function get_insurer_logo(string $insurer): void {
 
   if ($index !== false) {
       $img_index = $index + 1;
-      echo '<img src="' . get_bloginfo('template_url') . '/img/logotypes/logotypes' . $img_index . '.svg" alt="">';
+      echo '<img src="' . get_bloginfo('template_url') . '/assets/img/logotypes/logotypes' . $img_index . '.svg" alt="">';
   }
 }
 

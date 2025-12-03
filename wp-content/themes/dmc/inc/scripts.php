@@ -22,7 +22,7 @@ function footer_enqueue_scripts(){
         wp_enqueue_script('jquery-core', false, array(), false, true);
         wp_enqueue_script('jquery-migrate', false, array(), false, true);
 
-        wp_enqueue_style('tailwind-css', get_template_directory_uri() . '/css/output.css', array(), '1.0.0');
+        wp_enqueue_style('tailwind-css', get_template_directory_uri() . '/assets/css/output.css', array(), '1.0.0');
     }
 }
 

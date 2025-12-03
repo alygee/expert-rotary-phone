@@ -1,0 +1,13 @@
+/* Responsive styles for 5xl (max-width: 1430px) */
+@media screen and (max-width: 1430px) {
+.menu-top > li {
+    margin-right: 10px;
+  }
+  .menu-top > li > a {
+    font-size: 15px;
+  }
+  .about-img {
+    zoom: 0.7;
+    left: 37%;
+  }
+}

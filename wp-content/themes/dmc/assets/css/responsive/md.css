@@ -1,0 +1,111 @@
+/* Responsive styles for md (max-width: 599px) */
+@media screen and (max-width: 599px) {
+.insurance__item h3,
+  .h2-style h2,
+  .selection h3,
+  .faq-click,
+  .foot-title {
+    font-size: 26px;
+  }
+  .control__left h3 {
+    font-size: 28px;
+    text-align: center;
+  }
+  .control__left h3 span:before {
+    display: none;
+  }
+  .pl-wrap2 {
+    gap: 5px;
+  }
+  .pl-item img {
+    zoom: 0.7;
+  }
+  .pl-item {
+    width: 33.333%;
+  }
+  .insurance__item:first-child .insurance__item-wrp {
+    max-width: 100%;
+  }
+  .insurance__item > img {
+    position: static;
+    display: table;
+    margin: 0 auto;
+  }
+  .insurance__item:first-child {
+    padding-bottom: 0;
+  }
+  .insurance__item h3 {
+    font-size: 20px;
+  }
+  .insurance__row {
+    gap: 10px;
+  }
+  .h2-style h2 {
+    font-size: 26px;
+    margin-left: 0;
+  }
+  .about__top {
+    display: block;
+  }
+  .st-btn {
+    margin-bottom: 20px;
+  }
+  .list-number {
+    font-size: 40px;
+  }
+  .selection__top h3 br,
+  .block-top__wrp h2 span:before {
+    display: none;
+  }
+  .group-btn {
+    display: block;
+  }
+  .group-btn a:last-child {
+    margin-left: 0;
+    margin-top: 20px;
+  }
+  .group-btn a {
+    width: 100%;
+    max-width: 100%;
+  }
+  .txt-int {
+    font-size: 31px;
+  }
+  .kviz-wrp .input-wrp {
+    width: 100%;
+  }
+  .footer .wrap {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .footer__left {
+    padding: 40px 32px 37px;
+  }
+  .foot-top__item1 {
+    width: auto;
+    margin-bottom: 20px;
+  }
+  .foot-top {
+    justify-content: center;
+  }
+  .foot-bottom {
+    padding-left: 15px;
+  }
+  .foot-top span {
+    text-align: center;
+  }
+  .header__logo {
+    margin-right: 15px;
+  }
+  .header__logo-txt {
+    display: none;
+  }
+  .block-rezult__grid {
+    grid-template-columns: repeat(1, 1fr);
+    margin: 0 auto;
+    max-width: 450px;
+  }
+  .block-large h2 {
+    font-size: 30px;
+  }
+}

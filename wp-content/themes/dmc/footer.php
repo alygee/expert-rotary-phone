@@ -153,16 +153,16 @@
 
 	<?php wp_footer(); ?>
 
-	<link rel="stylesheet" href="<?php bloginfo('template_url'); ?>/css/tokenize2.min.css">
+	<link rel="stylesheet" href="<?php bloginfo('template_url'); ?>/assets/css/tokenize2.min.css">
 
-	<script src="<?php bloginfo('template_url'); ?>/js/tokenize2.min.js"></script>
+	<script src="<?php bloginfo('template_url'); ?>/assets/js/tokenize2.min.js"></script>
 
-	<script src="<?php bloginfo('template_url'); ?>/js/mainselect.js"></script>
+	<script src="<?php bloginfo('template_url'); ?>/assets/js/mainselect.js"></script>
 
-	<script src="<?php bloginfo('template_url'); ?>/js/jquery.maskedinput.min.js"></script>
+	<script src="<?php bloginfo('template_url'); ?>/assets/js/jquery.maskedinput.min.js"></script>
 
-	<script src="<?php bloginfo('template_url'); ?>/js/my-script.js"></script>
-	<script src="<?php bloginfo('template_url'); ?>/js/filter.js"></script>
+	<script src="<?php bloginfo('template_url'); ?>/assets/js/my-script.js"></script>
+	<script src="<?php bloginfo('template_url'); ?>/assets/js/filter.js"></script>
 
 </body>
 

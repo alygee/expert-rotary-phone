@@ -1,0 +1,10 @@
+/* Responsive styles for xs (max-width: 345px) */
+@media screen and (max-width: 345px) {
+.tarif-name {
+    font-size: 14px;
+    margin-left: 5px;
+  }
+  .rezult-top h5 {
+    font-size: 16px;
+  }
+}

@@ -1,0 +1,93 @@
+/* Responsive styles for 2xl (max-width: 1023px) */
+@media screen and (max-width: 1023px) {
+.block-top__wrap {
+    min-height: auto;
+  }
+  .control__left h3 {
+    margin: 0 auto 30px;
+  }
+  .control-img {
+    position: static;
+  }
+  .control .wrap {
+    display: block;
+  }
+  .control__right {
+    max-width: 100%;
+  }
+  .pl-wrap1 {
+    justify-content: center;
+    padding-bottom: 45px;
+  }
+  .pl-item2 {
+    top: 20px;
+  }
+  .control {
+    padding-bottom: 0;
+  }
+  .control-img {
+    max-width: 600px;
+    margin: 0 auto;
+    display: table;
+  }
+  .txt-int {
+    position: absolute;
+  }
+  .pl-wrap2 {
+    margin-bottom: 0;
+  }
+  .insurance__item:nth-child(3) {
+    background-position: center top;
+    background-size: 100% auto;
+  }
+  .cases__item {
+    padding: 20px;
+  }
+  .cases__item span {
+    font-size: 18px;
+  }
+  .cases__item span br,
+  .news__item-more br {
+    display: none;
+  }
+  .cases__row {
+    gap: 10px;
+  }
+  .foot-bottom {
+    display: block;
+  }
+  .email-foot {
+    margin-left: 0;
+    margin-top: 14px;
+  }
+  .header__right {
+    display: none;
+  }
+  .tel-mob {
+    display: block;
+    flex-shrink: 0;
+    margin-left: auto;
+    box-sizing: border-box;
+    width: 48px;
+    height: 48px;
+    margin-right: 8px;
+    border: 1px solid var(--green-1);
+    border-radius: 10px;
+    background: url('../img/tel-mob.svg') center center no-repeat;
+  }
+  .mob-menu .mail {
+    display: flex;
+  }
+  .block-top__wrp h2 span:before {
+    display: none;
+  }
+  .modal-bg {
+    background: #fff;
+  }
+  .block-rezult__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .block-large__forma .checkbox-wrp-txt {
+    font-size: 12px;
+  }
+}

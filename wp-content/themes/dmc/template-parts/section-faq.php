@@ -6,7 +6,7 @@
 				<h2 class="font-semibold inline leading-[1.25] tracking-[.035em] text-2xl md:text-5xl md:font-medium md:leading-none">
 					Часто задаваемые вопросы
 				</h2>
-				<img class="h-12 md:h-auto md:float-left md:mr-8" src="<?php bloginfo('template_url'); ?>/img/faq-title.webp" alt="">
+				<img class="h-12 md:h-auto md:float-left md:mr-8" src="<?php bloginfo('template_url'); ?>/assets/img/faq-title.webp" alt="">
 			</div>
 		</div>
 

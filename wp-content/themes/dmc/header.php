@@ -67,7 +67,7 @@
               </form>
             </div> -->
             <a target="_blank" class="url-avtorize" href="https://lk.kubiki.pro/">
-              <img src="<?php bloginfo('template_url'); ?>/img/login.svg" alt="">
+              <img src="<?php bloginfo('template_url'); ?>/assets/img/login.svg" alt="">
             </a>
             <a class="mail" href="mailto:<?php echo $mail; ?>">
             <span class="ico">
