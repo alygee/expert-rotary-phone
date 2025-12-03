@@ -1,6 +1,6 @@
 /* Responsive styles for xl (max-width: 920px) */
 @media screen and (max-width: 920px) {
-.news__list {
+  .news__list {
     grid-template-columns: repeat(2, 1fr);
   }
   .insurance__item h3,

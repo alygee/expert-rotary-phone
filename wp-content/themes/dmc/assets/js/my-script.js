@@ -11,16 +11,13 @@ jQuery(document).ready(function ($) {
     $(this).next('.faq-wrap').slideToggle(300);
     return false;
   });
+
+  /* обработка клика на пункт меню */
   $('.menu-top a, .menu-top-mob a, .footer-menu a').bind('click', function (e) {
     var anchor = $(this);
     $('html, body')
       .stop()
-      .animate(
-        {
-          scrollTop: $(anchor.attr('href')).offset().top,
-        },
-        500
-      );
+      .animate({ scrollTop: $(anchor.attr('href')).offset().top }, 500);
     e.preventDefault();
   });
 
@@ -106,11 +103,13 @@ jQuery(document).ready(function ($) {
 
     return false;
   });
-  $('.click-menu').click(function (event) {
+
+  $('.hamburger-button').click(function (event) {
     $(this).toggleClass('active');
-    $(this).next('.mob-menu-wrap').slideToggle(300);
+    $(this).next('.collapsible-menu').slideToggle(300);
     return false;
   });
+
   if ($('.phone-mask').hasClass('phone-mask')) {
     $('.phone-mask').mask('+7 (999) 999-99-99');
   }

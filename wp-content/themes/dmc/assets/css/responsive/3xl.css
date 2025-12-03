@@ -1,10 +1,7 @@
 /* Responsive styles for 3xl (max-width: 1199px) */
 @media screen and (max-width: 1199px) {
-.nav-wrp {
-    display: none;
-  }
-  .header__right .btn {
-    display: none;
+  .menu-top > li {
+    margin-right: 28px;
   }
   .kviz-wrap {
     padding: 20px;
@@ -81,69 +78,33 @@
   .mob-menu {
     display: block;
   }
-  .click-menu {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    line-height: 0;
-    width: 48px;
-    height: 48px;
-    background: var(--green-1);
-    border-radius: 10px;
-  }
-  .click-menu span {
+  .hamburger-button span {
     display: block;
     width: 16px;
     height: 2px;
     margin-bottom: 2px;
     border-radius: 4px;
     background: #fff;
+    transition: all 0.3s ease;
+    transform-origin: center;
   }
-  .click-menu span:last-child {
+  .hamburger-button span:last-child {
     margin-bottom: 0;
   }
-  .menu-top-mob {
-    margin-bottom: 20px;
+  /* Анимация превращения в крестик */
+  .hamburger-button.active span:nth-child(1) {
+    transform: translateY(4px) rotate(45deg);
   }
-  .mob-menu-wrap {
-    position: absolute;
-    z-index: 9;
-    border-radius: 5px;
-    padding: 15px;
-    background: #fff;
-    right: 15px;
-    min-width: 300px;
-    box-sizing: border-box;
-    display: none;
+  .hamburger-button.active span:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0);
   }
-  .menu-top-mob > li > a {
-    padding-bottom: 10px;
-    margin-bottom: 10px;
-    display: block;
-    border-bottom: 1px solid #ccc;
-    display: block;
-    font-weight: 400;
-    font-size: 18px;
-    line-height: 1.22222;
-    color: var(--black);
-    transition: 0.25s;
-  }
-  .menu-top-mob > li:last-child > a {
-    margin-bottom: 0;
+  .hamburger-button.active span:nth-child(3) {
+    transform: translateY(-4px) rotate(-45deg);
   }
   .search-block {
     margin-left: 0;
     margin-bottom: 11px;
-  }
-  .mob-menu .ico {
-    background: #f5f5f5;
-  }
-  .mob-menu .mail {
-    display: none;
-  }
-  .header__right {
-    margin-right: 25px;
   }
   .block-rezult__top {
     display: block;
@@ -189,8 +150,5 @@
   .price-r,
   .desc-r {
     text-align: left;
-  }
-  .url-avtorize {
-    margin-bottom: 12px;
   }
 }

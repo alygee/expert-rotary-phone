@@ -1,20 +1,22 @@
 /*Theme Name: ДМС */
 @import url('https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 :root {
-  --green-1: #01a24d;
-  --green-2: #00bf5a;
-  --green-3: #007437;
-  --white: #fff;
-  --black: #000;
-  --grey-1: #f1f1f5;
-  --grey-2: #bbb;
-  --yellow: #ffd96a;
-  --pink: #f9aae8;
-  --red-1: #f33;
-  --red-2: #cf0101;
-  --color: #898989;
-  --grassy: #0c432f;
-  --bedge: #faf7f2;
+  /* Алиасы для переменных Tailwind (если output.css загружен первым) */
+  --green-1: var(--color-green-1, #01a24d);
+  --green-2: var(--color-green-2, #00bf5a);
+  --green-3: var(--color-green-3, #007437);
+  --white: var(--color-white, #fff);
+  --black: var(--color-black, #000);
+  --grey-1: var(--color-grey-1, #ececf0);
+  --grey-2: var(--color-grey-2, #bbb);
+  --secondary-blck: #484848;
+  --yellow: var(--color-yellow, #ffd96a);
+  --pink: var(--color-pink, #f9aae8);
+  --red-1: var(--color-red-1, #f33);
+  --red-2: var(--color-red-2, #cf0101);
+  --color: var(--color-color, #898989);
+  --grassy: var(--color-grassy, #0c432f);
+  --bedge: var(--color-bedge, #faf7f2);
   --font-family: 'Inter', sans-serif;
   --second-family: 'Inter Tight', sans-serif;
 }
@@ -100,7 +102,7 @@ input[type='email']:focus {
 }
 .wrap {
   margin: 0 auto;
-  max-width: 1674px;
+  max-width: 1640px;
 }
 .after-clear:after {
   content: '';
@@ -144,50 +146,6 @@ input[type='email']:focus {
   padding-top: 20px;
   padding-bottom: 32px;
 }
-.header__logo {
-  display: block;
-  line-height: 0;
-  margin-right: 24px;
-}
-.header__logo-txt {
-  font-family: var(--font-family);
-  font-weight: 400;
-  font-size: 18px;
-  line-height: 1.22222;
-  color: #2d2d2d;
-  display: block;
-  max-width: 325px;
-}
-.header__right a {
-  margin-left: 17px;
-  position: relative;
-  transition: 0.25s;
-  flex-shrink: 0;
-}
-.ico {
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  background: var(--white);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-right: 10px;
-}
-.mail {
-  font-family: var(--font-family);
-  font-weight: 600;
-  font-size: 18px;
-  line-height: 1.22222;
-  text-decoration: underline;
-  text-decoration-skip-ink: none;
-  color: var(--green-1);
-  display: flex;
-  align-items: center;
-}
-.mail:hover {
-  text-decoration: none;
-}
 .tel {
   font-family: var(--font-family);
   font-weight: 600;
@@ -220,30 +178,33 @@ input[type='email']:focus {
 .btn:active {
   background: var(--green-3);
 }
-.nav-wrp {
-  box-sizing: border-box;
-  padding: 11px 10px 11px 30px;
-  background: var(--white);
-  border-radius: 10px;
-  margin-top: 20px;
-}
 .menu-top > li {
-  margin-right: 37px;
+  margin-right: 42px;
 }
 .menu-top > li:last-child {
   margin-right: 0;
 }
 .menu-top > li > a {
-  display: block;
-  font-family: var(--font-family);
   font-weight: 600;
   font-size: 18px;
-  line-height: 1.22222;
-  color: var(--black);
-  transition: 0.25s;
 }
 .menu-top > li > a:hover {
-  color: #01a34f;
+  color: var(--green-2);
+}
+.menu-top > li > a:focus {
+  color: var(--green-3);
+}
+.menu-top-mob {
+  margin-bottom: 20px;
+}
+.menu-top-mob > li > a {
+  padding: 10px 0;
+  display: block;
+  font-weight: 600;
+  font-size: 18px;
+}
+.menu-top-mob > li:last-child > a {
+  margin-bottom: 0;
 }
 .search-block {
   margin-left: 11px;
@@ -1555,7 +1516,8 @@ time {
   font-size: 18px;
   line-height: 1.22222;
   color: var(--black);
-  background: var(--grey-1) url(../img/gl.svg) calc(100% - 15px) center no-repeat;
+  background: var(--grey-1) url(../img/gl.svg) calc(100% - 15px) center
+    no-repeat;
   border-radius: 10px;
   padding-left: 30px;
   padding-right: 33px;
@@ -1985,7 +1947,7 @@ h3.prdl-dlvs {
   margin-right: 32px;
 }
 .prepend-title .sub-zag {
-  color: #01a34f;
+  color: var(--green-2);
 }
 .modal-window2 .modal-bg {
   background: #fff !important;
@@ -2135,10 +2097,6 @@ h3.prdl-dlvs {
   top: 28px;
   right: 55px;
 }
-.url-avtorize {
-  display: block;
-  line-height: 0;
-}
 .label-hover-hover {
   display: block;
   line-height: 0;
@@ -2278,7 +2236,12 @@ h3.h3-sfd {
 .mob-span,
 .control-img-mob,
 .foot-bottom-mob,
-.mob-menu,
-.tel-mob {
+.mob-menu {
   display: none;
+}
+
+.tel-mob {
+  background-image: url('../img/tel-mob.svg');
+  background-position: center center;
+  background-repeat: no-repeat;
 }

@@ -1,6 +1,6 @@
 /* Responsive styles for 2xl (max-width: 1023px) */
 @media screen and (max-width: 1023px) {
-.block-top__wrap {
+  .block-top__wrap {
     min-height: auto;
   }
   .control__left h3 {
@@ -59,24 +59,6 @@
   .email-foot {
     margin-left: 0;
     margin-top: 14px;
-  }
-  .header__right {
-    display: none;
-  }
-  .tel-mob {
-    display: block;
-    flex-shrink: 0;
-    margin-left: auto;
-    box-sizing: border-box;
-    width: 48px;
-    height: 48px;
-    margin-right: 8px;
-    border: 1px solid var(--green-1);
-    border-radius: 10px;
-    background: url('../img/tel-mob.svg') center center no-repeat;
-  }
-  .mob-menu .mail {
-    display: flex;
   }
   .block-top__wrp h2 span:before {
     display: none;

@@ -1,6 +1,6 @@
 /* Responsive styles for sm (max-width: 480px) */
 @media screen and (max-width: 480px) {
-.block-top__wrap {
+  .block-top__wrap {
     background: #01a34f url('../img/bg-top-mob.webp') right bottom no-repeat;
     border-radius: 10px;
     margin-left: -10px;
@@ -314,9 +314,6 @@
   .header {
     padding-top: 17px;
     padding-bottom: 33px;
-  }
-  .mob-menu-wrap {
-    right: 0;
   }
   .checkbox-wrp {
     margin: 0 auto;

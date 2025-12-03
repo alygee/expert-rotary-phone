@@ -1,16 +1,12 @@
 /* Responsive styles for 4xl (max-width: 1365px) */
 @media screen and (max-width: 1365px) {
-.search-block {
+  .search-block {
     max-width: 260px;
-  }
-  .menu-top > li > a {
-    font-size: 14px;
   }
   .header__logo-txt {
     font-size: 16px;
   }
-  .tel,
-  .mail {
+  .tel {
     font-size: 16px;
   }
   .pl-item__title {
