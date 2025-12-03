@@ -7,8 +7,8 @@
  */
 ?>
 
-<section id="block-top" class="base-container block-top">
-  <div class="wrap">
+<section id="block-top" class="block-top">
+  <div class="max-w-6xl mx-auto">
     <div class="block-top__wrap">
       <div class="block-top__wrp h2-style">
 

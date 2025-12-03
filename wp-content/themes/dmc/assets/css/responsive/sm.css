@@ -1,14 +1,15 @@
 /* Responsive styles for sm (max-width: 480px) */
 @media screen and (max-width: 480px) {
   .block-top__wrap {
-    background: #01a34f url('../img/bg-top-mob.webp') right bottom no-repeat;
-    border-radius: 10px;
-    margin-left: -10px;
-    margin-right: -10px;
+    background-color: #01a34f;
+    background-image: url('../../img/main-banner.png');
+    background-position: right bottom;
+    background-repeat: no-repeat;
+    background-size: contain;
     padding-left: 10px;
     padding-right: 10px;
     padding-top: 40px;
-    min-height: 1073px;
+    min-height: 970px;
   }
   .base-container {
     padding-left: 10px;

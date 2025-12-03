@@ -264,8 +264,10 @@ input[type='email']:focus {
 }
 .block-top__wrap {
   min-height: 610px;
-  background: #01a34f url('../img/bg-top.webp') right bottom no-repeat;
-  border-radius: 20px;
+  background-color: #01a34f;
+  background-image: url('../img/main-banner.png');
+  background-position: right bottom;
+  background-repeat: no-repeat;
   box-sizing: border-box;
   padding: 40px 60px;
 }
