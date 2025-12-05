@@ -9,13 +9,17 @@
 
 <section id="block-top" class="block-top">
   <div class="max-w-6xl mx-auto">
-    <div class="block-top__wrap">
-      <div class="block-top__wrp h2-style">
+    <div class="block-top__wrap pt-8 pb-16 px-2.5 lg:pt-8 lg:px-8 2xl:px-12 6xl:px-16 6xl:py-10">
+      <div class="block-top__wrp h2-style max-w-2xl mx-auto 2xl:mx-0">
 
         <?php // Первый экран - приветствие и описание процесса ?>
-        <div class="block-v1">
-          <h2>Подберем самые выгодные предложения за <span>3 минуты</span></h2>
-          <span class="sub-zag">Укажите свои данные, и мы предложим вам уникальный вариант, соответствующий вашим требованиям</span>
+        <div class="block-v1 mb-7 md:mb-9 text-center xl:text-left">
+          <h2 class="max-w-lg tracking-wide">Подберем самые выгодные предложения за <span>3 минуты</span></h2>
+          <span class="sub-zag text-base mx-auto xl:mx-0">
+            Заполните данные о компании,
+            <wbr /> и мы предложим уникальный вариант
+            <wbr /> под ваши требования
+          </span>
         </div>
 
         <?php // Второй экран - заголовок формы (показывается после первого шага) ?>
@@ -25,33 +29,33 @@
         </div>
 
         <?php // Форма сбора данных о компании ?>
-        <div class="kviz-wrap">
-          <h3 class="kviz-title">Расскажите о коллективе</h3>
-          <div class="kviz-wrp d-flex-wrap d-j">
+        <div class="kviz-wrap flex flex-col gap-7 max-w-lg bg-white rounded-[10px] p-5 xl:py-9 xl:px-12">
+          <h3 class="font-semibold text-2xl text-black text-center 3xl:text-left">Расскажите о коллективе</h3>
+          <div class="kviz-wrp grid grid-cols-1 md:grid-cols-2 gap-5">
 
             <?php // Поле: Наименование компании ?>
-            <div class="input-wrp input-wrp1">
+            <div class="input-wrp relative input-wrp1">
               <div class="label label1">Наименование компании</div>
               <input name="1" class="validate2" type="text" placeholder="Наименование компании">
               <span class="errorMsg errorMsg2"></span>
             </div>
 
             <?php // Поле: Количество сотрудников ?>
-            <div class="input-wrp input-wrp2">
+            <div class="input-wrp relative input-wrp2">
               <div class="label label-k1">Количество сотрудников</div>
               <input name="2" class="validate1" type="text" placeholder="128">
               <span class="errorMsg errorMsg1"></span>
             </div>
 
             <?php // Поле: ИНН компании ?>
-            <div class="input-wrp input-wrp3">
+            <div class="input-wrp relative input-wrp3">
               <div class="label label-kt1">ИНН</div>
               <input name="3" class="validate3" type="text" placeholder="ИНН">
               <span class="errorMsg errorMsg3"></span>
             </div>
 
             <?php // Поле: Уровень покрытия с подсказкой ?>
-            <div class="input-wrp input-wrp4">
+            <div class="input-wrp relative input-wrp4">
               <div class="label label-k2">
                 Уровень покрытия
                 <?php // Всплывающая подсказка с описанием уровней покрытия ?>
@@ -79,7 +83,7 @@
             </div>
 
             <?php // Поле: Регион обслуживания (множественный выбор) ?>
-            <div class="input-wrp input-wrp5">
+            <div class="input-wrp relative input-wrp5">
               <div class="label label-k3">Регион обслуживания</div>
               <select class="region-select" multiple name="5">
                 <?php 
@@ -95,14 +99,14 @@
             </div>
 
             <?php // Поле: ФИО ответственного лица ?>
-            <div class="input-wrp input-wrp6">
+            <div class="input-wrp relative input-wrp6">
               <div class="label label-kt2">ФИО ответственного</div>
               <input name="6" class="validate4" type="text" placeholder="Введите ФИО ответственного">
               <span class="errorMsg errorMsg4"></span>
             </div>
 
             <?php // Поле: Email ответственного ?>
-            <div class="input-wrp input-wrp7">
+            <div class="input-wrp relative input-wrp7">
               <div class="label label-kt4">Введите рабочую почту</div>
               <input name="7" class="validate5" type="email" placeholder="Рабочая почта">
               <span class="errorMsg errorMsg5"></span>
@@ -110,7 +114,7 @@
             </div>
 
             <?php // Поле: Телефон ответственного ?>
-            <div class="input-wrp input-wrp8">
+            <div class="input-wrp relative input-wrp8">
               <div class="label label-kt3">Телефон</div>
               <input name="8" class="validate6 phone-mask" type="tel" placeholder="Введите номер телефона">
               <span class="errorMsg errorMsg6"></span>
@@ -118,15 +122,18 @@
             </div>
 
             <?php // Кнопка отправки формы и скрытая форма Contact Form 7 ?>
-            <div class="input-wrp input-wrp9">
+            <div class="input-wrp relative input-wrp9">
               <div class="btn-submit-wrp">
                 <?php // Кнопка "Дальше" - отправляет данные на расчет ?>
                 <button class="btn-submit btn-submit1 click-step1" type="button">
                     Дальше
-                  <svg width="10" height="18" viewBox="0 0 10 18" fill="none">
-                      <path d="M0.5 17L8.5 9L0.499999 0.999999" stroke="white"></path>
-                  </svg>
-                  </button>
+
+                  <span class="hidden">
+                    <svg width="10" height="18" viewBox="0 0 10 18" fill="none">
+                        <path d="M0.5 17L8.5 9L0.499999 0.999999" stroke="white"></path>
+                    </svg>
+                    </span>
+                </button>
 
                 <?php // Кнопка "Обновить" - для обновления результатов (скрыта по умолчанию) ?>
                 <div class="update-rez">

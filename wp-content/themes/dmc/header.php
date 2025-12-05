@@ -10,7 +10,7 @@
 </head>
 
 <body <?php body_class(); ?>>
-  <header class="max-w-6xl mx-auto bg-white 2xl:bg-transparent px-4 2xl:px-2.5 6xl:px-0 pt-4 pb-8">
+  <header class="max-w-6xl mx-auto bg-white 2xl:bg-transparent px-4 pt-4 2xl:px-2.5 6xl:px-0 pb-9">
     <div class="flex justify-between items-center">
 
       <?php // logo + текст ?>

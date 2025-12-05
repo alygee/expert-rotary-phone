@@ -1,6 +1,6 @@
 /* Responsive styles for lg (max-width: 767px) */
 @media screen and (max-width: 767px) {
-.news__row {
+  .news__row {
     flex-wrap: wrap;
   }
   .news__left,
@@ -108,9 +108,6 @@
   .about-list__desc p {
     font-size: 16px;
   }
-  .block-top__wrap {
-    padding: 30px;
-  }
   .insurance__item {
     padding: 30px 20px;
   }
@@ -141,10 +138,6 @@
   }
   .form-wrap {
     display: block;
-  }
-  .input-wrp {
-    width: 100%;
-    margin-bottom: 10px;
   }
   .input-wrp:last-child {
     margin-bottom: 0;

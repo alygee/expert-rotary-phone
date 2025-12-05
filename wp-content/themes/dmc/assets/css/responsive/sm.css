@@ -6,9 +6,6 @@
     background-position: right bottom;
     background-repeat: no-repeat;
     background-size: contain;
-    padding-left: 10px;
-    padding-right: 10px;
-    padding-top: 40px;
     min-height: 970px;
   }
   .base-container {
@@ -22,14 +19,6 @@
   .foot-title {
     font-size: 24px;
   }
-  .sub-zag {
-    margin-bottom: 25px;
-    font-size: 16px;
-  }
-  h3.kviz-title {
-    max-width: 159px;
-    margin-bottom: 20px;
-  }
   input[type='tel'],
   input[type='text'],
   input[type='email'],
@@ -38,10 +27,7 @@
     font-size: 16px;
   }
   .kviz-wrap .btn-submit {
-    height: 70px;
-  }
-  .kviz-wrp .label {
-    margin-bottom: 10px;
+    height: 54px;
   }
   .block-top {
     padding-bottom: 0;
@@ -390,7 +376,7 @@
     min-height: 1626px;
   }
   .block-top__wrp-final .kviz-wrap .btn-submit {
-    height: 60px;
+    height: 54px;
   }
   .faq .btn3 {
     width: 100%;
