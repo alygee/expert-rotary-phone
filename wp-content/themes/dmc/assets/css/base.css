@@ -1281,9 +1281,8 @@ time {
   content: '';
   display: block;
   position: absolute;
+  top: 0;
   left: 0;
-  top: 50%;
-  transform: translate(0, -50%);
 }
 .label1:before {
   background: url('../img/label1.svg') no-repeat;
@@ -1363,27 +1362,30 @@ time {
   position: relative;
 }
 .label-k1:before {
-  background: url('../img/label3.svg') no-repeat;
-  width: 17px;
-  height: 18px;
+  background-image: url('../img/label3.svg');
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 20px;
+  height: 21px;
+}
+.label-k2:before {
+  background-image: url('../img/label44.svg');
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 20px;
+  height: 20px;
+}
+.label-k3:before {
+  background-image: url('../img/label5.svg');
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 19px;
+  height: 19px;
 }
 .label-k2 {
   display: flex;
   align-items: center;
   position: relative;
-}
-.label-hover {
-  margin-left: 8px;
-}
-.label-k2:before {
-  background: url('../img/label44.svg') no-repeat;
-  width: 20px;
-  height: 20px;
-}
-.label-k3:before {
-  background: url('../img/label5.svg') no-repeat;
-  width: 13px;
-  height: 14px;
 }
 .kviz-wrp .label {
   padding-left: 25px;
@@ -1844,16 +1846,6 @@ h3.prdl-dlvs {
 .tokenize .placeholder {
   color: var(--grey-2) !important;
 }
-.errorMsg,
-.region-error {
-  display: block;
-  position: absolute;
-  font-size: 12px;
-  color: red;
-  margin-top: -2px;
-  z-index: 2;
-  background: #fff;
-}
 .error {
   border: 1px solid var(--red-1) !important;
   background: rgba(249, 170, 232, 0.2) !important;
@@ -2189,4 +2181,9 @@ h3.h3-sfd {
 }
 .tokenize-dropdown.dropdown ul {
   margin-top: 6px;
+}
+
+/* просто, ты одинокий остров, на море где так часто тонули корабли */
+.validate1.error span {
+  display: block;
 }

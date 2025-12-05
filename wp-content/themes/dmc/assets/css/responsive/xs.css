@@ -1,6 +1,6 @@
 /* Responsive styles for xs (max-width: 345px) */
 @media screen and (max-width: 345px) {
-.tarif-name {
+  .tarif-name {
     font-size: 14px;
     margin-left: 5px;
   }

@@ -31,7 +31,7 @@
         <?php // Форма сбора данных о компании ?>
         <div class="kviz-wrap flex flex-col gap-7 max-w-lg bg-white rounded-[10px] p-5 xl:py-9 xl:px-12">
           <h3 class="font-semibold text-2xl text-black text-center 3xl:text-left">Расскажите о коллективе</h3>
-          <div class="kviz-wrp grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div class="kviz-wrp grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-6 place-content-start">
 
             <?php // Поле: Наименование компании ?>
             <div class="input-wrp relative input-wrp1">
@@ -42,9 +42,9 @@
 
             <?php // Поле: Количество сотрудников ?>
             <div class="input-wrp relative input-wrp2">
-              <div class="label label-k1">Количество сотрудников</div>
+              <div class="label label-k1 ml-1">Количество сотрудников</div>
               <input name="2" class="validate1" type="text" placeholder="128">
-              <span class="errorMsg errorMsg1"></span>
+              <span class="text-xs text-red-1 ml-1 mt-1 errorMsg1 absolute"></span>
             </div>
 
             <?php // Поле: ИНН компании ?>
@@ -56,10 +56,10 @@
 
             <?php // Поле: Уровень покрытия с подсказкой ?>
             <div class="input-wrp relative input-wrp4">
-              <div class="label label-k2">
+              <div class="label label-k2 ml-1">
                 Уровень покрытия
                 <?php // Всплывающая подсказка с описанием уровней покрытия ?>
-                <div class="label-hover">
+                <div class="ml-4">
                   <a class="label-hover-hover" href="#">
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                       <path d="M14.4668 8C14.4668 4.42856 11.5714 1.5332 8 1.5332C4.42856 1.5332 1.5332 4.42856 1.5332 8C1.5332 11.5714 4.42856 14.4668 8 14.4668C11.5714 14.4668 14.4668 11.5714 14.4668 8ZM8 7.4668C8.29455 7.4668 8.5332 7.70545 8.5332 8V10.5775H8.778C9.07245 10.5776 9.3112 10.8168 9.3112 11.1113C9.31108 11.4057 9.07237 11.6444 8.778 11.6445H8C7.70552 11.6445 7.46691 11.4058 7.4668 11.1113V8.5332H7.22201C6.92755 8.53309 6.6888 8.29448 6.6888 8C6.6888 7.70552 6.92755 7.46691 7.22201 7.4668H8ZM8.00781 4.35547C8.30228 4.35549 8.5409 4.59423 8.54102 4.88867C8.54102 5.18321 8.30235 5.42251 8.00781 5.42253H8C7.70545 5.42253 7.4668 5.18322 7.4668 4.88867C7.46691 4.59422 7.70552 4.35547 8 4.35547H8.00781ZM15.5332 8C15.5332 12.1605 12.1605 15.5332 8 15.5332C3.83946 15.5332 0.466797 12.1605 0.466797 8C0.466797 3.83946 3.83946 0.466797 8 0.466797C12.1605 0.466797 15.5332 3.83946 15.5332 8Z" fill="#1A1A1A" />
@@ -84,7 +84,7 @@
 
             <?php // Поле: Регион обслуживания (множественный выбор) ?>
             <div class="input-wrp relative input-wrp5">
-              <div class="label label-k3">Регион обслуживания</div>
+              <div class="label label-k3 ml-1">Регион обслуживания</div>
               <select class="region-select" multiple name="5">
                 <?php 
                   // Загружаем список городов из функции сity()
@@ -95,14 +95,16 @@
                   } 
                 ?>
               </select>
-              <span class="region-error" style="color:red; display:none;">Выберите хотя бы один регион</span>
+              <span class="text-xs text-red-1 ml-1 mt-1 region-error hidden absolute">
+                Выберите хотя бы один регион
+              </span>
             </div>
 
             <?php // Поле: ФИО ответственного лица ?>
             <div class="input-wrp relative input-wrp6">
               <div class="label label-kt2">ФИО ответственного</div>
               <input name="6" class="validate4" type="text" placeholder="Введите ФИО ответственного">
-              <span class="errorMsg errorMsg4"></span>
+              <span class="text-xs text-red-1 ml-1 mt-1 absolute"></span>
             </div>
 
             <?php // Поле: Email ответственного ?>
@@ -144,11 +146,11 @@
                     </svg>
                     </button>
                 </div>
+
                 <?php // Скрытая форма Contact Form 7 для отправки данных ?>
                 <?php echo do_shortcode( '[contact-form-7 id="363f513" title="Контактная форма 1"]'); ?>
               </div>
             </div>
-
           </div>
         </div>
       </div>

@@ -4,14 +4,14 @@
 @import url('assets/css/base.css');
 
 /* Responsive стили - от больших к маленьким экранам (mobile-first) */
-@import url('assets/css/responsive/7xl.css');  /* max-width: 1705px */
-@import url('assets/css/responsive/6xl.css');  /* max-width: 1640px */
-@import url('assets/css/responsive/5xl.css');  /* max-width: 1430px */
-@import url('assets/css/responsive/4xl.css');  /* max-width: 1365px */
-@import url('assets/css/responsive/3xl.css');  /* max-width: 1199px */
-@import url('assets/css/responsive/2xl.css');  /* max-width: 1023px */
-@import url('assets/css/responsive/xl.css');   /* max-width: 920px */
-@import url('assets/css/responsive/lg.css');   /* max-width: 767px */
-@import url('assets/css/responsive/md.css');   /* max-width: 599px */
-@import url('assets/css/responsive/sm.css');   /* max-width: 480px */
-@import url('assets/css/responsive/xs.css');   /* max-width: 345px */
+@import url('assets/css/responsive/7xl.css'); /* max-width: 1705px */
+@import url('assets/css/responsive/6xl.css'); /* max-width: 1640px */
+@import url('assets/css/responsive/5xl.css'); /* max-width: 1430px */
+@import url('assets/css/responsive/4xl.css'); /* max-width: 1365px */
+@import url('assets/css/responsive/3xl.css'); /* max-width: 1199px */
+@import url('assets/css/responsive/2xl.css'); /* max-width: 1023px */
+@import url('assets/css/responsive/xl.css'); /* max-width: 920px */
+@import url('assets/css/responsive/lg.css'); /* max-width: 767px */
+@import url('assets/css/responsive/md.css'); /* max-width: 599px */
+@import url('assets/css/responsive/sm.css'); /* max-width: 480px */
+@import url('assets/css/responsive/xs.css'); /* max-width: 345px */

@@ -7,12 +7,17 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build:css": "tailwindcss -i ./assets/css/input.css -o ./assets/css/output.css --minify",
     "watch:css": "tailwindcss -i ./assets/css/input.css -o ./assets/css/output.css --watch",
-    "dev:css": "tailwindcss -i ./assets/css/input.css -o ./assets/css/output.css"
+    "dev:css": "tailwindcss -i ./assets/css/input.css -o ./assets/css/output.css",
+    "format": "prettier --write \"**/*.{js,json,css,scss,html,php}\"",
+    "format:check": "prettier --check \"**/*.{js,json,css,scss,html,php}\""
   },
   "author": "Albert Allagulov",
   "license": "ISC",
   "dependencies": {
     "@tailwindcss/cli": "^4.1.17",
     "tailwindcss": "^4.1.17"
+  },
+  "devDependencies": {
+    "prettier": "^3.0.0"
   }
 }

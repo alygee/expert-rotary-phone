@@ -1,6 +1,6 @@
 /* Responsive styles for md (max-width: 599px) */
 @media screen and (max-width: 599px) {
-.insurance__item h3,
+  .insurance__item h3,
   .h2-style h2,
   .selection h3,
   .faq-click,
