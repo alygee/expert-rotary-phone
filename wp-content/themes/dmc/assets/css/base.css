@@ -286,6 +286,9 @@ input[type='email']:focus {
   color: var(--black);
   margin-bottom: 40px;
 }
+.block-top__wrp .prepend-title h2 {
+  color: var(--black);
+}
 .block-top__wrp h2 {
   margin-bottom: 20px;
   line-height: 1.20833;
@@ -1561,13 +1564,6 @@ time {
   min-height: 500px;
 }
 
-h3.prdl-dlvs {
-  font-family: var(--font-family);
-  font-weight: 500;
-  font-size: 48px;
-  color: var(--black);
-  margin-bottom: 50px;
-}
 .block-rezult__top {
   margin-bottom: 55px;
 }
@@ -1612,15 +1608,7 @@ h3.prdl-dlvs {
 }
 .rezult-top {
   margin-bottom: 14px;
-}
-.price-r {
-  display: block;
-  font-family: var(--font-family);
-  font-weight: 600;
-  font-size: 20px;
-  line-height: 1.2;
-  color: var(--black);
-  text-align: right;
+  display: flex;
 }
 .desc-r {
   display: block;
@@ -1842,7 +1830,6 @@ h3.prdl-dlvs {
   display: none;
 }
 .prepend-title h2 {
-  color: var(--black);
   max-width: auto;
   line-height: 1.15;
 }
@@ -2071,14 +2058,6 @@ h3.prdl-dlvs {
 }
 h5.cl-width {
   word-break: normal;
-}
-h3.h3-sfd {
-  font-family: var(--font-family);
-  font-weight: 600;
-  font-size: 36px;
-  line-height: 1.22222;
-  color: var(--black);
-  margin-bottom: 24px;
 }
 .ghd-grid {
   margin-bottom: 50px;

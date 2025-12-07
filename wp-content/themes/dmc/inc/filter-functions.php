@@ -187,7 +187,7 @@ function get_insurer_logo(string $insurer): void {
 
   if ($index !== false) {
       $img_index = $index + 1;
-      echo '<img src="' . get_bloginfo('template_url') . '/assets/img/logotypes/logotypes' . $img_index . '.svg" alt="">';
+      echo '<img class="w-10" src="' . get_bloginfo('template_url') . '/assets/img/logotypes/logotypes' . $img_index . '.svg" alt="">';
   }
 }
 

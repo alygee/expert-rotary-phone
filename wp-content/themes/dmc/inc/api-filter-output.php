@@ -19,17 +19,17 @@ function get_insurer_display_name(string $insurer): string {
  */
 function format_service_price($value, string $field_key): string {
     $price = $value[$field_key] ?? '';
-    
+
     // Проверка на пустое значение или Н/Д
     if ($price === '' || $price === '#Н/Д') {
         return '';
     }
-    
+
     // Проверка на бесплатную услугу
     if ($price == 0) {
         return 'беспл.';
     }
-    
+
     // Форматирование цены
     $cleaned = str_replace([' ', ','], ['', '.'], $price);
     return number_format((float) $cleaned, 0, ' ', ' ') . ' ₽';
@@ -72,9 +72,8 @@ $current_section = 0;
 if (!empty($results)) {
     foreach ($results as $key => $value2) {
         $current_section++;
-        echo '<h3 class="h3-sfd mt-3">' . esc_html($key) . '</h3>';
+        echo '<h3 class="text-center text-base mb-1.5 xl:font-semibold xl:text-4xl">' . esc_html($key) . '</h3>';
         ?>
-        
         <div class="block-rezult__grid grid ghd-grid">
             <?php foreach ($value2 as $value) { 
                 $suma_price = function_exists('calculate_total_price') ? calculate_total_price($value) : 0;
@@ -89,7 +88,7 @@ if (!empty($results)) {
                             <?php echo esc_html($insurer_display_name); ?>
                         </h5>
                         <div class="rezult-top__price">
-                            <span class="price-r"><?php echo number_format($suma_price, 0, ' ', ' '); ?> ₽</span>
+                            <span class="font-semibold text-right text-base 3xl:text-xl"><?php echo number_format($suma_price, 0, ' ', ' '); ?> ₽</span>
                             <span class="desc-r">в год за человека</span>
                         </div>
                     </div>  
@@ -108,7 +107,6 @@ if (!empty($results)) {
                 </div>
             <?php } ?>
         </div>
-        
         <?php
     }
 }
@@ -121,7 +119,6 @@ if (!empty($fallback_data) && !empty($not_found_cities)) {
     echo '<div class="text-4xl mt-3 font-semibold tracking-wide">Цены по соседним регионам</div>';
     echo '<div class="mt-3 mb-6 text-xl">' . esc_html($cities_label . $cities_text . ' не удалось произвести расчет') . '</div>';
     ?>
-    
     <div class="block-rezult__grid grid ghd-grid">
         <?php foreach ($fallback_data as $value) { 
             $suma_price = function_exists('calculate_total_price') ? calculate_total_price($value) : 0;
@@ -136,10 +133,10 @@ if (!empty($fallback_data) && !empty($not_found_cities)) {
                         <?php echo esc_html($insurer_display_name); ?>
                     </h5>
                     <div class="rezult-top__price">
-                        <span class="price-r"><?php echo number_format($suma_price, 0, ' ', ' '); ?> ₽</span>
-                        <span class="desc-r">в год за человека</span>
+                        <div class="price-r"><?php echo number_format($suma_price, 0, ' ', ' '); ?> ₽</div>
+                        <div class="desc-r">в год за человека</div>
                     </div>
-                </div>  
+                </div>
                 <span class="program-composition">Состав программы:</span>
                 <div class="rezult-data">
                     <ul>
@@ -155,7 +152,6 @@ if (!empty($fallback_data) && !empty($not_found_cities)) {
             </div>
         <?php } ?>
     </div>
-    
     <?php
 }
 

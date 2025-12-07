@@ -87,10 +87,11 @@
               <div class="label label-k3 ml-1">Регион обслуживания</div>
               <select class="region-select" multiple name="5">
                 <?php 
-                  // Загружаем список городов из функции сity()
-                  if(!empty(сity())){
-                    foreach (сity() as $value) {
-                      echo '<option value="'.$value.'">'.$value.'</option>';
+                  // Загружаем список городов из функции сity() (кэшируется внутри функции)
+                  $cities = сity();
+                  if(!empty($cities)){
+                    foreach ($cities as $value) {
+                      echo '<option value="'.esc_attr($value).'">'.esc_html($value).'</option>';
                     } 
                   } 
                 ?>
@@ -177,8 +178,8 @@
     </div>
 
     <?php // Блок результатов - отображает предложения страховых компаний ?>
-    <div id="block-rezult" style="display: none;" class="block-rezult">
-      <h3 class="prdl-dlvs">Предложения для вас</h3>
+    <div id="block-rezult" class="block-rezult hidden">
+      <h3 class="text-2xl font-semibold text-center mb-5 xl:font-medium xl:text-5xl xl:mb-12 xl:text-left">Предложения для вас</h3>
 
       <?php // Блок для крупных компаний - индивидуальный расчет через менеджера ?>
       <div class="block-large">

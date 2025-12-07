@@ -471,15 +471,9 @@ jQuery(document).ready(function ($) {
           $('.block-rezult__grid').html('');
           $('.block-rezult__grid').html(htmlData);
           $('.block-rezult').css('display', 'block');
-          var anchor = $(this);
           $('html, body')
             .stop()
-            .animate(
-              {
-                scrollTop: $('#block-rezult').offset().top,
-              },
-              500
-            );
+            .animate({ scrollTop: $('#block-rezult').offset().top }, 500);
         }, 10);
       },
       beforeSend: function () {
