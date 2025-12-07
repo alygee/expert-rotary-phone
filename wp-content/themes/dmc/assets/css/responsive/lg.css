@@ -142,12 +142,8 @@
   .input-wrp:last-child {
     margin-bottom: 0;
   }
-  .block-process__wrp h3,
   .block-rezult__top h3 {
     font-size: 28px;
-  }
-  .block-process {
-    background: #01a24d;
   }
   .block-rezult__top div {
     font-size: 16px;

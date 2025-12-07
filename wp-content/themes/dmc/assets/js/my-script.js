@@ -96,32 +96,32 @@ jQuery(document).ready(function ($) {
     /**
      * Обработка клика вне модального окна для его закрытия
      */
-    $(document).bind('click.myEvent2', function (e) {
-      // Если клик был вне области модального окна
-      if ($(e.target).closest('.popup_show .modal-tn__wrp').length == 0) {
-        // Если закрывается модальное окно квиза, восстанавливаем его исходное состояние
-        if ($('.modal-window2').hasClass('popup_show')) {
-          // Убираем обертку модального окна
-          $('.kviz-wrp').each(function () {
-            $(this).closest('#modal-window2').replaceWith(this);
-          });
-          // Сбрасываем стили элементов формы
-          $('.kviz-wrp .input-wrp').removeAttr('style');
-          $('.btn-submit2').removeAttr('style');
-          //$('.click-step1').removeAttr('style');
-          // Сбрасываем состояние формы к начальному
-          $('.kviz-wrp .wpcf7-form').addClass('init');
-          $('.kviz-wrp .wpcf7-form').attr('data-status', 'init');
-          $('.kviz-wrp .wpcf7-form').removeClass('sent');
-          $('.update-rez').css('display', 'block');
-        }
-        // Закрываем модальное окно
-        $(modal).removeClass('popup_show');
-        $('body').removeClass('popup-show-body');
-        $('body').removeAttr('style');
-        $(document).unbind('click.myEvent2');
-      }
-    });
+    // $(document).bind('click.myEvent2', function (e) {
+    //   // Если клик был вне области модального окна
+    //   if ($(e.target).closest('.popup_show .modal-tn__wrp').length == 0) {
+    //     // Если закрывается модальное окно квиза, восстанавливаем его исходное состояние
+    //     if ($('.modal-window2').hasClass('popup_show')) {
+    //       // Убираем обертку модального окна
+    //       $('.kviz-wrp').each(function () {
+    //         $(this).closest('#modal-window2').replaceWith(this);
+    //       });
+    //       // Сбрасываем стили элементов формы
+    //       $('.kviz-wrp .input-wrp').removeAttr('style');
+    //       $('.btn-submit2').removeAttr('style');
+    //       //$('.click-step1').removeAttr('style');
+    //       // Сбрасываем состояние формы к начальному
+    //       $('.kviz-wrp .wpcf7-form').addClass('init');
+    //       $('.kviz-wrp .wpcf7-form').attr('data-status', 'init');
+    //       $('.kviz-wrp .wpcf7-form').removeClass('sent');
+    //       $('.update-rez').css('display', 'block');
+    //     }
+    //     // Закрываем модальное окно
+    //     $(modal).removeClass('popup_show');
+    //     $('body').removeClass('popup-show-body');
+    //     $('body').removeAttr('style');
+    //     $(document).unbind('click.myEvent2');
+    //   }
+    // });
 
     /**
      * Обработка клика на кнопку закрытия модального окна

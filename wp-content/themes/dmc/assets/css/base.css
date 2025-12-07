@@ -1180,19 +1180,23 @@ time {
   align-items: center;
 }
 .modal-tn__wrp {
-  max-width: 1252px;
-  box-sizing: border-box;
+  max-width: 1000px;
   visibility: hidden;
   -webkit-transform: scale(0.5);
   transform: scale(0.5);
   transition: 0.3s ease 0s;
-  border-radius: 20px;
+  border-radius: 24px;
   width: 100%;
   opacity: 0;
   position: relative;
-  padding: 30px;
+  padding-left: 81px;
+  padding-right: 81px;
   background: #fff;
   min-height: 484px;
+}
+.modal-tn__wrp .kviz-wrp {
+  column-gap: 44px;
+  row-gap: 24px;
 }
 .modal-bg {
   background: #fff url('../img/bg-popap.webp') left bottom no-repeat;
@@ -1223,13 +1227,13 @@ time {
 .modal-tn__close {
   color: #2f1e1e;
   position: absolute;
-  right: 20px;
-  top: 30px;
+  right: 24px;
+  top: 12px;
   text-decoration: none;
   text-align: center;
   opacity: 1;
   font-style: normal;
-  font-size: 47px;
+  font-size: 40px;
   font-weight: 500;
   font-family: Arial, Baskerville, monospace;
   cursor: pointer;
@@ -1482,17 +1486,17 @@ time {
   background: #01a34f !important;
 }
 .block-process {
-  margin-top: 22px;
-  min-height: 314px;
-  box-sizing: border-box;
-  padding: 30px;
+  background-image: url('../img/additional-form-bg.png');
+  background-position: top left;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: left -60px top;
 }
-.block-process__wrp {
-  max-width: 740px;
-  margin: 0 auto;
-  text-align: center;
+@media screen and (min-width: 920px) {
+  .block-process {
+    background-position: top left;
+  }
 }
-.block-process__wrp h3,
 .block-rezult__top h3 {
   font-weight: 500;
   font-size: 48px;
@@ -1504,7 +1508,6 @@ time {
 .block-rezult__top h3 {
   margin-bottom: 0;
 }
-.block-process__wrp span,
 .block-rezult__top div {
   display: block;
   font-weight: 400;
@@ -1536,11 +1539,16 @@ time {
 .loader {
   margin: 0 auto;
   display: table;
+  animation: rotate 1s linear infinite;
 }
-.block-process {
-  background: #01a24d url('../img/proces.webp') left bottom no-repeat;
-  background-size: cover;
-  border-radius: 20px;
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 .block-rezult {
   border-radius: 20px;
@@ -1826,22 +1834,25 @@ h3.prdl-dlvs {
 .kviz-wrp .wpcf7 form .wpcf7-response-output {
   margin: 0;
 }
+.prepend-title {
+  margin-bottom: 40px;
+  text-align: left;
+}
 .prepend-title h2 span:before {
   display: none;
 }
 .prepend-title h2 {
-  color: #000;
-  max-width: 800px;
-  line-height: 1;
-  margin-right: 32px;
+  color: var(--black);
+  max-width: auto;
+  line-height: 1.15;
 }
 .prepend-title .sub-zag {
   color: var(--green-2);
 }
 .modal-window2 .modal-bg {
   background: #fff !important;
-  padding-bottom: 30px;
-  padding-top: 35px;
+  padding-top: 40px;
+  padding-bottom: 40px;
 }
 .tokenize .placeholder {
   color: var(--grey-2) !important;
@@ -2183,7 +2194,6 @@ h3.h3-sfd {
   margin-top: 6px;
 }
 
-/* просто, ты одинокий остров, на море где так часто тонули корабли */
 .validate1.error span {
   display: block;
 }

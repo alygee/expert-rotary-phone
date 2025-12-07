@@ -318,10 +318,6 @@
     font-size: 16px;
     margin-bottom: 10px;
   }
-  .modal-tn {
-    padding-left: 0;
-    padding-right: 0;
-  }
   .modal-tn__close {
     right: 15px;
   }
@@ -333,17 +329,11 @@
     padding-right: 0 !important;
   }
 
-  .block-process__wrp h3,
   .block-rezult__top h3 {
     font-size: 16px;
   }
   .block-process__wrp span {
     font-size: 14px;
-  }
-  .block-process {
-    min-height: 231px;
-    background: url('../img/process-mob-bg.webp') no-repeat;
-    background-size: cover;
   }
   .block-rezult {
     margin-left: -10px;

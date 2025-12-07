@@ -1,3 +1,12 @@
 <svg width="36" height="40" viewBox="0 0 36 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M11.0405 4.92332V4.94266M5.16198 11.2865V11.3058M3 19.99V20.0093M5.16198 28.6935V28.7128M11.0405 35.0567V35.076M19.081 37.397V37.4163M27.1215 35.0567V35.076M33 28.6935V28.7128M27.1215 4.92332V4.94266M19.081 2.58301V2.60235" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="18" cy="5" r="2"/>
+  <circle cx="26.82" cy="7.86" r="2"/>
+  <circle cx="32.27" cy="15.36" r="2"/>
+  <circle cx="32.27" cy="24.64" r="2"/>
+  <circle cx="26.82" cy="32.14" r="2"/>
+  <circle cx="18" cy="35" r="2"/>
+  <circle cx="9.18" cy="32.14" r="2"/>
+  <circle cx="3.73" cy="24.64" r="2"/>
+  <circle cx="3.73" cy="15.36" r="2"/>
+  <circle cx="9.18" cy="7.86" r="2"/>
 </svg>

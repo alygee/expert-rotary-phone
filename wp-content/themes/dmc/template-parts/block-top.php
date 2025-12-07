@@ -31,7 +31,7 @@
         <?php // Форма сбора данных о компании ?>
         <div class="kviz-wrap flex flex-col gap-7 max-w-lg bg-white rounded-[10px] p-5 xl:py-9 xl:px-12">
           <h3 class="font-semibold text-2xl text-black text-center 3xl:text-left">Расскажите о коллективе</h3>
-          <div class="kviz-wrp grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-6 place-content-start">
+          <div class="kviz-wrp grid grid-cols-1 xl:grid-cols-2 gap-x-5 gap-y-6 place-content-start">
 
             <?php // Поле: Наименование компании ?>
             <div class="input-wrp relative input-wrp1">
@@ -157,11 +157,22 @@
     </div>
 
     <?php // Блок загрузки - показывается во время расчета предложений ?>
-    <div style="display: none;" class="block-process d-flex d-m">
-      <div class="block-process__wrp">
-        <h3>Подождите, ведем расчет</h3>
-        <span>Сравните предложения от страховых компаний, выберите лучшееи оформите полис без визита в офис</span>
-        <img class="loader" src="<?php bloginfo('template_url'); ?>/assets/img/loader.svg" alt="">
+    <div class="block-process hidden xl:min-h-80 my-6 pt-8 pb-6 bg-bedge xl:pt-16 xl:pb-6 text-black text-center">
+      <div class="block-process__wrp mx-auto text-center">
+      <h3 class="font-medium text-lg xl:text-5xl mb-5 tracking-wide">Подождите, ведем расчет</h3>
+      <p class="max-w-md text-base xl:text-lg/5 mx-auto mb-6">Сравните предложения от страховых компаний, выберите лучшее и оформите полис без визита в офис</p>
+        <svg class="h-12 loader fill-green-1" viewBox="0 0 36 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="18" cy="5" r="2" fill="inherit"/>
+          <circle cx="26.82" cy="7.86" r="2"/>
+          <circle cx="32.27" cy="15.36" r="2"/>
+          <circle cx="32.27" cy="24.64" r="2"/>
+          <circle cx="26.82" cy="32.14" r="2"/>
+          <circle cx="18" cy="35" r="2"/>
+          <circle cx="9.18" cy="32.14" r="2"/>
+          <circle cx="3.73" cy="24.64" r="2"/>
+          <circle cx="3.73" cy="15.36" r="2"/>
+          <circle cx="9.18" cy="7.86" r="2"/>
+        </svg>
       </div>
     </div>
 
