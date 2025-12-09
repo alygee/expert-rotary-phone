@@ -50,14 +50,11 @@ const ajaxUrl = '/wp-json/dmc/v1/jivo-widget-event';
             };
             
             try {
-                // Пытаемся получить данные через API виджета
-                if (typeof jivo_api.getContactInfo === 'function') {
-                    const contactInfo = jivo_api.getContactInfo();
-                    if (contactInfo) {
-                        clientData.name = contactInfo.client_name || '';
-                        clientData.phone = contactInfo.phone || '';
-                        clientData.email = contactInfo.email || '';
-                    }
+                const contactInfo = jivo_api.getContactInfo();
+                if (contactInfo) {
+                    clientData.name = contactInfo.client_name || '';
+                    clientData.phone = contactInfo.phone || '';
+                    clientData.email = contactInfo.email || '';
                 }
             } catch (e) {
                 console.warn('Jivo Widget Handler: Не удалось получить данные клиента', e);
