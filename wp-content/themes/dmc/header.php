@@ -7,6 +7,7 @@
   <meta name="theme-color" content="#F1F1F5">
   <link rel="stylesheet" href="<?php bloginfo('stylesheet_url'); ?>">
   <?php wp_head(); ?>
+  <script src="//code.jivo.ru/widget/DoCukBypq4" async></script>
 </head>
 
 <body <?php body_class(); ?>>
