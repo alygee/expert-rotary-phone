@@ -12,7 +12,7 @@
  */
 
 // Загружаем WordPress
-require_once(__DIR__ . '/../../wp-load.php');
+require_once(__DIR__ . '/../../../wp-load.php');
 
 // Тестовые данные
 $test_data = array(
@@ -62,10 +62,31 @@ echo "Тип события: " . (isset($response_data['event_type']) ? $respons
 
 if ($response_data['success']) {
     echo "✅ Тест пройден! Проверьте почту: " . $notification_email . "\n";
+    echo "\n⚠️  ВАЖНО: Если email не пришел, проверьте:\n";
+    echo "   1. Папку 'Спам' в почтовом ящике\n";
+    echo "   2. Логи: " . WP_CONTENT_DIR . "/debug.log\n";
+    echo "   3. Настройки SMTP (рекомендуется установить плагин WP Mail SMTP)\n";
+    echo "   4. Функция mail() может быть отключена на сервере\n";
 } else {
     echo "❌ Тест не пройден. Проверьте настройки.\n";
 }
 
 echo "\nПолный ответ:\n";
 print_r($response_data);
+
+// Дополнительная проверка: тест прямой отправки email
+echo "\n=== Дополнительный тест: Прямая отправка email ===\n";
+$test_result = wp_mail(
+    $notification_email,
+    'Прямой тест отправки email от ' . get_bloginfo('name'),
+    'Это тестовое письмо отправлено напрямую через wp_mail() для проверки работы отправки email.',
+    array(
+        'Content-Type: text/html; charset=UTF-8',
+        'From: ' . get_bloginfo('name') . ' <' . get_option('admin_email') . '>'
+    )
+);
+echo "Результат прямой отправки: " . ($test_result ? "✓ Успешно" : "✗ Ошибка") . "\n";
+if ($test_result) {
+    echo "Проверьте почту: " . $notification_email . "\n";
+}
 

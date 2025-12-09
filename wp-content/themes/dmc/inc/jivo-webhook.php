@@ -71,10 +71,26 @@ function jivo_webhook_callback($request) {
                 $subject = 'Новое сообщение в Jivo чате от ' . $client_name;
                 $email_body = create_jivo_email_template($client_name, $client_phone, $client_email, $message_text, $data);
                 
+                // Логируем попытку отправки
+                if (defined('WP_DEBUG') && WP_DEBUG) {
+                    error_log('Jivo Webhook: Попытка отправить email на ' . $notification_email);
+                }
+                
+                // Добавляем фильтр для логирования ошибок wp_mail
+                add_filter('wp_mail_failed', 'jivo_log_mail_error');
+                
                 $message_sent = wp_mail($notification_email, $subject, $email_body, array(
                     'Content-Type: text/html; charset=UTF-8',
                     'From: ' . get_bloginfo('name') . ' <' . get_option('admin_email') . '>'
                 ));
+                
+                // Логируем результат
+                if (defined('WP_DEBUG') && WP_DEBUG) {
+                    error_log('Jivo Webhook: Результат отправки email - ' . ($message_sent ? 'успешно' : 'ошибка'));
+                }
+                
+                // Удаляем фильтр
+                remove_filter('wp_mail_failed', 'jivo_log_mail_error');
             }
             break;
             
@@ -90,10 +106,23 @@ function jivo_webhook_callback($request) {
                 $email_body .= '<p><strong>Телефон:</strong> ' . esc_html($client_phone) . '</p>';
                 $email_body .= '<p><strong>Время:</strong> ' . date('d.m.Y H:i:s') . '</p>';
                 
+                // Логируем попытку отправки
+                if (defined('WP_DEBUG') && WP_DEBUG) {
+                    error_log('Jivo Webhook: Попытка отправить email на ' . $notification_email . ' (chat_started)');
+                }
+                
+                add_filter('wp_mail_failed', 'jivo_log_mail_error');
+                
                 $message_sent = wp_mail($notification_email, $subject, $email_body, array(
                     'Content-Type: text/html; charset=UTF-8',
                     'From: ' . get_bloginfo('name') . ' <' . get_option('admin_email') . '>'
                 ));
+                
+                if (defined('WP_DEBUG') && WP_DEBUG) {
+                    error_log('Jivo Webhook: Результат отправки email - ' . ($message_sent ? 'успешно' : 'ошибка'));
+                }
+                
+                remove_filter('wp_mail_failed', 'jivo_log_mail_error');
             }
             break;
             
@@ -107,10 +136,22 @@ function jivo_webhook_callback($request) {
                     $subject = 'Сообщение в Jivo чате от ' . $client_name;
                     $email_body = create_jivo_email_template($client_name, '', '', $message_text, $data);
                     
+                    if (defined('WP_DEBUG') && WP_DEBUG) {
+                        error_log('Jivo Webhook: Попытка отправить email на ' . $notification_email . ' (default)');
+                    }
+                    
+                    add_filter('wp_mail_failed', 'jivo_log_mail_error');
+                    
                     $message_sent = wp_mail($notification_email, $subject, $email_body, array(
                         'Content-Type: text/html; charset=UTF-8',
                         'From: ' . get_bloginfo('name') . ' <' . get_option('admin_email') . '>'
                     ));
+                    
+                    if (defined('WP_DEBUG') && WP_DEBUG) {
+                        error_log('Jivo Webhook: Результат отправки email - ' . ($message_sent ? 'успешно' : 'ошибка'));
+                    }
+                    
+                    remove_filter('wp_mail_failed', 'jivo_log_mail_error');
                 }
             }
             break;
@@ -176,5 +217,16 @@ function create_jivo_email_template($client_name, $client_phone, $client_email, 
 </html>';
     
     return $html;
+}
+
+/**
+ * Логирует ошибки отправки email
+ * 
+ * @param WP_Error $error Объект ошибки
+ */
+function jivo_log_mail_error($error) {
+    if (defined('WP_DEBUG') && WP_DEBUG) {
+        error_log('Jivo Webhook: Ошибка отправки email - ' . $error->get_error_message());
+    }
 }
 
