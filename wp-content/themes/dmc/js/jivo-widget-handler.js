@@ -66,62 +66,13 @@ const ajaxUrl = '/wp-json/dmc/v1/jivo-widget-event';
             return clientData;
         }
         
-        // Обработчик: виджет готов
-        // Jivo API может использовать разные варианты
-        if (typeof jivo_api !== 'undefined') {
-            
-            // Обработчик: чат начат
-            if (typeof jivo_onClientStartChat === 'function') {
-                jivo_api.onChatStarted(function() {
-                    console.log('Jivo Widget Handler: Чат начат');
-                    sendEventToServer('chat_started', {
-                        client: getClientData()
-                    });
-                });
-            }
-        }
-        
-        // Отслеживание отправки сообщений через перехват формы чата
-        // Это fallback метод, если API события не работают
-        setTimeout(function() {
-            const chatContainer = document.querySelector('.jivo-container, #jivo-container, [id^="jivo"]');
-            if (chatContainer) {
-                // Наблюдаем за изменениями в контейнере чата
-                const observer = new MutationObserver(function(mutations) {
-                    mutations.forEach(function(mutation) {
-                        if (mutation.addedNodes.length) {
-                            mutation.addedNodes.forEach(function(node) {
-                                if (node.nodeType === 1) { // Element node
-                                    // Ищем сообщения от клиента
-                                    const clientMessages = node.querySelectorAll && node.querySelectorAll('.jivo-message-visitor, .message-visitor, [class*="visitor"]');
-                                    if (clientMessages && clientMessages.length > 0) {
-                                        clientMessages.forEach(function(msgEl) {
-                                            const text = msgEl.textContent || msgEl.innerText;
-                                            if (text && text.trim()) {
-                                                const clientData = getClientData();
-                                                sendEventToServer('client_message', {
-                                                    client: clientData,
-                                                    message: {
-                                                        text: text.trim(),
-                                                        timestamp: new Date().toISOString()
-                                                    }
-                                                });
-                                            }
-                                        });
-                                    }
-                                }
-                            });
-                        }
-                    });
-                });
-                
-                observer.observe(chatContainer, {
-                    childList: true,
-                    subtree: true
-                });
-            }
-        }, 2000); // Даем время виджету загрузиться
-        
+        jivo_api.jivo_onClientStartChat(function() {
+            console.log('Jivo Widget Handler: Чат начат');
+            sendEventToServer('chat_started', {
+                client: getClientData()
+            });
+        });
+
     // Глобальная функция для ручного тестирования из консоли
     window.testJivoWidgetHandler = function() {
         console.log('=== Тест Jivo Widget Handler ===');
