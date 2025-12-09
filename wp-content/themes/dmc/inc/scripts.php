@@ -23,6 +23,15 @@ function footer_enqueue_scripts(){
         wp_enqueue_script('jquery-migrate', false, array(), false, true);
 
         wp_enqueue_style('tailwind-css', get_template_directory_uri() . '/css/output.css', array(), '1.0.0');
+        
+        // Подключаем обработчик событий виджета Jivo
+        wp_enqueue_script(
+            'jivo-widget-handler',
+            get_template_directory_uri() . '/js/jivo-widget-handler.js',
+            array(),
+            '1.0.0',
+            true
+        );
     }
 }
 
