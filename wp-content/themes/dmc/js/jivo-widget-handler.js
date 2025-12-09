@@ -54,7 +54,7 @@ const ajaxUrl = '/wp-json/dmc/v1/jivo-widget-event';
                 if (typeof jivo_api.getContactInfo === 'function') {
                     const contactInfo = jivo_api.getContactInfo();
                     if (contactInfo) {
-                        clientData.name = contactInfo.name || '';
+                        clientData.client_name = contactInfo.client_name || '';
                         clientData.phone = contactInfo.phone || '';
                         clientData.email = contactInfo.email || '';
                     }
