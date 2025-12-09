@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест Jivo Widget Handler</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        h2 {
+            color: #4CAF50;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 10px;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        .warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        pre {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            border: 1px solid #dee2e6;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        .log {
+            max-height: 300px;
+            overflow-y: auto;
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .log-entry {
+            margin: 5px 0;
+            padding: 5px;
+            border-left: 3px solid #4CAF50;
+            background: white;
+        }
+        .log-error {
+            border-left-color: #dc3545;
+        }
+        .log-warning {
+            border-left-color: #ffc107;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Тест Jivo Widget Handler</h1>
+        <p>Эта страница помогает проверить работу обработчика событий виджета Jivo.</p>
+    </div>
+
+    <div class="container">
+        <h2>Статус загрузки</h2>
+        <div id="status-container">
+            <div class="status info">Проверка...</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>Информация о виджете</h2>
+        <div id="widget-info">
+            <pre id="widget-info-content">Загрузка...</pre>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>Лог событий</h2>
+        <div class="log" id="event-log">
+            <div class="log-entry">Ожидание событий...</div>
+        </div>
+        <button onclick="clearLog()">Очистить лог</button>
+    </div>
+
+    <div class="container">
+        <h2>Ручное тестирование</h2>
+        <p>Используйте эти кнопки для ручной отправки тестовых событий:</p>
+        <button onclick="testClientMessage()">Тест: Сообщение от клиента</button>
+        <button onclick="testChatStarted()">Тест: Чат начат</button>
+        <button onclick="testChatAccepted()">Тест: Оператор принял чат</button>
+        <button onclick="testChatFinished()">Тест: Чат завершен</button>
+    </div>
+
+    <div class="container">
+        <h2>Инструкции</h2>
+        <ol>
+            <li>Откройте консоль браузера (F12)</li>
+            <li>Проверьте статус загрузки виджета выше</li>
+            <li>Отправьте сообщение в чат Jivo</li>
+            <li>Следите за логом событий</li>
+            <li>Используйте кнопки для ручного тестирования</li>
+        </ol>
+    </div>
+
+    <!-- Подключаем виджет Jivo -->
+    <script src="//code.jivo.ru/widget/DoCukBypq4" async></script>
+    
+    <!-- Подключаем наш обработчик -->
+    <script src="/wp-content/themes/dmc/js/jivo-widget-handler.js"></script>
+
+    <script>
+        // Логирование
+        const logContainer = document.getElementById('event-log');
+        
+        function addLog(message, type = 'info') {
+            const entry = document.createElement('div');
+            entry.className = 'log-entry' + (type !== 'info' ? ' log-' + type : '');
+            entry.textContent = new Date().toLocaleTimeString() + ' - ' + message;
+            logContainer.appendChild(entry);
+            logContainer.scrollTop = logContainer.scrollHeight;
+        }
+        
+        function clearLog() {
+            logContainer.innerHTML = '';
+            addLog('Лог очищен');
+        }
+        
+        // Перехватываем console.log для отображения в логе
+        const originalLog = console.log;
+        const originalWarn = console.warn;
+        const originalError = console.error;
+        
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            if (args[0] && args[0].includes && args[0].includes('Jivo Widget Handler')) {
+                addLog(args.join(' '), 'info');
+            }
+        };
+        
+        console.warn = function(...args) {
+            originalWarn.apply(console, args);
+            if (args[0] && args[0].includes && args[0].includes('Jivo Widget Handler')) {
+                addLog(args.join(' '), 'warning');
+            }
+        };
+        
+        console.error = function(...args) {
+            originalError.apply(console, args);
+            if (args[0] && args[0].includes && args[0].includes('Jivo Widget Handler')) {
+                addLog(args.join(' '), 'error');
+            }
+        };
+        
+        // Проверка статуса
+        function checkStatus() {
+            const statusContainer = document.getElementById('status-container');
+            const widgetInfo = document.getElementById('widget-info-content');
+            
+            setTimeout(function() {
+                if (typeof jivo_api !== 'undefined') {
+                    statusContainer.innerHTML = '<div class="status success">✓ Виджет Jivo загружен</div>';
+                    
+                    const info = {
+                        'jivo_api доступен': true,
+                        'Методы API': Object.keys(jivo_api),
+                        'Тип jivo_api': typeof jivo_api
+                    };
+                    
+                    widgetInfo.textContent = JSON.stringify(info, null, 2);
+                } else {
+                    statusContainer.innerHTML = '<div class="status error">✗ Виджет Jivo не найден</div>';
+                    widgetInfo.textContent = 'jivo_api не определен. Проверьте загрузку виджета.';
+                }
+            }, 2000);
+        }
+        
+        // Функции тестирования
+        function testClientMessage() {
+            addLog('Отправка тестового события: client_message');
+            if (typeof sendEventToServer === 'function') {
+                sendEventToServer('client_message', {
+                    client: {
+                        name: 'Тестовый клиент',
+                        phone: '+7 (999) 123-45-67',
+                        email: 'test@example.com'
+                    },
+                    message: {
+                        text: 'Тестовое сообщение из тестовой страницы'
+                    }
+                });
+            } else {
+                // Прямой вызов через fetch
+                fetch('/wp-json/dmc/v1/jivo-widget-event', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        event_type: 'client_message',
+                        data: {
+                            client: {
+                                name: 'Тестовый клиент',
+                                phone: '+7 (999) 123-45-67',
+                                email: 'test@example.com'
+                            },
+                            message: {
+                                text: 'Тестовое сообщение из тестовой страницы'
+                            }
+                        },
+                        timestamp: new Date().toISOString(),
+                        page_url: window.location.href
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    addLog('Ответ сервера: ' + JSON.stringify(data));
+                })
+                .catch(error => {
+                    addLog('Ошибка: ' + error.message, 'error');
+                });
+            }
+        }
+        
+        function testChatStarted() {
+            addLog('Отправка тестового события: chat_started');
+            fetch('/wp-json/dmc/v1/jivo-widget-event', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    event_type: 'chat_started',
+                    data: { client: { name: 'Тест', phone: '+79991234567', email: 'test@test.com' } },
+                    timestamp: new Date().toISOString()
+                })
+            })
+            .then(r => r.json())
+            .then(d => addLog('Ответ: ' + JSON.stringify(d)))
+            .catch(e => addLog('Ошибка: ' + e.message, 'error'));
+        }
+        
+        function testChatAccepted() {
+            addLog('Отправка тестового события: chat_accepted');
+            fetch('/wp-json/dmc/v1/jivo-widget-event', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    event_type: 'chat_accepted',
+                    data: { 
+                        client: { name: 'Тест', phone: '+79991234567' },
+                        agent: { name: 'Оператор', id: 'agent_1' }
+                    },
+                    timestamp: new Date().toISOString()
+                })
+            })
+            .then(r => r.json())
+            .then(d => addLog('Ответ: ' + JSON.stringify(d)))
+            .catch(e => addLog('Ошибка: ' + e.message, 'error'));
+        }
+        
+        function testChatFinished() {
+            addLog('Отправка тестового события: chat_finished');
+            fetch('/wp-json/dmc/v1/jivo-widget-event', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    event_type: 'chat_finished',
+                    data: { client: { name: 'Тест', phone: '+79991234567' } },
+                    timestamp: new Date().toISOString()
+                })
+            })
+            .then(r => r.json())
+            .then(d => addLog('Ответ: ' + JSON.stringify(d)))
+            .catch(e => addLog('Ошибка: ' + e.message, 'error'));
+        }
+        
+        // Запускаем проверку при загрузке
+        window.addEventListener('load', function() {
+            checkStatus();
+            addLog('Страница загружена, ожидание событий...');
+        });
+    </script>
+</body>
+</html>
+
