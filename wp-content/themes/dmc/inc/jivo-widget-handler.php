@@ -40,13 +40,13 @@ function jivo_widget_event_callback($request) {
         ), 400);
     }
     
-    // Получаем email для отправки уведомлений
-    $notification_email = get_field('jivo_notification_email', 'option');
-    if (empty($notification_email)) {
-        $notification_email = get_option('admin_email');
-    }
-    if (empty($notification_email)) {
-        $notification_email = get_field('mail', 2);
+    // Получаем список email адресов для отправки уведомлений
+    $notification_emails = get_jivo_notification_emails();
+    
+    // Логируем для отладки
+    if (defined('WP_DEBUG') && WP_DEBUG) {
+        error_log('Jivo Widget Event: Получено событие ' . $event_type);
+        error_log('Jivo Widget Event: Email адресов для отправки: ' . count($notification_emails));
     }
     
     $event_type = sanitize_text_field($data['event_type']);
@@ -65,7 +65,7 @@ function jivo_widget_event_callback($request) {
             if (!empty($message_text)) {
                 $subject = 'Новое сообщение в Jivo чате от ' . $client_name;
                 $email_body = create_jivo_email_template($client_name, $client_phone, $client_email, $message_text, $event_data);
-                $message_sent = send_jivo_notification_email($notification_email, $subject, $email_body);
+                $message_sent = send_jivo_notification_emails($notification_emails, $subject, $email_body);
             }
             break;
             
@@ -83,7 +83,7 @@ function jivo_widget_event_callback($request) {
             $email_body .= '<p><strong>Время:</strong> ' . date('d.m.Y H:i:s') . '</p>';
             $email_body .= '<p><strong>Страница:</strong> ' . (isset($data['page_url']) ? esc_html($data['page_url']) : 'Не указана') . '</p>';
             
-            $message_sent = send_jivo_notification_email($notification_email, $subject, $email_body);
+            $message_sent = send_jivo_notification_emails($notification_emails, $subject, $email_body);
             break;
             
         case 'chat_accepted':
@@ -97,7 +97,7 @@ function jivo_widget_event_callback($request) {
             $email_body .= '<p><strong>Оператор:</strong> ' . esc_html($agent_name) . '</p>';
             $email_body .= '<p><strong>Время:</strong> ' . date('d.m.Y H:i:s') . '</p>';
             
-            $message_sent = send_jivo_notification_email($notification_email, $subject, $email_body);
+            $message_sent = send_jivo_notification_emails($notification_emails, $subject, $email_body);
             break;
             
         case 'chat_finished':
@@ -109,7 +109,7 @@ function jivo_widget_event_callback($request) {
             $email_body .= '<p><strong>Клиент:</strong> ' . esc_html($client_name) . '</p>';
             $email_body .= '<p><strong>Время:</strong> ' . date('d.m.Y H:i:s') . '</p>';
             
-            $message_sent = send_jivo_notification_email($notification_email, $subject, $email_body);
+            $message_sent = send_jivo_notification_emails($notification_emails, $subject, $email_body);
             break;
             
         case 'widget_ready':
@@ -139,7 +139,126 @@ function jivo_widget_event_callback($request) {
 }
 
 /**
- * Отправляет email уведомление с логированием
+ * Получает список email адресов для уведомлений
+ * 
+ * @return array Массив валидных email адресов
+ */
+function get_jivo_notification_emails() {
+    $emails = array();
+    
+    // Получаем список email из поля (textarea)
+    $emails_text = get_field('jivo_notification_emails', 'option');
+    
+    if (!empty($emails_text)) {
+        // Разбиваем по переносам строк и запятым
+        $emails_list = preg_split('/[\r\n,;]+/', $emails_text);
+        
+        foreach ($emails_list as $email) {
+            $email = trim($email);
+            if (!empty($email) && is_email($email)) {
+                $emails[] = sanitize_email($email);
+            }
+        }
+    }
+    
+    // Если все еще пусто, используем email администратора
+    if (empty($emails)) {
+        $admin_email = get_option('admin_email');
+        if (!empty($admin_email) && is_email($admin_email)) {
+            $emails[] = sanitize_email($admin_email);
+        }
+    }
+    
+    // Если все еще пусто, пробуем email из header.php
+    if (empty($emails)) {
+        $header_email = get_field('mail', 2);
+        if (!empty($header_email) && is_email($header_email)) {
+            $emails[] = sanitize_email($header_email);
+        }
+    }
+    
+    // Убираем дубликаты
+    $emails = array_unique($emails);
+    
+    // Логируем для отладки
+    if (defined('WP_DEBUG') && WP_DEBUG) {
+        error_log('Jivo Widget Handler: Список email для уведомлений: ' . implode(', ', $emails));
+    }
+    
+    return $emails;
+}
+
+/**
+ * Отправляет email уведомления на список адресов
+ * 
+ * @param array $emails Массив email адресов
+ * @param string $subject Тема письма
+ * @param string $body Тело письма
+ * @return bool Результат отправки (true если хотя бы одно письмо отправлено успешно)
+ */
+function send_jivo_notification_emails($emails, $subject, $body) {
+    if (empty($emails) || !is_array($emails)) {
+        if (defined('WP_DEBUG') && WP_DEBUG) {
+            error_log('Jivo Widget Handler: Нет email адресов для отправки');
+        }
+        return false;
+    }
+    
+    $success_count = 0;
+    $fail_count = 0;
+    
+    // Логируем попытку отправки
+    if (defined('WP_DEBUG') && WP_DEBUG) {
+        error_log('Jivo Widget Handler: Попытка отправить email на ' . count($emails) . ' адресов');
+        error_log('Jivo Widget Handler: Тема - ' . $subject);
+    }
+    
+    // Добавляем фильтр для логирования ошибок wp_mail
+    add_filter('wp_mail_failed', 'jivo_log_mail_error');
+    
+    // Отправляем на каждый email отдельно
+    foreach ($emails as $email) {
+        $email = sanitize_email($email);
+        if (!is_email($email)) {
+            if (defined('WP_DEBUG') && WP_DEBUG) {
+                error_log('Jivo Widget Handler: Пропущен невалидный email: ' . $email);
+            }
+            $fail_count++;
+            continue;
+        }
+        
+        $result = wp_mail($email, $subject, $body, array(
+            'Content-Type: text/html; charset=UTF-8',
+            'From: ' . get_bloginfo('name') . ' <' . get_option('admin_email') . '>'
+        ));
+        
+        if ($result) {
+            $success_count++;
+            if (defined('WP_DEBUG') && WP_DEBUG) {
+                error_log('Jivo Widget Handler: Email успешно отправлен на ' . $email);
+            }
+        } else {
+            $fail_count++;
+            if (defined('WP_DEBUG') && WP_DEBUG) {
+                error_log('Jivo Widget Handler: Ошибка отправки email на ' . $email);
+            }
+        }
+    }
+    
+    // Удаляем фильтр
+    remove_filter('wp_mail_failed', 'jivo_log_mail_error');
+    
+    // Логируем итоговый результат
+    if (defined('WP_DEBUG') && WP_DEBUG) {
+        error_log('Jivo Widget Handler: Итог отправки - успешно: ' . $success_count . ', ошибок: ' . $fail_count);
+    }
+    
+    // Возвращаем true если хотя бы одно письмо отправлено успешно
+    return $success_count > 0;
+}
+
+/**
+ * Отправляет email уведомление на один адрес (для обратной совместимости)
  * 
  * @param string $to Email получателя
  * @param string $subject Тема письма
@@ -147,29 +266,7 @@ function jivo_widget_event_callback($request) {
  * @return bool Результат отправки
  */
 function send_jivo_notification_email($to, $subject, $body) {
-    // Логируем попытку отправки
-    if (defined('WP_DEBUG') && WP_DEBUG) {
-        error_log('Jivo Widget Handler: Попытка отправить email на ' . $to);
-        error_log('Jivo Widget Handler: Тема - ' . $subject);
-    }
-    
-    // Добавляем фильтр для логирования ошибок wp_mail
-    add_filter('wp_mail_failed', 'jivo_log_mail_error');
-    
-    $result = wp_mail($to, $subject, $body, array(
-        'Content-Type: text/html; charset=UTF-8',
-        'From: ' . get_bloginfo('name') . ' <' . get_option('admin_email') . '>'
-    ));
-    
-    // Логируем результат
-    if (defined('WP_DEBUG') && WP_DEBUG) {
-        error_log('Jivo Widget Handler: Результат отправки email - ' . ($result ? 'успешно' : 'ошибка'));
-    }
-    
-    // Удаляем фильтр
-    remove_filter('wp_mail_failed', 'jivo_log_mail_error');
-    
-    return $result;
+    return send_jivo_notification_emails(array($to), $subject, $body);
 }
 
 /**

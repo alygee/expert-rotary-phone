@@ -66,14 +66,15 @@ function dmc_add_jivo_email_field() {
         'title' => 'Настройки Jivo',
         'fields' => array(
             array(
-                'key' => 'field_jivo_notification_email',
-                'label' => 'Email для уведомлений Jivo',
-                'name' => 'jivo_notification_email',
-                'type' => 'email',
-                'instructions' => 'Укажите email адрес, на который будут приходить уведомления о новых сообщениях в Jivo чате. Если не указан, будет использован email администратора сайта.',
+                'key' => 'field_jivo_notification_emails',
+                'label' => 'Email адреса для уведомлений Jivo',
+                'name' => 'jivo_notification_emails',
+                'type' => 'textarea',
+                'instructions' => 'Укажите email адреса для получения уведомлений о новых сообщениях в Jivo чате. Каждый email с новой строки или через запятую. Если не указаны, будет использован email администратора сайта.',
                 'required' => 0,
                 'default_value' => '',
-                'placeholder' => 'example@mail.ru',
+                'placeholder' => 'example1@mail.ru\nexample2@mail.ru\nили через запятую: example1@mail.ru, example2@mail.ru',
+                'rows' => 5,
             ),
         ),
         'location' => array(

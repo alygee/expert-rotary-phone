@@ -53,6 +53,7 @@ const ajaxUrl = '/wp-json/dmc/v1/jivo-widget-event';
                 // Пытаемся получить данные через API виджета
                 if (typeof jivo_api.getContactInfo === 'function') {
                     const contactInfo = jivo_api.getContactInfo();
+                    console.log(contactInfo);
                     if (contactInfo) {
                         clientData.client_name = contactInfo.client_name || '';
                         clientData.phone = contactInfo.phone || '';
