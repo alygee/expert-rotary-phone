@@ -18,6 +18,7 @@ require_once get_template_directory() . '/inc/filter-functions.php';
 require_once get_template_directory() . '/inc/ajax-handlers.php';
 require_once get_template_directory() . '/inc/api-endpoints.php';
 require_once get_template_directory() . '/inc/cf7-database.php';
+require_once get_template_directory() . '/inc/jivo-webhook.php';
 
 // ============================================
 // Регистрация хуков WordPress
