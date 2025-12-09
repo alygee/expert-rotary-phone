@@ -66,7 +66,7 @@ const ajaxUrl = '/wp-json/dmc/v1/jivo-widget-event';
             return clientData;
         }
         
-        jivo_api.jivo_onClientStartChat(function() {
+        jivo_onClientStartChat(function() {
             console.log('Jivo Widget Handler: Чат начат');
             sendEventToServer('chat_started', {
                 client: getClientData()
