@@ -3,11 +3,9 @@
  * Использует Widget API Jivo для отслеживания событий на клиентской стороне
  */
 
-(function() {
-    'use strict';
+const ajaxUrl = '/wp-json/dmc/v1/jivo-widget-event';
     
-    // Ждем загрузки виджета Jivo
-    function initJivoWidgetHandler() {        
+     
         /**
          * Отправляет данные события на сервер
          */
@@ -123,8 +121,7 @@
                 });
             }
         }, 2000); // Даем время виджету загрузиться
-    }
-    
+        
     // Глобальная функция для ручного тестирования из консоли
     window.testJivoWidgetHandler = function() {
         console.log('=== Тест Jivo Widget Handler ===');
@@ -149,8 +146,3 @@
         sendEventToServer('client_message', testData);
         console.log('Тестовое событие отправлено');
     };
-    
-    console.log('Jivo Widget Handler: Скрипт загружен. Для тестирования используйте: testJivoWidgetHandler()');
-    
-})();
-
