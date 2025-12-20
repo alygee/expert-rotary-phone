@@ -1,0 +1,317 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Локальные шрифты Jost */
+@font-face {
+  font-family: 'Jost';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./fonts/Jost-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Jost';
+  font-style: normal;
+  font-weight: 450;
+  font-display: swap;
+  src: url('./fonts/Jost-Medium.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Jost';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('./fonts/Jost-Medium.ttf') format('truetype');
+}
+
+@layer base {
+  :root {
+    /* Primary Colors */
+    --primary-dark: 208 39% 44%;
+    --primary: 205 73% 60%;
+    --primary-light: 203 80% 76%;
+    --primary-4p: 205 73% 60%;
+    --primary-8p: 205 73% 60%;
+    --primary-12p: 205 73% 60%;
+    --primary-20p: 205 73% 60%;
+    --primary-30p: 205 73% 60%;
+    --primary-50p: 205 73% 60%;
+    --primary-80p: 205 73% 60%;
+
+    /* Secondary Colors */
+    --secondary-dark: 342 59% 42%;
+    --secondary: 341 67% 57%;
+    --secondary-light: 339 75% 73%;
+    --secondary-4p: 341 67% 57%;
+    --secondary-8p: 341 67% 57%;
+    --secondary-12p: 341 67% 57%;
+    --secondary-20p: 341 67% 57%;
+    --secondary-30p: 341 67% 57%;
+    --secondary-50p: 341 67% 57%;
+    --secondary-80p: 341 67% 57%;
+
+    /* Grey Colors */
+    --grey-900: 206 51% 8%;
+    --grey-800: 205 25% 20%;
+    --grey-700: 204 20% 32%;
+    --grey-600: 205 18% 40%;
+    --grey-500: 204 14% 55%;
+    --grey-400: 204 12% 68%;
+    --grey-300: 204 11% 82%;
+    --grey-200: 210 11% 89%;
+    --grey-100: 210 12% 94%;
+    --grey-50: 210 12% 97%;
+
+    /* Error Colors */
+    --error-dark: 354 77% 40%;
+    --error: 1 77% 55%;
+    --error-light: 1 85% 71%;
+    --error-4p: 1 77% 55%;
+    --error-8p: 1 77% 55%;
+    --error-12p: 1 77% 55%;
+    --error-20p: 1 77% 55%;
+    --error-30p: 1 77% 55%;
+    --error-50p: 1 77% 55%;
+    --error-80p: 1 77% 55%;
+
+    /* Warning Colors */
+    --warning-dark: 24 86% 44%;
+    --warning: 26 86% 55%;
+    --warning-light: 30 86% 75%;
+    --warning-4p: 26 86% 55%;
+    --warning-8p: 26 86% 55%;
+    --warning-12p: 26 86% 55%;
+    --warning-20p: 26 86% 55%;
+    --warning-30p: 26 86% 55%;
+    --warning-50p: 26 86% 55%;
+    --warning-80p: 26 86% 55%;
+
+    /* Success Colors */
+    --success-dark: 145 100% 32%;
+    --success: 145 100% 39%;
+    --success-light: 145 80% 55%;
+    --success-4p: 145 100% 39%;
+    --success-8p: 145 100% 39%;
+    --success-12p: 145 100% 39%;
+    --success-20p: 145 100% 39%;
+    --success-30p: 145 100% 39%;
+    --success-50p: 145 100% 39%;
+    --success-80p: 145 100% 39%;
+
+    /* Background */
+    --background-paper: 0 0% 100%;
+    --background-default: 210 29% 97%;
+
+    /* Actions */
+    --action-primary: 0 0% 0%;
+    --action-hover: 0 0% 0%;
+    --action-selected: 0 0% 0%;
+    --action-disabled: 0 0% 0%;
+    --action-disabled-bg: 0 0% 0%;
+    --action-focus: 0 0% 0%;
+
+    /* Text */
+    --text-primary: 0 0% 0%;
+    --text-secondary: 0 0% 0%;
+    --text-disabled: 0 0% 0%;
+
+    /* Shadcn/ui compatibility */
+    --background: var(--background-default);
+    --foreground: var(--text-primary);
+    --card: var(--background-paper);
+    --card-foreground: var(--text-primary);
+    --popover: var(--background-paper);
+    --popover-foreground: var(--text-primary);
+    --primary-foreground: 0 0% 100%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: var(--grey-200);
+    --muted-foreground: var(--grey-600);
+    --accent: var(--grey-100);
+    --accent-foreground: var(--text-primary);
+    --destructive: var(--error);
+    --destructive-foreground: 0 0% 100%;
+    --border: var(--grey-300);
+    --input: 0 0% 0%;
+    --ring: var(--primary);
+    --radius: 0.5rem;
+  }
+}
+
+@layer utilities {
+  /* Базовые стили типографики для всех экранов */
+  .text-caption {
+    font-size: 12px;
+    line-height: 12px;
+    letter-spacing: 0.4px;
+    font-weight: 400;
+  }
+
+  .text-input {
+    font-size: 16px;
+    line-height: 16px;
+    letter-spacing: 0px;
+    font-weight: 400;
+  }
+
+  .text-overline {
+    font-size: 13px;
+    line-height: 16px;
+    letter-spacing: 1px;
+    font-weight: 400;
+  }
+
+  /* Базовые стили типографики для мобильной версии (≤480px) */
+  .text-h1 {
+    font-size: 76px;
+    line-height: 80px;
+    letter-spacing: -1px;
+    font-weight: 500;
+  }
+  .text-h2 {
+    font-size: 48px;
+    line-height: 56px;
+    letter-spacing: -0.6px;
+    font-weight: 450;
+  }
+  .text-h3 {
+    font-size: 38px;
+    line-height: 48px;
+    letter-spacing: -0.2px;
+    font-weight: 500;
+  }
+  .text-h4 {
+    font-size: 28px;
+    line-height: 40px;
+    letter-spacing: 0px;
+    font-weight: 450;
+  }
+  .text-h5 {
+    font-size: 20px;
+    line-height: 24px;
+    letter-spacing: 0.4px;
+    font-weight: 450;
+  }
+  .text-h6 {
+    font-size: 24px;
+    line-height: 24px;
+    letter-spacing: 0.6px;
+    font-weight: 500;
+  }
+  .text-subtitle1 {
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0.4px;
+    font-weight: 450;
+  }
+  .text-subtitle2 {
+    font-size: 14px;
+    line-height: 24px;
+    letter-spacing: 0.4px;
+    font-weight: 450;
+  }
+  .text-body1 {
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0px;
+    font-weight: 400;
+  }
+  .text-body2 {
+    font-size: 14px;
+    line-height: 16px;
+    letter-spacing: 0px;
+    font-weight: 400;
+  }
+
+  /* Адаптивные стили типографики для >480px */
+  @media (min-width: 481px) {
+    .text-h1 {
+      font-size: 96px;
+      line-height: 104px;
+      letter-spacing: -1px;
+      font-weight: 500;
+    }
+    .text-h2 {
+      font-size: 60px;
+      line-height: 72px;
+      letter-spacing: -0.6px;
+      font-weight: 450;
+    }
+    .text-h3 {
+      font-size: 48px;
+      line-height: 64px;
+      letter-spacing: -0.2px;
+      font-weight: 500;
+    }
+    .text-h4 {
+      font-size: 32px;
+      line-height: 48px;
+      letter-spacing: 0px;
+      font-weight: 450;
+    }
+    .text-h5 {
+      font-size: 24px;
+      line-height: 32px;
+      letter-spacing: 0.4px;
+      font-weight: 450;
+    }
+    .text-h6 {
+      font-size: 20px;
+      line-height: 32px;
+      letter-spacing: 0.6px;
+      font-weight: 500;
+    }
+    .text-subtitle1 {
+      font-size: 18px;
+      line-height: 24px;
+      letter-spacing: 0.4px;
+      font-weight: 450;
+    }
+    .text-subtitle2 {
+      font-size: 16px;
+      line-height: 24px;
+      letter-spacing: 0.4px;
+      font-weight: 450;
+    }
+    .text-body1 {
+      font-size: 18px;
+      line-height: 24px;
+      letter-spacing: 0px;
+      font-weight: 400;
+    }
+    .text-body2 {
+      font-size: 16px;
+      line-height: 24px;
+      letter-spacing: 0px;
+      font-weight: 400;
+    }
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-sans;
+    font-family: "Jost", system-ui, sans-serif;
+  }
+}
+
+@layer utilities {
+  @keyframes ripple {
+    0% {
+      transform: translate(-50%, -50%) scale(0);
+      opacity: 0.6;
+    }
+    50% {
+      opacity: 0.4;
+    }
+    100% {
+      transform: translate(-50%, -50%) scale(120);
+      opacity: 0;
+    }
+  }
+}
