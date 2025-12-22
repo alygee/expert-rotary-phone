@@ -49,10 +49,6 @@
       echo '</div>';
     }
     ?>
-<<<<<<< HEAD
-  </div>
-=======
->>>>>>> d1466f68c4782201dcaff13bd7c3bedd5fa1edb2
   
   <?php wp_footer(); ?>
 </body>
