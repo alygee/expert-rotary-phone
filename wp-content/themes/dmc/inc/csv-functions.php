@@ -62,8 +62,8 @@ function сity(){
   
   $rows = [];
   if (($handle = fopen($csv, "r")) !== false) {
-      $headers = fgetcsv($handle);
-      while (($data = fgetcsv($handle, 0, ",")) !== false) {
+      $headers = fgetcsv($handle, 0, ",", "\"", "\\");
+      while (($data = fgetcsv($handle, 0, ",", "\"", "\\")) !== false) {
           $rows[] = array_combine($headers, $data);
       }
       fclose($handle);
@@ -188,8 +188,8 @@ function rez(){
   // Читаем CSV файл
   $rows = [];
   if (($handle = fopen($csv, "r")) !== false) {
-      $headers = fgetcsv($handle);
-      while (($data = fgetcsv($handle, 0, ",")) !== false) {
+      $headers = fgetcsv($handle, 0, ",", "\"", "\\");
+      while (($data = fgetcsv($handle, 0, ",", "\"", "\\")) !== false) {
           $rows[] = array_combine($headers, $data);
       }
       fclose($handle);

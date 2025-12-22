@@ -19,10 +19,8 @@
 # Ignore everything in the "wp-content" directory, except the "plugins"
 # and "themes" directories.
 wp-content/*
-!wp-content/uploads/2025/10/list.csv
-!wp-content/plugins/
 !wp-content/themes/
-wp-content/themes/dmc/.obsidian
+!wp-content/plugins/inssmart
 node_modules
  
 # Ignore everything in the "plugins" directory, except the plugins you

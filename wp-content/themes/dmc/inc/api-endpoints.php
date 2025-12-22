@@ -139,6 +139,7 @@ function filter_api_callback($request) {
                 'count' => $count,
             ),
             'results' => array(),
+            'fallback' => null, // Добавляем поле для fallback данных
         );
         
         // Преобразуем результаты в удобный формат
@@ -177,6 +178,46 @@ function filter_api_callback($request) {
             
             $city_data['insurers'] = array_values($insurers);
             $response_data['results'][] = $city_data;
+        }
+        
+        // Добавляем fallback данные, если они есть
+        if (!empty($fallback_data) && !empty($not_found_cities)) {
+            $fallback_insurers = array();
+            
+            foreach ($fallback_data as $row) {
+                $insurer = $row['Страховщик'];
+                if (!isset($fallback_insurers[$insurer])) {
+                    $fallback_insurers[$insurer] = array(
+                        'name' => $insurer,
+                        'count' => 0,
+                        'records' => array(),
+                    );
+                }
+                $fallback_insurers[$insurer]['count']++;
+                $fallback_insurers[$insurer]['records'][] = array(
+                    'level' => $row['Уровень'] ?? '',
+                    'employees' => $row['Кол-во_сотрудников'] ?? '',
+                    'prices' => array(
+                        'polyclinic' => $row['Поликлиника'] ?? '',
+                        'dentistry' => $row['Стоматология'] ?? '',
+                        'ambulance' => $row['Скорая_помощь'] ?? '',
+                        'hospitalization' => $row['Госпитализация'] ?? '',
+                        'doctor_home' => $row['Вызов_врача_на_дом'] ?? '',
+                    ),
+                    'total_price' => calculate_total_price($row),
+                );
+            }
+            
+            $cities_text = is_array($not_found_cities) ? implode(', ', $not_found_cities) : $not_found_cities;
+            $cities_label = is_array($not_found_cities) && count($not_found_cities) > 1 ? 'Для регионов ' : 'Для региона ';
+            
+            $response_data['fallback'] = array(
+                'title' => 'Цены по соседним регионам',
+                'description' => $cities_label . $cities_text . ' не удалось произвести расчет',
+                'not_found_cities' => $not_found_cities,
+                'count' => count($fallback_data),
+                'insurers' => array_values($fallback_insurers),
+            );
         }
         
         return new WP_REST_Response($response_data, 200);

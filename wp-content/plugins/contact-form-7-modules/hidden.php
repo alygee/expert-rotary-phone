@@ -274,7 +274,7 @@ function wpcf7_add_tag_generator_hidden() {
 	if ( class_exists( 'WPCF7_TagGenerator' ) ) {
 
 		$tag_generator = WPCF7_TagGenerator::get_instance();
-		$tag_generator->add( 'hidden', _x( 'hidden', 'the name of the field button in CF7', 'cf7_modules' ), 'wpcf7_tg_pane_hidden' );
+		$tag_generator->add( 'hidden', _x( 'hidden', 'the name of the field button in CF7', 'cf7_modules' ), 'wpcf7_tg_pane_hidden', array( 'version' => 2 ) );
 
 	}
 }
