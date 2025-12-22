@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Пример интеграции Inssmart Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Пример страницы с формой Inssmart</h1>
+    
+    <p>Ниже встроена многошаговая форма:</p>
+    
+    <!-- Подключение стилей -->
+    <link rel="stylesheet" href="./dist/inssmart-form.css">
+    
+    <!-- Контейнер для формы -->
+    <div id="inssmart-form-container"></div>
+    
+    <!-- Подключение собранного файла формы -->
+    <script src="./dist/inssmart-form.js"></script>
+    
+    <!-- Инициализация формы -->
+    <script>
+        if (typeof window.initInssmartForm === 'function') {
+            window.initInssmartForm('inssmart-form-container');
+        } else {
+            // Ждем загрузки скрипта
+            document.addEventListener('DOMContentLoaded', function() {
+                if (typeof window.initInssmartForm === 'function') {
+                    window.initInssmartForm('inssmart-form-container');
+                }
+            });
+        }
+    </script>
+</body>
+</html>
+

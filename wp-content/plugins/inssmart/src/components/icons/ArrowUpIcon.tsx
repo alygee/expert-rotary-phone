@@ -1,0 +1,30 @@
+import * as React from "react"
+
+interface ArrowUpIconProps extends React.SVGProps<SVGSVGElement> {
+  size?: number
+  color?: string
+}
+
+export const ArrowUpIcon = React.forwardRef<SVGSVGElement, ArrowUpIconProps>(
+  ({ size = 8, color = "rgba(0, 0, 0, 0.6)", ...props }, ref) => {
+    return (
+      <svg
+        ref={ref}
+        width={size}
+        height={Math.round(size * (5 / 8))}
+        viewBox="0 0 8 5"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        {...props}
+      >
+        <path
+          d="M0.296477 2.8825L2.88648 0.2925C3.27648 -0.0975 3.90648 -0.0975 4.29648 0.2925L6.88648 2.8825C7.51648 3.5125 7.06648 4.5925 6.17648 4.5925H0.996477C0.106477 4.5925 -0.333523 3.5125 0.296477 2.8825Z"
+          fill={color}
+        />
+      </svg>
+    )
+  }
+)
+
+ArrowUpIcon.displayName = "ArrowUpIcon"
+

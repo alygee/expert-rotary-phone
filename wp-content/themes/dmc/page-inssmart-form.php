@@ -17,8 +17,7 @@
   <?php wp_head(); ?>
 </head>
 
-<body <?php body_class('inssmart-form-page'); ?>>
-  <div class="inssmart-form-container-wrapper" style="min-height: 100vh; padding: 20px; background: #fff; max-width: 100%;">
+<body>
     <?php
     // Выводим содержимое страницы, если оно есть
     if (have_posts()) {
@@ -50,7 +49,10 @@
       echo '</div>';
     }
     ?>
+<<<<<<< HEAD
   </div>
+=======
+>>>>>>> d1466f68c4782201dcaff13bd7c3bedd5fa1edb2
   
   <?php wp_footer(); ?>
 </body>
