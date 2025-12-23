@@ -18,7 +18,7 @@ export function InsurancePrice({ label, price }: InsurancePriceProps) {
     <div className="flex flex-row md:flex-col">
       <div className="flex gap-2 items-center">
         {hasData ? <CirclePlusIcon size={17} /> : <CircleMinusIcon size={17} />}
-        <Typography variant="subtitle2" className="text-text-secondary">
+        <Typography variant="body1" className="text-text-secondary">
           {label}
         </Typography>
       </div>

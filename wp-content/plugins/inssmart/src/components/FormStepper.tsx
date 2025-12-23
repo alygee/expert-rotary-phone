@@ -455,7 +455,7 @@ export function FormStepper() {
   };
 
   return (
-    <div className="flex flex-col gap-1.5 md:gap-5 md:mb-20">
+    <div className="w-full max-w-6xl mx-auto flex flex-col gap-1.5 md:gap-5 md:mb-20">
       <StepNavigation
         currentStep={currentStep}
         step3Mode={step3Mode}

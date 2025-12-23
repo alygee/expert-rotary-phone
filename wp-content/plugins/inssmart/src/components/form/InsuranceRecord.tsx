@@ -41,13 +41,15 @@ export function InsuranceRecord({
               {insurerName}
             </Typography>
           </div>
-          <div className="flex flex-col">
+          <div className="flex flex-col text-right">
             <Typography variant="h5">
               {formatCurrency(record.total_price)}
             </Typography>
-            <Typography variant="caption">в год за человека</Typography>
+            <Typography variant="caption" className="text-text-secondary">
+              в год за человека
+            </Typography>
             <Button
-              className="w-full text-white mt-2 -ml-2 hidden md:block"
+              className="w-full text-white mt-2 hidden md:block text-center"
               variant="solid"
               size="small"
               onClick={() => onSelectOffer(insurerName, city, record)}

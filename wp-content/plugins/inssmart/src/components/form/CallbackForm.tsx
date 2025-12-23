@@ -1,11 +1,9 @@
-import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { FormError } from '@/components/ui/form-error';
 import { Card, CardContent } from '../ui/card';
 import { Typography } from '../ui/typography';
 import { Checkbox } from '@/components/ui/checkbox';
-import { cn } from '@/lib/utils';
 import type { FormData, FormErrors, TouchedFields } from '@/types/form';
 import { handlePhoneChange } from '@/utils/phoneMask';
 import { validateStep3Callback } from '@/utils/validation';
@@ -79,13 +77,7 @@ export function CallbackForm({
             </Typography>
           </div>
           <div className="flex flex-col md:flex-row gap-4">
-            <div className="space-y-2 w-full md:w-1/2">
-              <Label htmlFor="callbackName">
-                <div className="flex items-center gap-2.5 tracking-wide">
-                  <ContactIcon className="ml-1" />
-                  <span>Ваше имя</span>
-                </div>
-              </Label>
+            <div className="w-full md:w-1/2">
               <Input
                 id="callbackName"
                 type="text"
@@ -93,24 +85,14 @@ export function CallbackForm({
                 value={formData.step3.callbackName}
                 onChange={(e) => onInputChange('callbackName', e.target.value)}
                 onBlur={() => onBlur?.('callbackName')}
-                className={cn(
-                  touched?.callbackName &&
-                    errors?.callbackName &&
-                    'border-error focus-visible:ring-error placeholder:text-error'
-                )}
+                label="Ваше имя"
+                icon={<ContactIcon />}
+                error={errors?.callbackName}
+                touched={touched?.callbackName}
               />
-              {touched?.callbackName && errors?.callbackName && (
-                <FormError>{errors.callbackName}</FormError>
-              )}
             </div>
 
-            <div className="space-y-2 w-full md:w-1/2">
-              <Label htmlFor="callbackPhone">
-                <div className="flex items-center gap-2.5 tracking-wide">
-                  <CallIcon className="ml-1" />
-                  <span>Телефон</span>
-                </div>
-              </Label>
+            <div className="w-full md:w-1/2">
               <Input
                 id="callbackPhone"
                 type="tel"
@@ -122,15 +104,11 @@ export function CallbackForm({
                   )
                 }
                 onBlur={() => onBlur?.('callbackPhone')}
-                className={cn(
-                  touched?.callbackPhone &&
-                    errors?.callbackPhone &&
-                    'border-error focus-visible:ring-error placeholder:text-error'
-                )}
+                label="Телефон"
+                icon={<CallIcon />}
+                error={errors?.callbackPhone}
+                touched={touched?.callbackPhone}
               />
-              {touched?.callbackPhone && errors?.callbackPhone && (
-                <FormError>{errors.callbackPhone}</FormError>
-              )}
             </div>
           </div>
 

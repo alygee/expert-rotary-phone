@@ -2,29 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Локальные шрифты Jost */
 @font-face {
-  font-family: 'Jost';
+  font-family: 'Futura';
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('./fonts/Jost-Regular.ttf') format('truetype');
+  src: url('./assets/fonts/FuturaPT-Book.ttf') format('truetype');
 }
 
 @font-face {
-  font-family: 'Jost';
-  font-style: normal;
+  font-family: 'Futura';
+  font-style: medium;
   font-weight: 450;
   font-display: swap;
-  src: url('./fonts/Jost-Medium.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'Jost';
-  font-style: normal;
-  font-weight: 500;
-  font-display: swap;
-  src: url('./fonts/Jost-Medium.ttf') format('truetype');
+  src: url('./assets/fonts/FuturaPT-Medium.ttf') format('truetype');
 }
 
 @layer base {
@@ -103,7 +94,7 @@
 
     /* Background */
     --background-paper: 0 0% 100%;
-    --background-default: 210 29% 97%;
+    --background-default: #fafafa;
 
     /* Actions */
     --action-primary: 0 0% 0%;
@@ -143,8 +134,8 @@
 @layer utilities {
   /* Базовые стили типографики для всех экранов */
   .text-caption {
-    font-size: 12px;
-    line-height: 12px;
+    font-size: 14px;
+    line-height: 14px;
     letter-spacing: 0.4px;
     font-weight: 400;
   }
@@ -294,9 +285,12 @@
   * {
     @apply border-border;
   }
+  html {
+    overflow-y: scroll;
+  }
   body {
     @apply bg-background text-foreground font-sans;
-    font-family: "Jost", system-ui, sans-serif;
+    font-family: 'Futura', system-ui, sans-serif;
   }
 }
 
