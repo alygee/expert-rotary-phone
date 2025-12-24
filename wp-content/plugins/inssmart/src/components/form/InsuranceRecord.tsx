@@ -45,7 +45,7 @@ export function InsuranceRecord({
             <Typography variant="h5">
               {formatCurrency(record.total_price)}
             </Typography>
-            <Typography variant="caption" className="text-text-secondary">
+            <Typography variant="body2" className="text-text-secondary">
               в год за человека
             </Typography>
             <Button
