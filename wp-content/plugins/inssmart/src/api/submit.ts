@@ -32,6 +32,7 @@ export async function submitOrderForm(
     formData.append('action', 'inssmart_submit_order');
     formData.append('nonce', inssmartAjax.nonce);
     formData.append('form_data', JSON.stringify(request.formData));
+    // Включаем subId и clickId в additional_data, если они присутствуют
     formData.append('additional_data', JSON.stringify(request.additionalData));
 
     const response = await fetch(inssmartAjax.ajaxurl, {
@@ -89,6 +90,19 @@ export async function submitCallbackForm(
     formData.append('action', 'inssmart_submit_callback');
     formData.append('nonce', inssmartAjax.nonce);
     formData.append('form_data', JSON.stringify(request.formData));
+    // Включаем subId и clickId в additional_data, если они присутствуют
+    if (request.additionalData) {
+      const additionalData: Record<string, string | null> = {};
+      if (request.additionalData.subId) {
+        additionalData.subId = request.additionalData.subId;
+      }
+      if (request.additionalData.clickId) {
+        additionalData.clickId = request.additionalData.clickId;
+      }
+      if (Object.keys(additionalData).length > 0) {
+        formData.append('additional_data', JSON.stringify(additionalData));
+      }
+    }
 
     const response = await fetch(inssmartAjax.ajaxurl, {
       method: 'POST',

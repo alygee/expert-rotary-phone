@@ -539,6 +539,7 @@ class Inssmart_Form {
         check_ajax_referer('inssmart_ajax', 'nonce');
 
         $form_data_raw = isset($_POST['form_data']) ? $_POST['form_data'] : '';
+        $additional_data_raw = isset($_POST['additional_data']) ? $_POST['additional_data'] : '';
         
         // Если данные пришли как JSON-строка, декодируем их
         if (is_string($form_data_raw)) {
@@ -546,21 +547,35 @@ class Inssmart_Form {
             if (json_last_error() !== JSON_ERROR_NONE) {
                 // Если не удалось декодировать, пытаемся обработать как обычную строку
                 $form_data = array();
-                inssmart_log('Ошибка декодирования JSON в ajax_submit_callback: ' . json_last_error_msg(), 'error');
+                inssmart_log('Ошибка декодирования JSON form_data в ajax_submit_callback: ' . json_last_error_msg(), 'error');
             }
         } else {
             $form_data = $form_data_raw;
         }
         
-        // Если после декодирования не массив, создаем пустой массив
+        if (is_string($additional_data_raw)) {
+            $additional_data = json_decode(stripslashes($additional_data_raw), true);
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                $additional_data = array();
+                inssmart_log('Ошибка декодирования JSON additional_data в ajax_submit_callback: ' . json_last_error_msg(), 'error');
+            }
+        } else {
+            $additional_data = $additional_data_raw;
+        }
+        
+        // Если после декодирования не массивы, создаем пустые массивы
         if (!is_array($form_data)) {
             $form_data = array();
+        }
+        if (!is_array($additional_data)) {
+            $additional_data = array();
         }
 
         // Валидация и санитизация данных
         $form_data = $this->sanitize_form_data($form_data);
+        $additional_data = $this->sanitize_additional_data($additional_data);
         // Отправка в Contact Form 7
-        $result = inssmart_submit_to_cf7($form_data, 'callback', array());
+        $result = inssmart_submit_to_cf7($form_data, 'callback', $additional_data);
 
         if ($result['success']) {
             wp_send_json_success(array(

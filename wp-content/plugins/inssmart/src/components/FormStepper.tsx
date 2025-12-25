@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Typography } from './ui/typography';
@@ -23,6 +23,7 @@ import {
 import { fetchFilterData } from '@/api/filter';
 import { submitOrderForm, submitCallbackForm } from '@/api/submit';
 import { Button } from './ui/button';
+import { getUrlParams } from '@/utils/urlParams';
 
 export function FormStepper() {
   const [currentStep, setCurrentStep] = useState(1);
@@ -70,6 +71,16 @@ export function FormStepper() {
       selectedCities: false,
     },
   });
+  const [urlParams, setUrlParams] = useState<{
+    subId: string | null;
+    clickId: string | null;
+  }>({ subId: null, clickId: null });
+
+  // Получаем параметры из URL при монтировании компонента
+  useEffect(() => {
+    const params = getUrlParams();
+    setUrlParams(params);
+  }, []);
 
   const errors = validateStep1(formData, coverageLevel, selectedCities);
   const step3Errors =
@@ -297,6 +308,8 @@ export function FormStepper() {
             selectedCities: selectedCities,
             numberOfEmployees: formData.step1.numberOfEmployees,
             selectedOffer: selectedOffer,
+            subId: urlParams.subId,
+            clickId: urlParams.clickId,
           },
         });
 
@@ -310,6 +323,10 @@ export function FormStepper() {
         // Отправка формы обратного звонка
         const response = await submitCallbackForm({
           formData: formData,
+          additionalData: {
+            subId: urlParams.subId,
+            clickId: urlParams.clickId,
+          },
         });
 
         if (response.success) {

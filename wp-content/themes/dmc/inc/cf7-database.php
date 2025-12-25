@@ -11,26 +11,35 @@ function cf7_create_submissions_table() {
     global $wpdb;
     
     $table_name = $wpdb->prefix . 'cf7_submissions';
+    $charset_collate = $wpdb->get_charset_collate();
     
-    // Проверяем, существует ли таблица
-    if ($wpdb->get_var("SHOW TABLES LIKE '$table_name'") != $table_name) {
-        $charset_collate = $wpdb->get_charset_collate();
-        
-        $sql = "CREATE TABLE $table_name (
-            id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-            form_id varchar(20) NOT NULL,
-            form_title varchar(255) DEFAULT NULL,
-            submitted_data longtext NOT NULL,
-            ip_address varchar(45) DEFAULT NULL,
-            user_agent text DEFAULT NULL,
-            submitted_at datetime DEFAULT CURRENT_TIMESTAMP,
-            PRIMARY KEY (id),
-            KEY form_id (form_id),
-            KEY submitted_at (submitted_at)
-        ) $charset_collate;";
-        
-        require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-        dbDelta($sql);
+    $sql = "CREATE TABLE $table_name (
+        id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+        form_id varchar(20) NOT NULL,
+        form_title varchar(255) DEFAULT NULL,
+        submitted_data longtext NOT NULL,
+        ip_address varchar(45) DEFAULT NULL,
+        user_agent text DEFAULT NULL,
+        sub_id varchar(255) DEFAULT NULL,
+        click_id varchar(255) DEFAULT NULL,
+        submitted_at datetime DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (id),
+        KEY form_id (form_id),
+        KEY submitted_at (submitted_at)
+    ) $charset_collate;";
+    
+    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+    dbDelta($sql);
+    
+    // Проверяем и добавляем колонки, если таблица уже существует, но колонок нет
+    $columns = $wpdb->get_col("DESCRIBE $table_name");
+    
+    if (!in_array('sub_id', $columns)) {
+        $wpdb->query("ALTER TABLE $table_name ADD COLUMN sub_id varchar(255) DEFAULT NULL");
+    }
+    
+    if (!in_array('click_id', $columns)) {
+        $wpdb->query("ALTER TABLE $table_name ADD COLUMN click_id varchar(255) DEFAULT NULL");
     }
 }
 
@@ -62,6 +71,43 @@ function cf7_save_submission_to_db($contact_form, $result) {
     // Получаем все данные формы
     $posted_data = $submission->get_posted_data();
     
+    // Извлекаем subId и clickId из данных формы
+    $sub_id = null;
+    $click_id = null;
+    
+    // Проверяем различные варианты названий полей
+    if (isset($posted_data['subId']) && !empty($posted_data['subId'])) {
+        $sub_id = sanitize_text_field($posted_data['subId']);
+    } elseif (isset($posted_data['sub_id']) && !empty($posted_data['sub_id'])) {
+        $sub_id = sanitize_text_field($posted_data['sub_id']);
+    } elseif (isset($_POST['subId']) && !empty($_POST['subId'])) {
+        $sub_id = sanitize_text_field($_POST['subId']);
+    } elseif (isset($_GET['subId']) && !empty($_GET['subId'])) {
+        $sub_id = sanitize_text_field($_GET['subId']);
+    }
+    
+    if (isset($posted_data['clickId']) && !empty($posted_data['clickId'])) {
+        $click_id = sanitize_text_field($posted_data['clickId']);
+    } elseif (isset($posted_data['click_id']) && !empty($posted_data['click_id'])) {
+        $click_id = sanitize_text_field($posted_data['click_id']);
+    } elseif (isset($_POST['clickId']) && !empty($_POST['clickId'])) {
+        $click_id = sanitize_text_field($_POST['clickId']);
+    } elseif (isset($_GET['clickId']) && !empty($_GET['clickId'])) {
+        $click_id = sanitize_text_field($_GET['clickId']);
+    }
+    
+    // Временное логирование для отладки (можно удалить после тестирования)
+    if (defined('WP_DEBUG') && WP_DEBUG) {
+        error_log('CF7 Submission Debug - subId: ' . ($sub_id ?? 'не найден') . ', clickId: ' . ($click_id ?? 'не найден'));
+        error_log('CF7 Submission Debug - posted_data keys: ' . implode(', ', array_keys($posted_data)));
+        if (isset($_POST['subId']) || isset($_POST['clickId'])) {
+            error_log('CF7 Submission Debug - $_POST содержит subId или clickId');
+        }
+        if (isset($_GET['subId']) || isset($_GET['clickId'])) {
+            error_log('CF7 Submission Debug - $_GET содержит subId или clickId');
+        }
+    }
+    
     // Подготавливаем данные для сохранения
     $submitted_data = array();
     foreach ($posted_data as $key => $value) {
@@ -89,17 +135,28 @@ function cf7_save_submission_to_db($contact_form, $result) {
     // Сохраняем в БД
     $table_name = $wpdb->prefix . 'cf7_submissions';
     
-    $wpdb->insert(
-        $table_name,
-        array(
-            'form_id' => $form_id,
-            'form_title' => $form_title,
-            'submitted_data' => json_encode($submitted_data, JSON_UNESCAPED_UNICODE),
-            'ip_address' => $ip_address,
-            'user_agent' => $user_agent,
-        ),
-        array('%s', '%s', '%s', '%s', '%s')
+    $insert_data = array(
+        'form_id' => $form_id,
+        'form_title' => $form_title,
+        'submitted_data' => json_encode($submitted_data, JSON_UNESCAPED_UNICODE),
+        'ip_address' => $ip_address,
+        'user_agent' => $user_agent,
     );
+    
+    $insert_format = array('%s', '%s', '%s', '%s', '%s');
+    
+    // Добавляем sub_id и click_id, если они есть
+    if ($sub_id !== null) {
+        $insert_data['sub_id'] = $sub_id;
+        $insert_format[] = '%s';
+    }
+    
+    if ($click_id !== null) {
+        $insert_data['click_id'] = $click_id;
+        $insert_format[] = '%s';
+    }
+    
+    $wpdb->insert($table_name, $insert_data, $insert_format);
 }
 
 /**
@@ -185,6 +242,8 @@ function cf7_display_submissions_page() {
                     <th>ID</th>
                     <th>Форма</th>
                     <th>Данные</th>
+                    <th>Sub ID</th>
+                    <th>Click ID</th>
                     <th>Статус</th>
                     <th>IP адрес</th>
                     <th>Дата</th>
@@ -194,7 +253,7 @@ function cf7_display_submissions_page() {
             <tbody>
                 <?php if (empty($submissions)): ?>
                     <tr>
-                        <td colspan="7">Заявки не найдены</td>
+                        <td colspan="9">Заявки не найдены</td>
                     </tr>
                 <?php else: ?>
                     <?php foreach ($submissions as $submission): ?>
@@ -235,6 +294,8 @@ function cf7_display_submissions_page() {
                                     </details>
                                 <?php endif; ?>
                             </td>
+                            <td><?php echo isset($submission->sub_id) ? esc_html($submission->sub_id) : '-'; ?></td>
+                            <td><?php echo isset($submission->click_id) ? esc_html($submission->click_id) : '-'; ?></td>
                             <td><?php echo $status_label; ?></td>
                             <td><?php echo esc_html($submission->ip_address); ?></td>
                             <td><?php echo esc_html(date('d.m.Y H:i', strtotime($submission->submitted_at))); ?></td>
@@ -302,7 +363,7 @@ function cf7_export_submissions_to_csv() {
     fprintf($output, chr(0xEF).chr(0xBB).chr(0xBF));
     
     // Заголовки столбцов
-    $headers = array('ID', 'ID формы', 'Название формы', 'Дата отправки', 'IP адрес');
+    $headers = array('ID', 'ID формы', 'Название формы', 'Дата отправки', 'IP адрес', 'Sub ID', 'Click ID');
     $headers = array_merge($headers, $all_fields);
     fputcsv($output, $headers, ';');
     
@@ -314,7 +375,9 @@ function cf7_export_submissions_to_csv() {
             $submission->form_id,
             $submission->form_title,
             $submission->submitted_at,
-            $submission->ip_address
+            $submission->ip_address,
+            isset($submission->sub_id) ? $submission->sub_id : '',
+            isset($submission->click_id) ? $submission->click_id : ''
         );
         
         // Добавляем значения полей

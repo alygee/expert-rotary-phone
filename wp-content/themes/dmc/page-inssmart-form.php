@@ -15,6 +15,20 @@
   <meta name="theme-color" content="#F1F1F5">
   <title><?php wp_title('|', true, 'right'); ?><?php bloginfo('name'); ?></title>
   <?php wp_head(); ?>
+  
+  <?php
+  // Получаем параметры subId и clickId из URL
+  $sub_id = isset($_GET['subId']) ? sanitize_text_field($_GET['subId']) : '';
+  $click_id = isset($_GET['clickId']) ? sanitize_text_field($_GET['clickId']) : '';
+  ?>
+  
+  <script>
+    // Передаем параметры в глобальные переменные для использования формой
+    window.inssmartUrlParams = {
+      subId: <?php echo $sub_id ? "'" . esc_js($sub_id) . "'" : 'null'; ?>,
+      clickId: <?php echo $click_id ? "'" . esc_js($click_id) . "'" : 'null'; ?>
+    };
+  </script>
 </head>
 
 <body>
@@ -36,6 +50,19 @@
           
           // Выводим форму Inssmart через шорткод
           echo '<div class="inssmart-form-wrapper">';
+          
+          // Добавляем скрытые поля для передачи параметров в форму
+          if (!empty($sub_id) || !empty($click_id)) {
+            echo '<div style="display: none;">';
+            if (!empty($sub_id)) {
+              echo '<input type="hidden" name="subId" id="inssmart-sub-id" value="' . esc_attr($sub_id) . '">';
+            }
+            if (!empty($click_id)) {
+              echo '<input type="hidden" name="clickId" id="inssmart-click-id" value="' . esc_attr($click_id) . '">';
+            }
+            echo '</div>';
+          }
+          
           echo do_shortcode('[inssmart_form]');
           echo '</div>';
           ?>
@@ -45,6 +72,19 @@
     } else {
       // Если нет контента, просто выводим форму
       echo '<div style="max-width: 1200px; margin: 0 auto;">';
+      
+      // Добавляем скрытые поля для передачи параметров в форму
+      if (!empty($sub_id) || !empty($click_id)) {
+        echo '<div style="display: none;">';
+        if (!empty($sub_id)) {
+          echo '<input type="hidden" name="subId" id="inssmart-sub-id" value="' . esc_attr($sub_id) . '">';
+        }
+        if (!empty($click_id)) {
+          echo '<input type="hidden" name="clickId" id="inssmart-click-id" value="' . esc_attr($click_id) . '">';
+        }
+        echo '</div>';
+      }
+      
       echo do_shortcode('[inssmart_form]');
       echo '</div>';
     }

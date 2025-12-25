@@ -84,6 +84,8 @@ export interface SubmitOrderRequest {
         total_price: number;
       };
     } | null;
+    subId?: string | null;
+    clickId?: string | null;
   };
 }
 
@@ -103,6 +105,10 @@ export interface SubmitCallbackRequest {
       callbackPhone: string;
       isAgreed: boolean;
     };
+  };
+  additionalData?: {
+    subId?: string | null;
+    clickId?: string | null;
   };
 }
 

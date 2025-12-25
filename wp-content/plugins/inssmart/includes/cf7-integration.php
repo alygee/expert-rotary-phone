@@ -182,6 +182,59 @@ function inssmart_map_form_data($form_data, $form_type = 'order', $additional_da
         }
     }
     
+    // Добавляем subId и clickId из различных источников
+    // Проверяем в additional_data
+    if (isset($additional_data['subId']) && !empty($additional_data['subId'])) {
+        $mapped_data['subId'] = sanitize_text_field($additional_data['subId']);
+    } elseif (isset($additional_data['sub_id']) && !empty($additional_data['sub_id'])) {
+        $mapped_data['subId'] = sanitize_text_field($additional_data['sub_id']);
+    }
+    
+    if (isset($additional_data['clickId']) && !empty($additional_data['clickId'])) {
+        $mapped_data['clickId'] = sanitize_text_field($additional_data['clickId']);
+    } elseif (isset($additional_data['click_id']) && !empty($additional_data['click_id'])) {
+        $mapped_data['clickId'] = sanitize_text_field($additional_data['click_id']);
+    }
+    
+    // Проверяем в form_data
+    if (!isset($mapped_data['subId']) && isset($form_data['subId']) && !empty($form_data['subId'])) {
+        $mapped_data['subId'] = sanitize_text_field($form_data['subId']);
+    } elseif (!isset($mapped_data['subId']) && isset($form_data['sub_id']) && !empty($form_data['sub_id'])) {
+        $mapped_data['subId'] = sanitize_text_field($form_data['sub_id']);
+    }
+    
+    if (!isset($mapped_data['clickId']) && isset($form_data['clickId']) && !empty($form_data['clickId'])) {
+        $mapped_data['clickId'] = sanitize_text_field($form_data['clickId']);
+    } elseif (!isset($mapped_data['clickId']) && isset($form_data['click_id']) && !empty($form_data['click_id'])) {
+        $mapped_data['clickId'] = sanitize_text_field($form_data['click_id']);
+    }
+    
+    // Проверяем в $_POST (на случай, если переданы через скрытые поля)
+    if (!isset($mapped_data['subId']) && isset($_POST['subId']) && !empty($_POST['subId'])) {
+        $mapped_data['subId'] = sanitize_text_field($_POST['subId']);
+    } elseif (!isset($mapped_data['subId']) && isset($_POST['sub_id']) && !empty($_POST['sub_id'])) {
+        $mapped_data['subId'] = sanitize_text_field($_POST['sub_id']);
+    }
+    
+    if (!isset($mapped_data['clickId']) && isset($_POST['clickId']) && !empty($_POST['clickId'])) {
+        $mapped_data['clickId'] = sanitize_text_field($_POST['clickId']);
+    } elseif (!isset($mapped_data['clickId']) && isset($_POST['click_id']) && !empty($_POST['click_id'])) {
+        $mapped_data['clickId'] = sanitize_text_field($_POST['click_id']);
+    }
+    
+    // Проверяем в $_GET (на случай, если переданы через URL)
+    if (!isset($mapped_data['subId']) && isset($_GET['subId']) && !empty($_GET['subId'])) {
+        $mapped_data['subId'] = sanitize_text_field($_GET['subId']);
+    } elseif (!isset($mapped_data['subId']) && isset($_GET['sub_id']) && !empty($_GET['sub_id'])) {
+        $mapped_data['subId'] = sanitize_text_field($_GET['sub_id']);
+    }
+    
+    if (!isset($mapped_data['clickId']) && isset($_GET['clickId']) && !empty($_GET['clickId'])) {
+        $mapped_data['clickId'] = sanitize_text_field($_GET['clickId']);
+    } elseif (!isset($mapped_data['clickId']) && isset($_GET['click_id']) && !empty($_GET['click_id'])) {
+        $mapped_data['clickId'] = sanitize_text_field($_GET['click_id']);
+    }
+    
     return $mapped_data;
 }
 
