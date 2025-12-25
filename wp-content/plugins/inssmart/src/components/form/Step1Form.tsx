@@ -79,7 +79,7 @@ export function Step1Form({
                   >
                     <InfoIcon
                       size={20}
-                      className="text-grey-500 group-hover:text-gray-600 transition-colors"
+                      className="text-grey-300 group-hover:text-gray-600 transition-colors"
                     />
                   </button>
                 </TooltipTrigger>
