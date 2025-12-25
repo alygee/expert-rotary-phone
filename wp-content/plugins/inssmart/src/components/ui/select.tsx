@@ -133,7 +133,7 @@ export const Select = React.forwardRef<HTMLDivElement, SelectProps>(
 
       if (React.isValidElement(icon)) {
         const iconProps = (icon as React.ReactElement).props;
-        
+
         return (
           <div className="ml-1">
             {React.cloneElement(icon as React.ReactElement, {
@@ -236,6 +236,15 @@ export const Select = React.forwardRef<HTMLDivElement, SelectProps>(
         <div className="space-y-2">
           <Label>
             <div
+              onClick={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                // // Блокируем клик на label, но пропускаем клики на tooltip кнопку
+                // const target = e.target as HTMLElement;
+                // if (!target.closest('button[type="button"]')) {
+                //   e.stopPropagation();
+                // }
+              }}
               className={cn(
                 'flex items-center gap-2.5 tracking-wide',
                 isFocused && 'text-primary',
