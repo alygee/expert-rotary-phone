@@ -75,6 +75,12 @@ class Inssmart_Form {
         add_action('wp_ajax_inssmart_submit_callback', array($this, 'ajax_submit_callback'));
         add_action('wp_ajax_nopriv_inssmart_submit_callback', array($this, 'ajax_submit_callback'));
         
+        // Диагностический AJAX обработчик (только для отладки)
+        if (defined('WP_DEBUG') && WP_DEBUG) {
+            add_action('wp_ajax_inssmart_diagnostic', array($this, 'ajax_diagnostic'));
+            add_action('wp_ajax_nopriv_inssmart_diagnostic', array($this, 'ajax_diagnostic'));
+        }
+        
         // Локализация
         add_action('plugins_loaded', array($this, 'load_textdomain'));
     }
@@ -124,10 +130,43 @@ class Inssmart_Form {
             );
             
             // Локализация для AJAX
+            $nonce = wp_create_nonce('inssmart_ajax');
+            
+            // Логирование nonce для отладки (только в режиме отладки)
+            if (defined('WP_DEBUG') && WP_DEBUG) {
+                inssmart_log('Создан nonce для AJAX: ' . $nonce, 'info');
+            }
+            
             wp_localize_script('inssmart-form', 'inssmartAjax', array(
                 'ajaxurl' => admin_url('admin-ajax.php'),
-                'nonce' => wp_create_nonce('inssmart_ajax'),
+                'nonce' => $nonce,
             ));
+        }
+    }
+    
+    /**
+     * Диагностическая функция для проверки AJAX настроек
+     * Можно вызвать через AJAX для отладки
+     */
+    public function ajax_diagnostic() {
+        // Разрешаем вызов без nonce для диагностики (только в режиме отладки)
+        if (defined('WP_DEBUG') && WP_DEBUG) {
+            $diagnostic = array(
+                'ajax_url' => admin_url('admin-ajax.php'),
+                'nonce_created' => wp_create_nonce('inssmart_ajax'),
+                'nonce_received' => isset($_POST['nonce']) ? $_POST['nonce'] : 'не передан',
+                'nonce_valid' => isset($_POST['nonce']) ? wp_verify_nonce($_POST['nonce'], 'inssmart_ajax') : false,
+                'user_logged_in' => is_user_logged_in(),
+                'current_user_id' => get_current_user_id(),
+                'request_method' => $_SERVER['REQUEST_METHOD'] ?? 'неизвестно',
+                'content_type' => $_SERVER['CONTENT_TYPE'] ?? 'неизвестно',
+                'post_data_keys' => array_keys($_POST),
+                'server_software' => $_SERVER['SERVER_SOFTWARE'] ?? 'неизвестно',
+            );
+            
+            wp_send_json_success($diagnostic);
+        } else {
+            wp_send_json_error(array('message' => 'Диагностика доступна только в режиме отладки'));
         }
     }
     
@@ -566,7 +605,31 @@ class Inssmart_Form {
      * AJAX обработчик для отправки формы обратного звонка
      */
     public function ajax_submit_callback() {
-        check_ajax_referer('inssmart_ajax', 'nonce');
+        // Логирование для отладки 403 ошибки
+        if (defined('WP_DEBUG') && WP_DEBUG) {
+            inssmart_log('AJAX запрос получен - action: inssmart_submit_callback', 'info');
+            inssmart_log('POST данные: ' . print_r($_POST, true), 'info');
+            inssmart_log('Nonce получен: ' . (isset($_POST['nonce']) ? $_POST['nonce'] : 'не найден'), 'info');
+        }
+        
+        // Проверка nonce с более детальной обработкой ошибок
+        $nonce_check = check_ajax_referer('inssmart_ajax', 'nonce', false);
+        
+        if (!$nonce_check) {
+            // Детальное логирование ошибки nonce
+            if (defined('WP_DEBUG') && WP_DEBUG) {
+                $received_nonce = isset($_POST['nonce']) ? $_POST['nonce'] : 'не передан';
+                $expected_nonce = wp_create_nonce('inssmart_ajax');
+                inssmart_log('ОШИБКА NONCE - Получен: ' . $received_nonce, 'error');
+                inssmart_log('ОШИБКА NONCE - Ожидается: ' . $expected_nonce, 'error');
+            }
+            
+            wp_send_json_error(array(
+                'message' => 'Ошибка безопасности: неверный или отсутствующий nonce. Обновите страницу и попробуйте снова.',
+                'error_code' => 'nonce_failed',
+            ), 403);
+            return;
+        }
 
         $form_data_raw = isset($_POST['form_data']) ? $_POST['form_data'] : '';
         $additional_data_raw = isset($_POST['additional_data']) ? $_POST['additional_data'] : '';
