@@ -477,7 +477,37 @@ class Inssmart_Form {
      * AJAX обработчик для отправки формы заказа
      */
     public function ajax_submit_order() {
-        check_ajax_referer('inssmart_ajax', 'nonce');
+        // Логирование для отладки 403 ошибки
+        if (defined('WP_DEBUG') && WP_DEBUG) {
+            inssmart_log('AJAX запрос получен - action: inssmart_submit_order', 'info');
+            inssmart_log('POST данные: ' . print_r($_POST, true), 'info');
+            inssmart_log('Nonce получен: ' . (isset($_POST['nonce']) ? $_POST['nonce'] : 'не найден'), 'info');
+            inssmart_log('HTTP метод: ' . ($_SERVER['REQUEST_METHOD'] ?? 'неизвестно'), 'info');
+        }
+        
+        // Проверка nonce с более детальной обработкой ошибок
+        $nonce_check = check_ajax_referer('inssmart_ajax', 'nonce', false);
+        
+        if (!$nonce_check) {
+            // Детальное логирование ошибки nonce
+            if (defined('WP_DEBUG') && WP_DEBUG) {
+                $received_nonce = isset($_POST['nonce']) ? $_POST['nonce'] : 'не передан';
+                $expected_nonce = wp_create_nonce('inssmart_ajax');
+                inssmart_log('ОШИБКА NONCE - Получен: ' . $received_nonce, 'error');
+                inssmart_log('ОШИБКА NONCE - Ожидается: ' . $expected_nonce, 'error');
+                inssmart_log('ОШИБКА NONCE - Проверка: ' . wp_verify_nonce($received_nonce, 'inssmart_ajax'), 'error');
+            }
+            
+            wp_send_json_error(array(
+                'message' => 'Ошибка безопасности: неверный или отсутствующий nonce. Обновите страницу и попробуйте снова.',
+                'error_code' => 'nonce_failed',
+                'debug_info' => defined('WP_DEBUG') && WP_DEBUG ? array(
+                    'received_nonce' => isset($_POST['nonce']) ? 'present' : 'missing',
+                    'user_logged_in' => is_user_logged_in(),
+                ) : null,
+            ), 403);
+            return;
+        }
 
         $form_data_raw = isset($_POST['form_data']) ? $_POST['form_data'] : '';
         $additional_data_raw = isset($_POST['additional_data']) ? $_POST['additional_data'] : '';

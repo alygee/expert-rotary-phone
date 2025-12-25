@@ -392,6 +392,22 @@ function cf7_export_submissions_to_csv() {
     exit;
 }
 
+/**
+ * Автоматическое добавление скрытых полей subId и clickId в формы CF7
+ * Поля будут автоматически заполняться из URL параметров через JavaScript
+ */
+function cf7_add_url_params_fields($form) {
+    // Добавляем скрытые поля в форму, если их еще нет
+    // JavaScript будет заполнять их значениями из URL
+    $hidden_fields = '<input type="hidden" name="subId" value="" class="cf7-url-param-subid">';
+    $hidden_fields .= '<input type="hidden" name="clickId" value="" class="cf7-url-param-clickid">';
+    
+    // Вставляем поля перед закрывающим тегом формы
+    $form = str_replace('</form>', $hidden_fields . '</form>', $form);
+    
+    return $form;
+}
+
 // Хуки
 // Создаем таблицу при загрузке админки или при отправке формы
 add_action('admin_init', 'cf7_create_submissions_table');
@@ -400,4 +416,6 @@ add_action('wpcf7_before_send_mail', 'cf7_create_submissions_table');
 // Это позволяет сохранять данные даже если email не отправился
 add_action('wpcf7_submit', 'cf7_save_submission_to_db', 10, 2);
 add_action('admin_menu', 'cf7_add_admin_menu');
+// Автоматически добавляем скрытые поля в формы CF7
+add_filter('wpcf7_form_elements', 'cf7_add_url_params_fields');
 

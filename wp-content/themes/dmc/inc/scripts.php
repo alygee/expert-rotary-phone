@@ -32,6 +32,15 @@ function footer_enqueue_scripts(){
             '1.0.0',
             true
         );
+        
+        // Подключаем скрипт для автоматического заполнения полей subId и clickId в формах CF7
+        wp_enqueue_script(
+            'cf7-url-params',
+            get_template_directory_uri() . '/js/cf7-url-params.js',
+            array('jquery'),
+            '1.0.0',
+            true
+        );
     }
 }
 
