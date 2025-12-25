@@ -583,6 +583,13 @@ class Inssmart_Form {
         // Валидация и санитизация данных
         $form_data = $this->sanitize_form_data($form_data);
         $additional_data = $this->sanitize_additional_data($additional_data);
+        
+        // Логирование для отладки
+        if (defined('WP_DEBUG') && WP_DEBUG) {
+            inssmart_log('ajax_submit_order - additional_data после санитизации: ' . print_r($additional_data, true), 'info');
+            inssmart_log('ajax_submit_order - subId в additional_data: ' . (isset($additional_data['subId']) ? $additional_data['subId'] : 'не найден'), 'info');
+            inssmart_log('ajax_submit_order - clickId в additional_data: ' . (isset($additional_data['clickId']) ? $additional_data['clickId'] : 'не найден'), 'info');
+        }
 
         // Отправка в Contact Form 7
         $result = inssmart_submit_to_cf7($form_data, 'order', $additional_data);
@@ -751,6 +758,19 @@ class Inssmart_Form {
         }
         
         $sanitized = array();
+        
+        // Добавляем subId и clickId из URL параметров
+        if (isset($data['subId']) && !empty($data['subId'])) {
+            $sanitized['subId'] = sanitize_text_field($data['subId']);
+        } elseif (isset($data['sub_id']) && !empty($data['sub_id'])) {
+            $sanitized['subId'] = sanitize_text_field($data['sub_id']);
+        }
+        
+        if (isset($data['clickId']) && !empty($data['clickId'])) {
+            $sanitized['clickId'] = sanitize_text_field($data['clickId']);
+        } elseif (isset($data['click_id']) && !empty($data['click_id'])) {
+            $sanitized['clickId'] = sanitize_text_field($data['click_id']);
+        }
         
         if (isset($data['coverageLevel'])) {
             $sanitized['coverageLevel'] = sanitize_text_field($data['coverageLevel']);

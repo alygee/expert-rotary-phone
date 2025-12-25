@@ -75,37 +75,63 @@ function cf7_save_submission_to_db($contact_form, $result) {
     $sub_id = null;
     $click_id = null;
     
-    // Проверяем различные варианты названий полей
+    // ВАЖНО: Проверяем в следующем порядке приоритета:
+    // 1. posted_data (данные из формы CF7)
+    // 2. $_POST (могут быть переданы через AJAX)
+    // 3. $_GET (из URL параметров)
+    // 4. $_REQUEST (на случай, если переданы другим способом)
+    
+    // Проверяем subId
     if (isset($posted_data['subId']) && !empty($posted_data['subId'])) {
         $sub_id = sanitize_text_field($posted_data['subId']);
     } elseif (isset($posted_data['sub_id']) && !empty($posted_data['sub_id'])) {
         $sub_id = sanitize_text_field($posted_data['sub_id']);
     } elseif (isset($_POST['subId']) && !empty($_POST['subId'])) {
         $sub_id = sanitize_text_field($_POST['subId']);
+    } elseif (isset($_POST['sub_id']) && !empty($_POST['sub_id'])) {
+        $sub_id = sanitize_text_field($_POST['sub_id']);
     } elseif (isset($_GET['subId']) && !empty($_GET['subId'])) {
         $sub_id = sanitize_text_field($_GET['subId']);
+    } elseif (isset($_GET['sub_id']) && !empty($_GET['sub_id'])) {
+        $sub_id = sanitize_text_field($_GET['sub_id']);
+    } elseif (isset($_REQUEST['subId']) && !empty($_REQUEST['subId'])) {
+        $sub_id = sanitize_text_field($_REQUEST['subId']);
+    } elseif (isset($_REQUEST['sub_id']) && !empty($_REQUEST['sub_id'])) {
+        $sub_id = sanitize_text_field($_REQUEST['sub_id']);
     }
     
+    // Проверяем clickId
     if (isset($posted_data['clickId']) && !empty($posted_data['clickId'])) {
         $click_id = sanitize_text_field($posted_data['clickId']);
     } elseif (isset($posted_data['click_id']) && !empty($posted_data['click_id'])) {
         $click_id = sanitize_text_field($posted_data['click_id']);
     } elseif (isset($_POST['clickId']) && !empty($_POST['clickId'])) {
         $click_id = sanitize_text_field($_POST['clickId']);
+    } elseif (isset($_POST['click_id']) && !empty($_POST['click_id'])) {
+        $click_id = sanitize_text_field($_POST['click_id']);
     } elseif (isset($_GET['clickId']) && !empty($_GET['clickId'])) {
         $click_id = sanitize_text_field($_GET['clickId']);
+    } elseif (isset($_GET['click_id']) && !empty($_GET['click_id'])) {
+        $click_id = sanitize_text_field($_GET['click_id']);
+    } elseif (isset($_REQUEST['clickId']) && !empty($_REQUEST['clickId'])) {
+        $click_id = sanitize_text_field($_REQUEST['clickId']);
+    } elseif (isset($_REQUEST['click_id']) && !empty($_REQUEST['click_id'])) {
+        $click_id = sanitize_text_field($_REQUEST['click_id']);
     }
     
-    // Временное логирование для отладки (можно удалить после тестирования)
+    // Детальное логирование для отладки
     if (defined('WP_DEBUG') && WP_DEBUG) {
-        error_log('CF7 Submission Debug - subId: ' . ($sub_id ?? 'не найден') . ', clickId: ' . ($click_id ?? 'не найден'));
-        error_log('CF7 Submission Debug - posted_data keys: ' . implode(', ', array_keys($posted_data)));
-        if (isset($_POST['subId']) || isset($_POST['clickId'])) {
-            error_log('CF7 Submission Debug - $_POST содержит subId или clickId');
-        }
-        if (isset($_GET['subId']) || isset($_GET['clickId'])) {
-            error_log('CF7 Submission Debug - $_GET содержит subId или clickId');
-        }
+        error_log('=== CF7 Submission Debug ===');
+        error_log('subId найден: ' . ($sub_id ?? 'НЕТ'));
+        error_log('clickId найден: ' . ($click_id ?? 'НЕТ'));
+        error_log('posted_data keys: ' . implode(', ', array_keys($posted_data)));
+        error_log('posted_data subId: ' . (isset($posted_data['subId']) ? $posted_data['subId'] : 'не найден'));
+        error_log('posted_data clickId: ' . (isset($posted_data['clickId']) ? $posted_data['clickId'] : 'не найден'));
+        error_log('$_POST subId: ' . (isset($_POST['subId']) ? $_POST['subId'] : 'не найден'));
+        error_log('$_POST clickId: ' . (isset($_POST['clickId']) ? $_POST['clickId'] : 'не найден'));
+        error_log('$_GET subId: ' . (isset($_GET['subId']) ? $_GET['subId'] : 'не найден'));
+        error_log('$_GET clickId: ' . (isset($_GET['clickId']) ? $_GET['clickId'] : 'не найден'));
+        error_log('=======================');
     }
     
     // Подготавливаем данные для сохранения

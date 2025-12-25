@@ -328,13 +328,30 @@ function inssmart_submit_to_cf7($form_data, $form_type = 'order', $additional_da
 
     // Маппим данные
     $mapped_data = inssmart_map_form_data($form_data, $form_type, $additional_data);
+    
+    // Логирование для отладки
+    if (defined('WP_DEBUG') && WP_DEBUG) {
+        inssmart_log('inssmart_submit_to_cf7 - mapped_data keys: ' . implode(', ', array_keys($mapped_data)), 'info');
+        inssmart_log('inssmart_submit_to_cf7 - subId в mapped_data: ' . (isset($mapped_data['subId']) ? $mapped_data['subId'] : 'не найден'), 'info');
+        inssmart_log('inssmart_submit_to_cf7 - clickId в mapped_data: ' . (isset($mapped_data['clickId']) ? $mapped_data['clickId'] : 'не найден'), 'info');
+        inssmart_log('inssmart_submit_to_cf7 - additional_data: ' . print_r($additional_data, true), 'info');
+    }
 
     // Подготавливаем данные для отправки
     // Сохраняем оригинальный $_POST
     $original_post = $_POST;
 
     // Устанавливаем данные формы
+    // ВАЖНО: Объединяем с существующим $_POST, чтобы не потерять другие данные
     $_POST = array_merge($_POST, $mapped_data);
+    
+    // Убеждаемся, что subId и clickId точно попадут в $_POST
+    if (isset($mapped_data['subId']) && !empty($mapped_data['subId'])) {
+        $_POST['subId'] = $mapped_data['subId'];
+    }
+    if (isset($mapped_data['clickId']) && !empty($mapped_data['clickId'])) {
+        $_POST['clickId'] = $mapped_data['clickId'];
+    }
 
     // Добавляем служебные поля CF7
     $_POST['_wpcf7'] = $form_id;
