@@ -24,47 +24,52 @@ function getInssmartAjax(): { ajaxurl: string; nonce: string } | null {
 }
 
 /**
- * Отправка формы заказа в Contact Form 7
+ * Отправка формы заказа в Contact Form 7 через REST API
  */
 export async function submitOrderForm(
   request: SubmitOrderRequest
 ): Promise<SubmitResponse> {
-  // Используем AJAX URL из WordPress, если доступен, иначе используем базовый URL
-  const inssmartAjax = getInssmartAjax();
-  const ajaxUrl = inssmartAjax?.ajaxurl || API_CONFIG.getAjaxUrl();
-  const nonce = inssmartAjax?.nonce || '';
+  // Используем новый REST API эндпоинт
+  const apiUrl = API_CONFIG.getRestApiUrl('dmc/v1/order-form');
 
   try {
-    const formData = new FormData();
-    formData.append('action', 'inssmart_submit_order');
-    if (nonce) {
-      formData.append('nonce', nonce);
-    }
-    formData.append('form_data', JSON.stringify(request.formData));
-    // Включаем subId и clickId в additional_data, если они присутствуют
-    formData.append('additional_data', JSON.stringify(request.additionalData));
-
-    const response = await fetch(ajaxUrl, {
+    const response = await fetch(apiUrl, {
       method: 'POST',
-      body: formData,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        form_data: request.formData,
+        additional_data: request.additionalData,
+      }),
     });
 
     const data = await response.json();
+
+    if (!response.ok) {
+      // Обрабатываем ошибки HTTP
+      return {
+        success: false,
+        message: data.message || data.data?.message || 'Ошибка при отправке формы',
+        errors: data.errors || data.data?.errors || [],
+        status: data.status || data.data?.status || null,
+      };
+    }
 
     if (data.success) {
       return {
         success: true,
         data: {
-          message: data.data?.message || 'Форма успешно отправлена',
-          status: data.data?.status || 'mail_sent',
+          message: data.message || 'Форма успешно отправлена',
+          status: data.status || 'mail_sent',
         },
       };
     } else {
       return {
         success: false,
-        message: data.data?.message || 'Ошибка при отправке формы',
-        errors: data.data?.errors || [],
-        status: data.data?.status || null,
+        message: data.message || 'Ошибка при отправке формы',
+        errors: data.errors || [],
+        status: data.status || null,
       };
     }
   } catch (error) {

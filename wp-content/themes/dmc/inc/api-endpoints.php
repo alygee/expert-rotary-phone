@@ -4,6 +4,42 @@
  */
 
 /**
+ * Отключение CORS для эндпоинтов dmc/v1
+ */
+function disable_cors_for_dmc_endpoints($served, $result, $request, $server) {
+    $route = $request->get_route();
+    
+    // Проверяем, что это запрос к нашему API
+    if (strpos($route, '/dmc/v1/') !== false) {
+        // Удаляем ограничения CORS - разрешаем все источники
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+        header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
+        header('Access-Control-Max-Age: 86400');
+    }
+    
+    return $served;
+}
+add_filter('rest_pre_serve_request', 'disable_cors_for_dmc_endpoints', 0, 4);
+
+/**
+ * Обработка preflight OPTIONS запросов для CORS
+ */
+function handle_cors_preflight() {
+    $request_uri = $_SERVER['REQUEST_URI'] ?? '';
+    if (strpos($request_uri, '/wp-json/dmc/v1/') !== false && $_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+        header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
+        header('Access-Control-Max-Age: 86400');
+        http_response_code(200);
+        exit;
+    }
+}
+add_action('rest_api_init', 'handle_cors_preflight', 1);
+add_action('init', 'handle_cors_preflight', 1);
+
+/**
  * Регистрация REST API endpoint для фильтрации данных
  */
 function register_filter_api_endpoint() {
@@ -294,5 +330,217 @@ function filter_info_callback($request) {
             'employee_ranges' => array_values($employee_ranges),
         ),
     ), 200);
+}
+
+/**
+ * Регистрация REST API endpoint для сохранения формы OrderForm
+ */
+function register_order_form_endpoint() {
+    register_rest_route('dmc/v1', '/order-form', array(
+        'methods' => 'POST',
+        'callback' => 'order_form_callback',
+        'permission_callback' => '__return_true', // Публичный доступ
+        'args' => array(),
+    ));
+}
+add_action('rest_api_init', 'register_order_form_endpoint');
+
+/**
+ * Обработчик REST API endpoint для сохранения формы OrderForm
+ * 
+ * @param WP_REST_Request $request Объект запроса
+ * @return WP_REST_Response|WP_Error Ответ API
+ */
+function order_form_callback($request) {
+    // Проверяем наличие функции из плагина inssmart
+    if (!function_exists('inssmart_submit_to_cf7')) {
+        return new WP_Error(
+            'plugin_not_available',
+            'Плагин inssmart не установлен или не активирован',
+            array('status' => 500)
+        );
+    }
+    
+    // Получаем данные из запроса
+    $form_data = $request->get_param('form_data');
+    $additional_data = $request->get_param('additional_data') ?: array();
+    
+    // Проверяем, что form_data передан
+    if (empty($form_data)) {
+        return new WP_Error(
+            'missing_form_data',
+            'Не переданы данные формы (form_data)',
+            array('status' => 400)
+        );
+    }
+    
+    // Преобразуем объект в массив, если необходимо
+    if (is_object($form_data)) {
+        $form_data = json_decode(json_encode($form_data), true);
+    }
+    
+    if (is_object($additional_data)) {
+        $additional_data = json_decode(json_encode($additional_data), true);
+    }
+    
+    // Убеждаемся, что это массивы
+    if (!is_array($form_data)) {
+        $form_data = array();
+    }
+    if (!is_array($additional_data)) {
+        $additional_data = array();
+    }
+    
+    // Санитизация данных
+    $form_data = sanitize_order_form_data($form_data);
+    $additional_data = sanitize_order_form_additional_data($additional_data);
+    
+    // Отправляем данные через функцию плагина inssmart
+    $result = inssmart_submit_to_cf7($form_data, 'order', $additional_data);
+    
+    if ($result['success']) {
+        return new WP_REST_Response(array(
+            'success' => true,
+            'message' => $result['message'] ?? 'Форма успешно сохранена',
+            'status' => $result['status'] ?? 'mail_sent',
+        ), 200);
+    } else {
+        $status_code = isset($result['status']) && $result['status'] === 'validation_failed' ? 400 : 500;
+        
+        return new WP_REST_Response(array(
+            'success' => false,
+            'message' => $result['message'] ?? 'Ошибка при сохранении формы',
+            'status' => $result['status'] ?? 'error',
+            'errors' => isset($result['errors']) ? $result['errors'] : array(),
+            'invalid_fields' => isset($result['invalid_fields']) ? $result['invalid_fields'] : array(),
+        ), $status_code);
+    }
+}
+
+/**
+ * Санитизация данных формы OrderForm
+ * 
+ * @param array $data Данные формы
+ * @return array Санитизированные данные
+ */
+function sanitize_order_form_data($data) {
+    if (!is_array($data)) {
+        return array();
+    }
+    
+    $sanitized = array();
+    
+    // Обрабатываем структуру с step3
+    if (isset($data['step3']) && is_array($data['step3'])) {
+        $sanitized['step3'] = array();
+        
+        $fields = array(
+            'organizationName',
+            'inn',
+            'responsiblePerson',
+            'workEmail',
+            'workPhone',
+            'serviceRegion',
+            'coverageLevel',
+            'numberOfEmployees',
+            'insurerName',
+            'totalPrice',
+            'city',
+        );
+        
+        foreach ($fields as $field) {
+            if (isset($data['step3'][$field])) {
+                if (is_array($data['step3'][$field])) {
+                    $sanitized['step3'][$field] = array_map('sanitize_text_field', $data['step3'][$field]);
+                } else {
+                    $sanitized['step3'][$field] = sanitize_text_field($data['step3'][$field]);
+                }
+            }
+        }
+    }
+    
+    // Сохраняем другие поля, если они есть
+    foreach ($data as $key => $value) {
+        if ($key !== 'step3' && !isset($sanitized[$key])) {
+            if (is_array($value)) {
+                $sanitized[$key] = array_map('sanitize_text_field', $value);
+            } else {
+                $sanitized[$key] = sanitize_text_field($value);
+            }
+        }
+    }
+    
+    return $sanitized;
+}
+
+/**
+ * Санитизация дополнительных данных формы OrderForm
+ * 
+ * @param array $data Дополнительные данные
+ * @return array Санитизированные данные
+ */
+function sanitize_order_form_additional_data($data) {
+    if (!is_array($data)) {
+        return array();
+    }
+    
+    $sanitized = array();
+    
+    // Обрабатываем subId и clickId
+    if (isset($data['subId']) && !empty($data['subId'])) {
+        $sanitized['subId'] = sanitize_text_field($data['subId']);
+    } elseif (isset($data['sub_id']) && !empty($data['sub_id'])) {
+        $sanitized['subId'] = sanitize_text_field($data['sub_id']);
+    }
+    
+    if (isset($data['clickId']) && !empty($data['clickId'])) {
+        $sanitized['clickId'] = sanitize_text_field($data['clickId']);
+    } elseif (isset($data['click_id']) && !empty($data['click_id'])) {
+        $sanitized['clickId'] = sanitize_text_field($data['click_id']);
+    }
+    
+    // Обрабатываем другие поля
+    if (isset($data['coverageLevel'])) {
+        $sanitized['coverageLevel'] = sanitize_text_field($data['coverageLevel']);
+    }
+    
+    if (isset($data['selectedCities'])) {
+        if (is_array($data['selectedCities'])) {
+            $sanitized['selectedCities'] = array_map('sanitize_text_field', $data['selectedCities']);
+        } else {
+            $sanitized['selectedCities'] = sanitize_text_field($data['selectedCities']);
+        }
+    }
+    
+    if (isset($data['numberOfEmployees'])) {
+        $sanitized['numberOfEmployees'] = sanitize_text_field($data['numberOfEmployees']);
+    }
+    
+    // Обрабатываем selectedOffer
+    if (isset($data['selectedOffer']) && is_array($data['selectedOffer'])) {
+        $offer = array();
+        
+        if (isset($data['selectedOffer']['insurerName'])) {
+            $offer['insurerName'] = sanitize_text_field($data['selectedOffer']['insurerName']);
+        }
+        
+        if (isset($data['selectedOffer']['city'])) {
+            $offer['city'] = sanitize_text_field($data['selectedOffer']['city']);
+        }
+        
+        if (isset($data['selectedOffer']['record']) && is_array($data['selectedOffer']['record'])) {
+            $record = array();
+            
+            if (isset($data['selectedOffer']['record']['total_price'])) {
+                $record['total_price'] = floatval($data['selectedOffer']['record']['total_price']);
+            }
+            
+            $offer['record'] = $record;
+        }
+        
+        $sanitized['selectedOffer'] = $offer;
+    }
+    
+    return $sanitized;
 }
 

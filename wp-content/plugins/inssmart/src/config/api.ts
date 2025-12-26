@@ -22,5 +22,14 @@ export const API_CONFIG = {
   getAjaxUrl(): string {
     return `${this.BASE_URL}/wp-admin/admin-ajax.php`;
   },
+  
+  /**
+   * Получить URL для REST API запросов WordPress
+   */
+  getRestApiUrl(endpoint: string): string {
+    // Убираем начальный слэш, если он есть
+    const cleanEndpoint = endpoint.startsWith('/') ? endpoint.slice(1) : endpoint;
+    return `${this.BASE_URL}/wp-json/${cleanEndpoint}`;
+  },
 };
 
