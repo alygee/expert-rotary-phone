@@ -1,4 +1,5 @@
 import type { FilterResponse } from '@/types/api';
+import { API_CONFIG } from '@/config/api';
 
 interface FilterParams {
   cities?: string[];
@@ -22,9 +23,11 @@ export async function fetchFilterData(
   }
 
   const queryString = urlParams.toString();
-  const url = queryString
-    ? `/wp-json/dmc/v1/filter?${queryString}`
-    : '/wp-json/dmc/v1/filter';
+  const endpoint = queryString
+    ? `wp-json/dmc/v1/filter?${queryString}`
+    : 'wp-json/dmc/v1/filter';
+  
+  const url = API_CONFIG.getApiUrl(endpoint);
 
   const response = await fetch(url, {
     method: 'GET',

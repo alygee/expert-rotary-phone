@@ -1,15 +1,51 @@
 {
   "name": "inssmart-form",
   "version": "1.0.0",
-  "description": "Stepper form for WordPress integration",
+  "description": "Stepper form for WordPress integration and iframe embedding",
   "type": "module",
+  "main": "./dist/inssmart-form.js",
+  "module": "./dist/inssmart-form.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/inssmart-form.js",
+      "require": "./dist/inssmart-form.js"
+    },
+    "./iframe": "./dist/iframe/index.html"
+  },
+  "keywords": [
+    "react",
+    "form",
+    "stepper",
+    "wordpress",
+    "iframe",
+    "insurance"
+  ],
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "build:wordpress": "tsc && vite build --mode wordpress && npm run copy-fonts",
-    "copy-fonts": "mkdir -p dist/assets/fonts && cp src/assets/fonts/*.ttf dist/assets/fonts/",
+    "build:wordpress": "tsc && vite build --mode wordpress && npm run copy-fonts && npm run generate-types",
+    "build:iframe": "tsc && vite build --mode iframe && npm run copy-fonts:iframe && npm run rename-iframe",
+    "rename-iframe": "mv dist/iframe/iframe.html dist/iframe/index.html 2>/dev/null || true",
+    "build:all": "npm run build:wordpress && npm run build:iframe",
+    "generate-types": "node scripts/generate-types.js",
+    "copy-fonts": "mkdir -p dist/assets/fonts && cp src/assets/fonts/*.ttf dist/assets/fonts/ 2>/dev/null || true",
+    "copy-fonts:iframe": "mkdir -p dist/iframe/assets/fonts && cp src/assets/fonts/*.ttf dist/iframe/assets/fonts/ 2>/dev/null || true",
     "preview": "vite preview",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
+    "preview:iframe": "vite preview --outDir dist/iframe",
+    "serve": "python3 -m http.server 8000 || python -m http.server 8000 || php -S localhost:8000 || npx serve .",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "prepublishOnly": "npm run build:all"
   },
   "dependencies": {
     "@floating-ui/react-dom": "^2.1.6",

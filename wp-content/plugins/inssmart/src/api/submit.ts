@@ -3,14 +3,25 @@ import type {
   SubmitCallbackRequest,
   SubmitResponse,
 } from '@/types/api';
+import { API_CONFIG } from '@/config/api';
 
-// Получаем AJAX URL и nonce из WordPress
-declare const inssmartAjax:
-  | {
-      ajaxurl: string;
-      nonce: string;
+// Получаем AJAX URL и nonce из WordPress (если доступно)
+// Безопасная проверка для iframe версии, где эта переменная может отсутствовать
+function getInssmartAjax(): { ajaxurl: string; nonce: string } | null {
+  if (typeof window !== 'undefined') {
+    try {
+      // Проверяем, определена ли переменная inssmartAjax
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const ajax = (window as any).inssmartAjax;
+      if (ajax && typeof ajax === 'object' && ajax.ajaxurl && ajax.nonce) {
+        return ajax;
+      }
+    } catch {
+      // Игнорируем ошибки доступа к переменной
     }
-  | undefined;
+  }
+  return null;
+}
 
 /**
  * Отправка формы заказа в Contact Form 7
@@ -18,24 +29,22 @@ declare const inssmartAjax:
 export async function submitOrderForm(
   request: SubmitOrderRequest
 ): Promise<SubmitResponse> {
-  if (!inssmartAjax) {
-    return {
-      success: false,
-      message:
-        'AJAX конфигурация не найдена. Убедитесь, что плагин правильно загружен.',
-      errors: [],
-    };
-  }
+  // Используем AJAX URL из WordPress, если доступен, иначе используем базовый URL
+  const inssmartAjax = getInssmartAjax();
+  const ajaxUrl = inssmartAjax?.ajaxurl || API_CONFIG.getAjaxUrl();
+  const nonce = inssmartAjax?.nonce || '';
 
   try {
     const formData = new FormData();
     formData.append('action', 'inssmart_submit_order');
-    formData.append('nonce', inssmartAjax.nonce);
+    if (nonce) {
+      formData.append('nonce', nonce);
+    }
     formData.append('form_data', JSON.stringify(request.formData));
     // Включаем subId и clickId в additional_data, если они присутствуют
     formData.append('additional_data', JSON.stringify(request.additionalData));
 
-    const response = await fetch(inssmartAjax.ajaxurl, {
+    const response = await fetch(ajaxUrl, {
       method: 'POST',
       body: formData,
     });
@@ -76,19 +85,17 @@ export async function submitOrderForm(
 export async function submitCallbackForm(
   request: SubmitCallbackRequest
 ): Promise<SubmitResponse> {
-  if (!inssmartAjax) {
-    return {
-      success: false,
-      message:
-        'AJAX конфигурация не найдена. Убедитесь, что плагин правильно загружен.',
-      errors: [],
-    };
-  }
+  // Используем AJAX URL из WordPress, если доступен, иначе используем базовый URL
+  const inssmartAjax = getInssmartAjax();
+  const ajaxUrl = inssmartAjax?.ajaxurl || API_CONFIG.getAjaxUrl();
+  const nonce = inssmartAjax?.nonce || '';
 
   try {
     const formData = new FormData();
     formData.append('action', 'inssmart_submit_callback');
-    formData.append('nonce', inssmartAjax.nonce);
+    if (nonce) {
+      formData.append('nonce', nonce);
+    }
     formData.append('form_data', JSON.stringify(request.formData));
     // Включаем subId и clickId в additional_data, если они присутствуют
     if (request.additionalData) {
@@ -104,7 +111,7 @@ export async function submitCallbackForm(
       }
     }
 
-    const response = await fetch(inssmartAjax.ajaxurl, {
+    const response = await fetch(ajaxUrl, {
       method: 'POST',
       body: formData,
     });

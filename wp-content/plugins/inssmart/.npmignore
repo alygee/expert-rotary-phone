@@ -1,0 +1,40 @@
+# Исходный код
+src/
+scripts/
+includes/
+*.php
+*.ts
+*.tsx
+*.js
+!dist/**/*.js
+
+# Конфигурация
+vite.config.ts
+tsconfig.json
+tsconfig.node.json
+tailwind.config.js
+postcss.config.js
+pnpm-lock.yaml
+pnpm-workspace.yaml
+
+# Разработка
+node_modules/
+.git/
+.gitignore
+*.log
+.DS_Store
+
+# Файлы для разработки
+index.html
+iframe.html
+iframe-example.html
+wordpress-example.html
+*.md
+!README.md
+NPM_PUBLISH.md
+
+# Временные файлы
+*.tmp
+.cache/
+.vite/
+

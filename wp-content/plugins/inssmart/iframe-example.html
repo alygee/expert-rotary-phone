@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Пример встраивания Inssmart Form через iframe</title>
+    <!-- 
+    ВАЖНО: Этот файл нужно открывать через локальный HTTP сервер, 
+    а не напрямую через file:// протокол!
+    
+    Для запуска локального сервера используйте одну из команд:
+    - npm run preview (запустит Vite preview сервер)
+    - python3 -m http.server 8000
+    - npx serve .
+    
+    Затем откройте: http://localhost:8000/iframe-example.html
+    -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .iframe-container {
+            width: 100%;
+            margin: 20px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .iframe-container iframe {
+            display: block;
+            width: 100%;
+            border: none;
+        }
+        h1 {
+            color: #333;
+        }
+        .example {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f5f5f5;
+            border-radius: 8px;
+        }
+        code {
+            background: #e8e8e8;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div style="background: #fff3cd; border: 1px solid #ffc107; padding: 15px; margin-bottom: 20px; border-radius: 4px;">
+        <strong>⚠️ Важно:</strong> Этот файл нужно открывать через локальный HTTP сервер, а не напрямую через <code>file://</code> протокол!<br>
+        Используйте: <code>npm run preview</code> или <code>python3 -m http.server 8000</code>, затем откройте <code>http://localhost:8000/iframe-example.html</code>
+    </div>
+    <h1>Примеры встраивания Inssmart Form через iframe</h1>
+    
+    <div class="example">
+        <h2>Пример 1: Фиксированная высота</h2>
+        <div class="iframe-container">
+            <iframe 
+                src="./dist/iframe/index.html"
+                width="100%"
+                height="800"
+                frameborder="0"
+                style="min-height: 800px;"
+            ></iframe>
+        </div>
+        <p>Код:</p>
+        <pre><code>&lt;iframe 
+  src="./dist/iframe/index.html"
+  width="100%"
+  height="800"
+  frameborder="0"
+  style="min-height: 800px;"
+&gt;&lt;/iframe&gt;</code></pre>
+    </div>
+
+    <div class="example">
+        <h2>Пример 2: Адаптивная высота (с JavaScript)</h2>
+        <div class="iframe-container">
+            <iframe 
+                id="inssmart-iframe-adaptive"
+                src="./dist/iframe/index.html"
+                width="100%"
+                frameborder="0"
+                style="display: block; min-height: 600px;"
+            ></iframe>
+        </div>
+        <p>Код:</p>
+        <pre><code>&lt;iframe 
+  id="inssmart-iframe-adaptive"
+  src="./dist/iframe/index.html"
+  width="100%"
+  frameborder="0"
+  style="display: block; min-height: 600px;"
+&gt;&lt;/iframe&gt;
+
+&lt;script&gt;
+  const iframe = document.getElementById('inssmart-iframe-adaptive');
+  
+  window.addEventListener('message', function(event) {
+    if (event.data && event.data.type === 'resize' && event.data.height) {
+      iframe.style.height = event.data.height + 'px';
+    }
+  });
+&lt;/script&gt;</code></pre>
+    </div>
+
+    <div class="example">
+        <h2>Пример 3: Полная ширина и высота</h2>
+        <div class="iframe-container" style="height: 900px;">
+            <iframe 
+                src="./dist/iframe/index.html"
+                width="100%"
+                height="100%"
+                frameborder="0"
+            ></iframe>
+        </div>
+        <p>Код:</p>
+        <pre><code>&lt;div style="width: 100%; height: 900px;"&gt;
+  &lt;iframe 
+    src="./dist/iframe/index.html"
+    width="100%"
+    height="100%"
+    frameborder="0"
+  &gt;&lt;/iframe&gt;
+&lt;/div&gt;</code></pre>
+    </div>
+
+    <script>
+        // Пример обработки сообщений от iframe для адаптивной высоты
+        const iframe = document.getElementById('inssmart-iframe-adaptive');
+        if (iframe) {
+            window.addEventListener('message', function(event) {
+                // В продакшене проверяйте origin для безопасности
+                // if (event.origin !== 'https://your-domain.com') return;
+                
+                if (event.data && event.data.type === 'resize' && event.data.height) {
+                    iframe.style.height = event.data.height + 'px';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
+
