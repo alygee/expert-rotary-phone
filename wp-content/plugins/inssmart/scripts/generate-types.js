@@ -43,3 +43,5 @@ fs.writeFileSync(typesPath, typesContent, 'utf-8');
 console.log('✓ Файл типов создан:', typesPath);
 
 
+
+

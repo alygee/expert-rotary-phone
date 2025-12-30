@@ -2,6 +2,39 @@
 
 Многошаговая форма на React с использованием shadcn/ui и Tailwind CSS, предназначенная для интеграции в WordPress и встраивания через iframe.
 
+## Быстрый старт через CDN
+
+После публикации в npm пакет автоматически доступен через CDN. **Никакой дополнительной настройки не требуется!**
+
+### Использование iframe версии через CDN
+
+```html
+<iframe 
+  src="https://unpkg.com/inssmart-form@latest/dist/iframe/index.html"
+  width="100%"
+  height="800"
+  frameborder="0"
+  style="border: none;"
+></iframe>
+```
+
+### Использование WordPress версии через CDN
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/inssmart-form@latest/dist/inssmart-form.css">
+<div id="inssmart-form-container"></div>
+<script src="https://unpkg.com/inssmart-form@latest/dist/inssmart-form.js"></script>
+<script>
+  if (typeof window.initInssmartForm === 'function') {
+    window.initInssmartForm('inssmart-form-container');
+  }
+</script>
+```
+
+**Доступные CDN:**
+- **unpkg**: `https://unpkg.com/inssmart-form@latest/...`
+- **jsDelivr**: `https://cdn.jsdelivr.net/npm/inssmart-form@latest/...`
+
 ## Установка
 
 ### Для разработки
@@ -101,15 +134,65 @@ php -S localhost:8000
 
 ### Вариант 1: Использование из npm пакета (CDN)
 
-Если пакет опубликован в npm и доступен через CDN (например, unpkg или jsDelivr):
+После публикации в npm пакет автоматически становится доступен через CDN. Вы можете использовать один из следующих CDN:
+
+#### Unpkg (рекомендуется)
 
 ```html
+<!-- iframe версия -->
 <iframe 
   src="https://unpkg.com/inssmart-form@latest/dist/iframe/index.html"
   width="100%"
   height="800"
   frameborder="0"
   style="border: none; min-height: 800px;"
+></iframe>
+
+<!-- WordPress версия -->
+<link rel="stylesheet" href="https://unpkg.com/inssmart-form@latest/dist/inssmart-form.css">
+<div id="inssmart-form-container"></div>
+<script src="https://unpkg.com/inssmart-form@latest/dist/inssmart-form.js"></script>
+<script>
+  if (typeof window.initInssmartForm === 'function') {
+    window.initInssmartForm('inssmart-form-container');
+  }
+</script>
+```
+
+#### jsDelivr
+
+```html
+<!-- iframe версия -->
+<iframe 
+  src="https://cdn.jsdelivr.net/npm/inssmart-form@latest/dist/iframe/index.html"
+  width="100%"
+  height="800"
+  frameborder="0"
+  style="border: none; min-height: 800px;"
+></iframe>
+
+<!-- WordPress версия -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/inssmart-form@latest/dist/inssmart-form.css">
+<div id="inssmart-form-container"></div>
+<script src="https://cdn.jsdelivr.net/npm/inssmart-form@latest/dist/inssmart-form.js"></script>
+<script>
+  if (typeof window.initInssmartForm === 'function') {
+    window.initInssmartForm('inssmart-form-container');
+  }
+</script>
+```
+
+#### Использование конкретной версии
+
+Вместо `@latest` можно указать конкретную версию для стабильности:
+
+```html
+<!-- Использование версии 1.1.0 -->
+<iframe 
+  src="https://unpkg.com/inssmart-form@1.1.0/dist/iframe/index.html"
+  width="100%"
+  height="800"
+  frameborder="0"
 ></iframe>
 ```
 

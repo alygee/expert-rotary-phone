@@ -1,6 +1,6 @@
 {
   "name": "inssmart-form",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Stepper form for WordPress integration and iframe embedding",
   "type": "module",
   "main": "./dist/inssmart-form.js",
@@ -17,6 +17,8 @@
     },
     "./iframe": "./dist/iframe/index.html"
   },
+  "unpkg": "./dist/inssmart-form.js",
+  "jsdelivr": "./dist/inssmart-form.js",
   "keywords": [
     "react",
     "form",
