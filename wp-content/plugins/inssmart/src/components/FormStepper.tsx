@@ -80,6 +80,7 @@ export function FormStepper() {
   useEffect(() => {
     const params = getUrlParams();
     setUrlParams(params);
+    console.log('url params: ', params);
   }, []);
 
   const errors = validateStep1(formData, coverageLevel, selectedCities);
