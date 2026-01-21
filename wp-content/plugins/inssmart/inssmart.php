@@ -72,14 +72,15 @@ class Inssmart_Form {
         // AJAX обработчики
         add_action('wp_ajax_inssmart_submit_order', array($this, 'ajax_submit_order'));
         add_action('wp_ajax_nopriv_inssmart_submit_order', array($this, 'ajax_submit_order'));
-        add_action('wp_ajax_inssmart_submit_callback', array($this, 'ajax_submit_callback'));
-        add_action('wp_ajax_nopriv_inssmart_submit_callback', array($this, 'ajax_submit_callback'));
         
         // Диагностический AJAX обработчик (только для отладки)
         if (defined('WP_DEBUG') && WP_DEBUG) {
             add_action('wp_ajax_inssmart_diagnostic', array($this, 'ajax_diagnostic'));
             add_action('wp_ajax_nopriv_inssmart_diagnostic', array($this, 'ajax_diagnostic'));
         }
+        
+        // REST API endpoints
+        add_action('rest_api_init', array($this, 'register_rest_routes'));
         
         // Локализация
         add_action('plugins_loaded', array($this, 'load_textdomain'));
@@ -609,89 +610,6 @@ class Inssmart_Form {
     }
 
     /**
-     * AJAX обработчик для отправки формы обратного звонка
-     */
-    public function ajax_submit_callback() {
-        // Логирование для отладки 403 ошибки
-        if (defined('WP_DEBUG') && WP_DEBUG) {
-            inssmart_log('AJAX запрос получен - action: inssmart_submit_callback', 'info');
-            inssmart_log('POST данные: ' . print_r($_POST, true), 'info');
-            inssmart_log('Nonce получен: ' . (isset($_POST['nonce']) ? $_POST['nonce'] : 'не найден'), 'info');
-        }
-        
-        // Проверка nonce с более детальной обработкой ошибок
-        $nonce_check = check_ajax_referer('inssmart_ajax', 'nonce', false);
-        
-        if (!$nonce_check) {
-            // Детальное логирование ошибки nonce
-            if (defined('WP_DEBUG') && WP_DEBUG) {
-                $received_nonce = isset($_POST['nonce']) ? $_POST['nonce'] : 'не передан';
-                $expected_nonce = wp_create_nonce('inssmart_ajax');
-                inssmart_log('ОШИБКА NONCE - Получен: ' . $received_nonce, 'error');
-                inssmart_log('ОШИБКА NONCE - Ожидается: ' . $expected_nonce, 'error');
-            }
-            
-            wp_send_json_error(array(
-                'message' => 'Ошибка безопасности: неверный или отсутствующий nonce. Обновите страницу и попробуйте снова.',
-                'error_code' => 'nonce_failed',
-            ), 403);
-            return;
-        }
-
-        $form_data_raw = isset($_POST['form_data']) ? $_POST['form_data'] : '';
-        $additional_data_raw = isset($_POST['additional_data']) ? $_POST['additional_data'] : '';
-        
-        // Если данные пришли как JSON-строка, декодируем их
-        if (is_string($form_data_raw)) {
-            $form_data = json_decode(stripslashes($form_data_raw), true);
-            if (json_last_error() !== JSON_ERROR_NONE) {
-                // Если не удалось декодировать, пытаемся обработать как обычную строку
-                $form_data = array();
-                inssmart_log('Ошибка декодирования JSON form_data в ajax_submit_callback: ' . json_last_error_msg(), 'error');
-            }
-        } else {
-            $form_data = $form_data_raw;
-        }
-        
-        if (is_string($additional_data_raw)) {
-            $additional_data = json_decode(stripslashes($additional_data_raw), true);
-            if (json_last_error() !== JSON_ERROR_NONE) {
-                $additional_data = array();
-                inssmart_log('Ошибка декодирования JSON additional_data в ajax_submit_callback: ' . json_last_error_msg(), 'error');
-            }
-        } else {
-            $additional_data = $additional_data_raw;
-        }
-        
-        // Если после декодирования не массивы, создаем пустые массивы
-        if (!is_array($form_data)) {
-            $form_data = array();
-        }
-        if (!is_array($additional_data)) {
-            $additional_data = array();
-        }
-
-        // Валидация и санитизация данных
-        $form_data = $this->sanitize_form_data($form_data);
-        $additional_data = $this->sanitize_additional_data($additional_data);
-        // Отправка в Contact Form 7
-        $result = inssmart_submit_to_cf7($form_data, 'callback', $additional_data);
-
-        if ($result['success']) {
-            wp_send_json_success(array(
-                'message' => $result['message'],
-                'status' => $result['status'],
-            ));
-        } else {
-            wp_send_json_error(array(
-                'message' => $result['message'],
-                'errors' => isset($result['errors']) ? $result['errors'] : array(),
-                'status' => isset($result['status']) ? $result['status'] : null,
-            ));
-        }
-    }
-
-    /**
      * Получение списка полей из формы Contact Form 7
      * 
      * @param WPCF7_ContactForm $form Объект формы CF7
@@ -807,6 +725,105 @@ class Inssmart_Form {
         }
         
         return $sanitized;
+    }
+    
+    /**
+     * Регистрация REST API маршрутов
+     */
+    public function register_rest_routes() {
+        register_rest_route('inssmart/v1', '/callback-form', array(
+            'methods' => 'POST',
+            'callback' => array($this, 'rest_submit_callback'),
+            'permission_callback' => '__return_true', // Публичный доступ
+            'args' => array(
+                'form_data' => array(
+                    'required' => true,
+                    'type' => 'object',
+                    'description' => 'Данные формы обратного звонка',
+                ),
+                'additional_data' => array(
+                    'required' => false,
+                    'type' => 'object',
+                    'default' => array(),
+                    'description' => 'Дополнительные данные (subId, clickId и т.д.)',
+                ),
+            ),
+        ));
+    }
+    
+    /**
+     * REST API обработчик для отправки формы обратного звонка
+     * 
+     * @param WP_REST_Request $request Объект запроса
+     * @return WP_REST_Response|WP_Error Ответ API
+     */
+    public function rest_submit_callback($request) {
+        // Логирование для отладки
+        if (defined('WP_DEBUG') && WP_DEBUG) {
+            inssmart_log('REST API запрос получен - endpoint: inssmart/v1/callback-form', 'info');
+            inssmart_log('Request данные: ' . print_r($request->get_params(), true), 'info');
+        }
+        
+        // Получаем данные из запроса
+        $form_data = $request->get_param('form_data');
+        $additional_data = $request->get_param('additional_data') ?: array();
+        
+        // Проверяем, что form_data передан
+        if (empty($form_data)) {
+            return new WP_Error(
+                'missing_form_data',
+                'Не переданы данные формы (form_data)',
+                array('status' => 400)
+            );
+        }
+        
+        // Преобразуем объект в массив, если необходимо
+        if (is_object($form_data)) {
+            $form_data = json_decode(json_encode($form_data), true);
+        }
+        
+        if (is_object($additional_data)) {
+            $additional_data = json_decode(json_encode($additional_data), true);
+        }
+        
+        // Убеждаемся, что это массивы
+        if (!is_array($form_data)) {
+            $form_data = array();
+        }
+        if (!is_array($additional_data)) {
+            $additional_data = array();
+        }
+        
+        // Валидация и санитизация данных
+        $form_data = $this->sanitize_form_data($form_data);
+        $additional_data = $this->sanitize_additional_data($additional_data);
+        
+        // Логирование для отладки
+        if (defined('WP_DEBUG') && WP_DEBUG) {
+            inssmart_log('rest_submit_callback - additional_data после санитизации: ' . print_r($additional_data, true), 'info');
+            inssmart_log('rest_submit_callback - subId в additional_data: ' . (isset($additional_data['subId']) ? $additional_data['subId'] : 'не найден'), 'info');
+            inssmart_log('rest_submit_callback - clickId в additional_data: ' . (isset($additional_data['clickId']) ? $additional_data['clickId'] : 'не найден'), 'info');
+        }
+        
+        // Отправка в Contact Form 7
+        $result = inssmart_submit_to_cf7($form_data, 'callback', $additional_data);
+        
+        if ($result['success']) {
+            return new WP_REST_Response(array(
+                'success' => true,
+                'message' => $result['message'] ?? 'Форма успешно отправлена',
+                'status' => $result['status'] ?? 'mail_sent',
+            ), 200);
+        } else {
+            $status_code = isset($result['status']) && $result['status'] === 'validation_failed' ? 400 : 500;
+            
+            return new WP_REST_Response(array(
+                'success' => false,
+                'message' => $result['message'] ?? 'Ошибка при отправке формы',
+                'status' => $result['status'] ?? 'error',
+                'errors' => isset($result['errors']) ? $result['errors'] : array(),
+            ), $status_code);
+        }
     }
     
     /**
