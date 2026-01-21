@@ -56,7 +56,14 @@ jQuery(document).ready(function ($) {
       $('.modal-bg2').prepend(
         '<button title="Close (Esc)" type="button" class="modal-tn__close">×</button>'
       );
-      $('.modal-window2 .input-wrp').css('display', 'block');
+      $('.modal-window2 .input-wrp1').css('display', 'block');
+      $('.modal-window2 .input-wrp2').css('display', 'none');
+      $('.modal-window2 .input-wrp3').css('display', 'none');
+      $('.modal-window2 .input-wrp4').css('display', 'none');
+      $('.modal-window2 .input-wrp5').css('display', 'none');
+      $('.modal-window2 .input-wrp6').css('display', 'block');
+      $('.modal-window2 .input-wrp7').css('display', 'block');
+      $('.modal-window2 .input-wrp8').css('display', 'block');
       $('.modal-window2 .btn-submit2').css('display', 'flex');
       $('.modal-window2 .click-step1').css('display', 'none');
     }
