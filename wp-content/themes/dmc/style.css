@@ -1916,6 +1916,14 @@ h3.prdl-dlvs {
   border: 1px solid var(--color);
   box-sizing: border-box;
 }
+.modal-window2 .modal-bg input {
+  background: #fff;
+  border: 1px solid var(--color);
+  box-sizing: border-box;
+}
+.modal-window2 .modal-bg .btn-submit {
+  margin-top: 16px;
+}
 .label-kt1:before {
   background: url('img/kt1.svg') no-repeat;
   width: 20px;
