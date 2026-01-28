@@ -120,12 +120,17 @@ function filter_api_callback($request) {
     }
     
     // Получаем данные из CSV
-    $data = rez();
+    $data = rez_from_db();
+    
+    // Если БД пуста, пробуем получить данные из CSV (fallback)
+    if (empty($data) || $data === false) {
+        $data = rez();
+    }
     
     if (empty($data) || $data === false) {
         return new WP_Error(
             'no_data',
-            'Не удалось загрузить данные из CSV',
+            'Не удалось загрузить данные из базы данных или CSV',
             array('status' => 500)
         );
     }
@@ -297,15 +302,79 @@ function register_filter_info_endpoint() {
 add_action('rest_api_init', 'register_filter_info_endpoint');
 
 /**
+ * Регистрация REST API endpoint для расширенной фильтрации данных
+ */
+function register_advanced_filter_api_endpoint() {
+    register_rest_route('dmc/v1', '/filter-advanced', array(
+        'methods' => 'GET',
+        'callback' => 'advanced_filter_api_callback',
+        'permission_callback' => '__return_true', // Публичный доступ
+        'args' => array(
+            'employees_count' => array(
+                'required' => false,
+                'type' => 'integer',
+                'description' => 'Количество сотрудников',
+                'sanitize_callback' => 'absint',
+            ),
+            'city' => array(
+                'required' => false,
+                'type' => 'string',
+                'description' => 'Регион обслуживания (город)',
+                'sanitize_callback' => 'sanitize_text_field',
+            ),
+            'insurer' => array(
+                'required' => false,
+                'type' => 'string',
+                'description' => 'Название страховщика',
+                'sanitize_callback' => 'sanitize_text_field',
+            ),
+            'polyclinic' => array(
+                'required' => false,
+                'type' => 'boolean',
+                'description' => 'Фильтр по услуге "Поликлиника" (true - услуга должна быть)',
+            ),
+            'dentistry' => array(
+                'required' => false,
+                'type' => 'boolean',
+                'description' => 'Фильтр по услуге "Стоматология" (true - услуга должна быть)',
+            ),
+            'ambulance' => array(
+                'required' => false,
+                'type' => 'boolean',
+                'description' => 'Фильтр по услуге "Скорая помощь" (true - услуга должна быть)',
+            ),
+            'hospitalization' => array(
+                'required' => false,
+                'type' => 'boolean',
+                'description' => 'Фильтр по услуге "Госпитализация" (true - услуга должна быть)',
+            ),
+            'doctor_home' => array(
+                'required' => false,
+                'type' => 'boolean',
+                'description' => 'Фильтр по услуге "Вызов врача на дом" (true - услуга должна быть)',
+            ),
+            'format' => array(
+                'required' => false,
+                'type' => 'string',
+                'default' => 'json',
+                'enum' => array('json', 'html'),
+                'description' => 'Формат ответа: json или html',
+            ),
+        ),
+    ));
+}
+add_action('rest_api_init', 'register_advanced_filter_api_endpoint');
+
+/**
  * Возвращает информацию о доступных фильтрах
  */
 function filter_info_callback($request) {
-    $data = rez();
+    $data = rez_from_db();
     
     if (empty($data) || $data === false) {
         return new WP_Error(
             'no_data',
-            'Не удалось загрузить данные из CSV',
+            'Не удалось загрузить данные из базы данных. Убедитесь, что данные были импортированы.',
             array('status' => 500)
         );
     }
@@ -330,6 +399,281 @@ function filter_info_callback($request) {
             'employee_ranges' => array_values($employee_ranges),
         ),
     ), 200);
+}
+
+/**
+ * Обработчик REST API endpoint для расширенной фильтрации
+ * 
+ * @param WP_REST_Request $request Объект запроса
+ * @return WP_REST_Response|WP_Error Ответ API
+ */
+function advanced_filter_api_callback($request) {
+    // Получаем параметры
+    $employees_count = $request->get_param('employees_count');
+    $city = $request->get_param('city');
+    $insurer = $request->get_param('insurer');
+    $format = $request->get_param('format') ?: 'json';
+    
+    // Получаем boolean параметры для услуг
+    // WordPress REST API может передавать строки 'true'/'false' вместо boolean
+    $polyclinic = $request->get_param('polyclinic');
+    $dentistry = $request->get_param('dentistry');
+    $ambulance = $request->get_param('ambulance');
+    $hospitalization = $request->get_param('hospitalization');
+    $doctor_home = $request->get_param('doctor_home');
+    
+    // Логирование для отладки
+    if (defined('WP_DEBUG') && WP_DEBUG) {
+        error_log('advanced_filter_api_callback - Полученные параметры:');
+        error_log('  employees_count: ' . var_export($employees_count, true));
+        error_log('  city: ' . var_export($city, true));
+        error_log('  insurer: ' . var_export($insurer, true));
+        error_log('  polyclinic: ' . var_export($polyclinic, true) . ' (type: ' . gettype($polyclinic) . ')');
+        error_log('  dentistry: ' . var_export($dentistry, true) . ' (type: ' . gettype($dentistry) . ')');
+    }
+    
+    // Подготавливаем параметры для функции фильтрации
+    $filter_params = array();
+    
+    if (!empty($employees_count)) {
+        $filter_params['employees_count'] = (int) $employees_count;
+    }
+    
+    if (!empty($city)) {
+        // Декодируем URL-кодированную строку
+        $filter_params['city'] = urldecode($city);
+    }
+    
+    if (!empty($insurer)) {
+        // Декодируем URL-кодированную строку
+        $filter_params['insurer'] = urldecode($insurer);
+    }
+    
+    // Обрабатываем boolean параметры услуг
+    // WordPress REST API может передавать как boolean, так и строки
+    if ($polyclinic === true || $polyclinic === 'true' || $polyclinic === '1' || $polyclinic === 1) {
+        $filter_params['polyclinic'] = true;
+    }
+    
+    if ($dentistry === true || $dentistry === 'true' || $dentistry === '1' || $dentistry === 1) {
+        $filter_params['dentistry'] = true;
+    }
+    
+    if ($ambulance === true || $ambulance === 'true' || $ambulance === '1' || $ambulance === 1) {
+        $filter_params['ambulance'] = true;
+    }
+    
+    if ($hospitalization === true || $hospitalization === 'true' || $hospitalization === '1' || $hospitalization === 1) {
+        $filter_params['hospitalization'] = true;
+    }
+    
+    if ($doctor_home === true || $doctor_home === 'true' || $doctor_home === '1' || $doctor_home === 1) {
+        $filter_params['doctor_home'] = true;
+    }
+    
+    if (defined('WP_DEBUG') && WP_DEBUG) {
+        error_log('advanced_filter_api_callback - Подготовленные параметры фильтрации:');
+        error_log(print_r($filter_params, true));
+    }
+    
+    // Проверяем наличие функции фильтрации
+    if (!function_exists('filter_insurers_from_db')) {
+        return new WP_Error(
+            'function_not_available',
+            'Функция фильтрации не доступна',
+            array('status' => 500)
+        );
+    }
+    
+    // Фильтруем данные из БД
+    $data = filter_insurers_from_db($filter_params);
+    
+    if (defined('WP_DEBUG') && WP_DEBUG) {
+        error_log('advanced_filter_api_callback - Найдено записей: ' . count($data));
+    }
+    
+    // Определяем, для какого города искали данные
+    $requested_city = !empty($filter_params['city']) ? trim($filter_params['city']) : null;
+    
+    // Определяем города, для которых не найдено данных
+    $not_found_cities = array();
+    $fallback_data = array();
+    
+    if ($requested_city !== null) {
+        // Проверяем, найдены ли данные для запрошенного города
+        // Используем точное сравнение (с учетом регистра и пробелов)
+        $city_found = false;
+        foreach ($data as $row) {
+            $city_name = trim($row['Город'] ?? '');
+            // Сравниваем без учета регистра для надежности
+            if (mb_strtolower($city_name, 'UTF-8') === mb_strtolower($requested_city, 'UTF-8')) {
+                $city_found = true;
+                break;
+            }
+        }
+        
+        // Если город не найден, получаем fallback данные
+        if (!$city_found) {
+            $not_found_cities[] = $requested_city;
+            
+            // Создаем копию параметров без города для fallback запроса
+            $fallback_params = $filter_params;
+            unset($fallback_params['city']);
+            
+            // Получаем fallback данные
+            if (function_exists('get_fallback_insurers_from_db')) {
+                $fallback_data = get_fallback_insurers_from_db($fallback_params);
+                
+                if (defined('WP_DEBUG') && WP_DEBUG) {
+                    error_log('advanced_filter_api_callback - Запрошенный город: ' . $requested_city);
+                    error_log('advanced_filter_api_callback - Город найден: ' . ($city_found ? 'да' : 'нет'));
+                    error_log('advanced_filter_api_callback - Fallback данных найдено: ' . count($fallback_data));
+                }
+            }
+        }
+    }
+    
+    // НЕ заменяем $data на fallback_data - они должны быть отдельно
+    // Если данных нет вообще и нет fallback, возвращаем пустой ответ
+    if (empty($data) && empty($fallback_data)) {
+        return new WP_REST_Response(array(
+            'success' => true,
+            'count' => 0,
+            'filters' => $filter_params,
+            'results' => array(),
+            'message' => 'По заданным критериям ничего не найдено',
+        ), 200);
+    }
+    
+    // Формируем ответ
+    if ($format === 'html') {
+        // HTML формат (используем существующий шаблон)
+        $results = array();
+        foreach ($data as $row) {
+            $city_name = $row['Город'] ?? 'Не указан';
+            // Исключаем "Другой город" из основных результатов, если он не запрошен
+            if ($requested_city !== null && mb_strtolower(trim($city_name), 'UTF-8') === mb_strtolower('Другой город', 'UTF-8')) {
+                continue; // Пропускаем "Другой город" из основных результатов
+            }
+            if (!isset($results[$city_name])) {
+                $results[$city_name] = array();
+            }
+            $results[$city_name][] = $row;
+        }
+        
+        // Передаем fallback_data и not_found_cities в шаблон
+        ob_start();
+        include get_template_directory() . '/inc/api-filter-output.php';
+        $html = ob_get_clean();
+        
+        return new WP_REST_Response(array(
+            'success' => true,
+            'data' => $html,
+            'count' => count($data),
+            'filters' => $filter_params,
+        ), 200);
+    } else {
+        // JSON формат
+        $response_data = array(
+            'success' => true,
+            'count' => count($data),
+            'filters' => $filter_params,
+            'results' => array(),
+        );
+        
+        // Группируем по городам и страховщикам (исключаем "Другой город" из основных результатов)
+        $grouped_by_city = array();
+        foreach ($data as $row) {
+            $city_name = $row['Город'] ?? 'Не указан';
+            // Исключаем "Другой город" из основных результатов, если он не запрошен
+            if ($requested_city !== null && mb_strtolower(trim($city_name), 'UTF-8') === mb_strtolower('Другой город', 'UTF-8')) {
+                continue; // Пропускаем "Другой город" из основных результатов
+            }
+            if (!isset($grouped_by_city[$city_name])) {
+                $grouped_by_city[$city_name] = array();
+            }
+            $grouped_by_city[$city_name][] = $row;
+        }
+        
+        foreach ($grouped_by_city as $city => $rows) {
+            $city_data = array(
+                'city' => $city,
+                'count' => count($rows),
+                'insurers' => array(),
+            );
+            
+            // Группируем по страховщикам
+            $insurers = array();
+            foreach ($rows as $row) {
+                $insurer = $row['Страховщик'];
+                if (!isset($insurers[$insurer])) {
+                    $insurers[$insurer] = array(
+                        'name' => $insurer,
+                        'count' => 0,
+                        'records' => array(),
+                    );
+                }
+                $insurers[$insurer]['count']++;
+                $insurers[$insurer]['records'][] = array(
+                    'level' => $row['Уровень'] ?? '',
+                    'employees' => $row['Кол-во_сотрудников'] ?? '',
+                    'prices' => array(
+                        'polyclinic' => $row['Поликлиника'] ?? '',
+                        'dentistry' => $row['Стоматология'] ?? '',
+                        'ambulance' => $row['Скорая_помощь'] ?? '',
+                        'hospitalization' => $row['Госпитализация'] ?? '',
+                        'doctor_home' => $row['Вызов_врача_на_дом'] ?? '',
+                    ),
+                    'total_price' => calculate_total_price($row),
+                );
+            }
+            
+            $city_data['insurers'] = array_values($insurers);
+            $response_data['results'][] = $city_data;
+        }
+        
+        // Добавляем fallback данные, если они есть
+        if (!empty($fallback_data) && !empty($not_found_cities)) {
+            $fallback_insurers = array();
+            
+            foreach ($fallback_data as $row) {
+                $insurer = $row['Страховщик'];
+                if (!isset($fallback_insurers[$insurer])) {
+                    $fallback_insurers[$insurer] = array(
+                        'name' => $insurer,
+                        'count' => 0,
+                        'records' => array(),
+                    );
+                }
+                $fallback_insurers[$insurer]['count']++;
+                $fallback_insurers[$insurer]['records'][] = array(
+                    'level' => $row['Уровень'] ?? '',
+                    'employees' => $row['Кол-во_сотрудников'] ?? '',
+                    'prices' => array(
+                        'polyclinic' => $row['Поликлиника'] ?? '',
+                        'dentistry' => $row['Стоматология'] ?? '',
+                        'ambulance' => $row['Скорая_помощь'] ?? '',
+                        'hospitalization' => $row['Госпитализация'] ?? '',
+                        'doctor_home' => $row['Вызов_врача_на_дом'] ?? '',
+                    ),
+                    'total_price' => calculate_total_price($row),
+                );
+            }
+            
+            $cities_text = is_array($not_found_cities) ? implode(', ', $not_found_cities) : $not_found_cities;
+            $cities_label = is_array($not_found_cities) && count($not_found_cities) > 1 ? 'Для регионов ' : 'Для региона ';
+            
+            $response_data['fallback'] = array(
+                'title' => 'Цены по соседним регионам',
+                'description' => $cities_label . $cities_text . ' не удалось произвести расчет',
+                'not_found_cities' => $not_found_cities,
+                'count' => count($fallback_data),
+                'insurers' => array_values($fallback_insurers),
+            );
+        }
+        
+        return new WP_REST_Response($response_data, 200);
+    }
 }
 
 /**

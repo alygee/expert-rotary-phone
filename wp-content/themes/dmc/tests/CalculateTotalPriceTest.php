@@ -11,12 +11,12 @@
 
 use PHPUnit\Framework\TestCase;
 
-// Подключаем functions.php с функцией calculate_total_price
-require_once __DIR__ . '/../functions.php';
+// Подключаем файл, где определена calculate_total_price()
+require_once __DIR__ . '/../inc/api-endpoints.php';
 
 // Проверяем, что функция существует
 if (!function_exists('calculate_total_price')) {
-    throw new \RuntimeException('Функция calculate_total_price не найдена в functions.php');
+    throw new \RuntimeException('Функция calculate_total_price не найдена');
 }
 
 class CalculateTotalPriceTest extends TestCase
