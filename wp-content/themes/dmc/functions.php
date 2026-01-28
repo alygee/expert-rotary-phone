@@ -19,6 +19,7 @@ require_once get_template_directory() . '/inc/ajax-handlers.php';
 require_once get_template_directory() . '/inc/api-endpoints.php';
 require_once get_template_directory() . '/inc/cf7-database.php';
 require_once get_template_directory() . '/inc/jivo-widget-handler.php';
+require_once get_template_directory() . '/inc/insurers-database.php';
 
 // ============================================
 // Регистрация хуков WordPress

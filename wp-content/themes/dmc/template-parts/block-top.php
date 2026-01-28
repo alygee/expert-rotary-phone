@@ -52,17 +52,17 @@
                 <img class="" src="<?php bloginfo('template_url'); ?>/img/icons/clinic.svg" alt="clinic icon">
                 Выбор страховщика
               </label>
-              <select class="main-select" name="insurer">
-                <option value="" disabled selected hidden>Выберите страховщика</option>
-                <option value="Комфорт">Зетта</option>
-                <option value="Базовый">Ингос</option>
-                <option value="Премиум">Капитал Лайф</option>
-                <option value="Премиум">Пари</option>
-                <option value="Премиум">РГС</option>
-                <option value="Премиум">Сбер</option>
-              </select> 
+              <select class="insurer-select" name="insurer" multiple>
+                <option value="Зетта">Зетта</option>
+                <option value="Ингос">Ингос</option>
+                <option value="Капитал Лайф">Капитал Лайф</option>
+                <option value="Пари">Пари</option>
+                <option value="РГС">РГС</option>
+                <option value="Сбер">Сбер</option>
+              </select>
+              <span class="insurer-error" style="color:red; display:none;">Выберите хотя бы одного страховщика</span>
             </div>
-            <!-- end: Выбор клиники -->
+            <!-- end: Выбор страховщика -->
 
             <div class="input-wrp input-wrp6">
               <div class="label label-kt2">ФИО ответственного</div>
@@ -94,9 +94,9 @@
                 <div class="flex justify-between items-center py-1.5">
                   <div class="form-group">
                     <div class="checkbox-wrap">
-                      <input type="checkbox" name="checkbox-styled" checked disabled>
+                      <input type="checkbox" name="service-polyclinic" data-service="polyclinic" checked disabled>
                     </div>
-                    <label for="checkbox-styled" class="cursor-pointer">Поликлиника</label>
+                    <label for="service-polyclinic" class="cursor-pointer">Поликлиника</label>
                   </div>
 
                   <span class="text-xs text-black-secondary">
@@ -109,9 +109,9 @@
                 <div class="flex justify-between items-center py-1.5">
                   <div class="form-group">
                     <div class="checkbox-wrap">
-                      <input type="checkbox" name="checkbox-styled" checked disabled>
+                      <input type="checkbox" name="service-dentistry" data-service="dentistry" checked disabled>
                     </div>
-                    <label for="checkbox-styled" class="cursor-pointer">Стоматология</label>
+                    <label for="service-dentistry" class="cursor-pointer">Стоматология</label>
                   </div>
 
                   <span class="text-xs text-black-secondary">
@@ -124,9 +124,9 @@
                 <div class="flex justify-between items-center py-1.5">
                   <div class="form-group">
                     <div class="checkbox-wrap">
-                      <input type="checkbox" name="checkbox-styled" checked>
+                      <input type="checkbox" name="service-ambulance" data-service="ambulance" checked>
                     </div>
-                    <label for="checkbox-styled" class="cursor-pointer">Скорая помощь</label>
+                    <label for="service-ambulance" class="cursor-pointer">Скорая помощь</label>
                   </div>
                 </div>
 
@@ -135,9 +135,9 @@
                 <div class="flex justify-between items-center py-1.5">
                   <div class="form-group">
                     <div class="checkbox-wrap">
-                      <input type="checkbox" name="checkbox-styled" id="checkbox-styled">
+                      <input type="checkbox" name="service-hospitalization" data-service="hospitalization" id="service-hospitalization">
                     </div>
-                    <label for="checkbox-styled" class="cursor-pointer">Госпитализация</label>
+                    <label for="service-hospitalization" class="cursor-pointer">Госпитализация</label>
                   </div>
                 </div>
 
@@ -146,9 +146,9 @@
                 <div class="flex justify-between items-center py-1.5">
                   <div class="form-group">
                     <div class="checkbox-wrap">
-                      <input type="checkbox" name="checkbox-styled">
+                      <input type="checkbox" name="service-doctor-home" data-service="doctor-home">
                     </div>
-                    <label for="checkbox-styled" class="cursor-pointer">Вызов врача на дом</label>
+                    <label for="service-doctor-home" class="cursor-pointer">Вызов врача на дом</label>
                   </div>
                 </div>
 
