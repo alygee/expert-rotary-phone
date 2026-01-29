@@ -387,7 +387,6 @@ input[type='email']:focus {
 .kviz-wrap {
   background: var(--white);
   border-radius: 10px;
-  padding: 37px 50px 8px;
 }
 .block-top {
   padding-bottom: 105px;
@@ -2348,9 +2347,6 @@ h3.h3-sfd {
   }
   .header__right .btn {
     display: none;
-  }
-  .kviz-wrap {
-    padding: 20px;
   }
   .pl-item__title {
     font-size: 15px;
