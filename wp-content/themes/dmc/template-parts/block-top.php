@@ -11,7 +11,7 @@
           <h2>Оформление заявки <br>на медицинское страхование</h2>
           <span>Заполните все поля, чтобы получить самые выгодные условия <br>для вашей компании</span>
         </div>
-        <div class="kviz-wrap max-w-[880px] mx-auto px-5 py-5 md:pt-10 md:pb-2 md:px-12">
+        <div class="kviz-wrap max-w-[880px] mx-auto px-5 py-5 md:py-10 md:px-12">
           <h3 class="kviz-title">Расскажите о коллективе</h3>
           <div class="kviz-wrp d-flex-wrap d-j">
             <div class="input-wrp input-wrp1">
