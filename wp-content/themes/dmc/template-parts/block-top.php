@@ -124,17 +124,6 @@
                 <div class="flex justify-between items-center py-1.5">
                   <div class="form-group">
                     <div class="checkbox-wrap">
-                      <input type="checkbox" name="service-ambulance" data-service="ambulance" checked>
-                    </div>
-                    <label for="service-ambulance" class="cursor-pointer">Скорая помощь</label>
-                  </div>
-                </div>
-
-                <hr class="text-grey-4">
-
-                <div class="flex justify-between items-center py-1.5">
-                  <div class="form-group">
-                    <div class="checkbox-wrap">
                       <input type="checkbox" name="service-hospitalization" data-service="hospitalization" id="service-hospitalization">
                     </div>
                     <label for="service-hospitalization" class="cursor-pointer">Госпитализация</label>

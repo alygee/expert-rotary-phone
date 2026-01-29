@@ -511,7 +511,7 @@ function filter_insurers_from_db($params = array()) {
         // $where_values[] = trim($params['insurer']);
 
         $value = $wpdb->esc_like(trim($params['insurer']));
-        $where_conditions[] = "insureinsurer LIKE CONCAT('%', %s, '%')";
+        $where_conditions[] = "insurer LIKE CONCAT('%', %s, '%')";
         $where_values[] = $value;
     }
     
