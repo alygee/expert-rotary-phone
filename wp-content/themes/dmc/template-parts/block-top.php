@@ -83,7 +83,7 @@
               <span class="errorMsg errorMsg66"></span>
             </div>
 
-            <div class="mt-4 w-full">
+            <div class="services-wrp mt-4 w-full">
               <label class="flex gap-2 text-lg mb-1.5 pl-1">
                 <img class="" src="<?php bloginfo('template_url'); ?>/img/icons/service.svg" alt="clinic icon">
                 Выбор услуг
