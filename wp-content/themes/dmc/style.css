@@ -2006,9 +2006,13 @@ h3.prdl-dlvs {
   max-width: 800px;
   line-height: 1;
   margin-right: 32px;
+  margin-bottom: 10px;
 }
 .prepend-title .sub-zag {
   color: #01a34f;
+}
+.prepend-title p {
+  display: none;
 }
 .modal-window2 .modal-bg {
   background: #fff !important;

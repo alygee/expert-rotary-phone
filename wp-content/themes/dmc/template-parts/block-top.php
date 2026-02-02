@@ -53,12 +53,13 @@
                 Выбор страховщика
               </label>
               <select class="insurer-select" name="insurer" multiple>
-                <option value="Зетта">Зетта</option>
-                <option value="Ингос">Ингос</option>
-                <option value="Капитал Лайф">Капитал Лайф</option>
-                <option value="Пари">Пари</option>
-                <option value="РГС">РГС</option>
-                <option value="Сбер">Сбер</option>
+                <?php 
+                  if(!empty(insurance())){
+                    foreach (insurance() as $value) {
+                      echo '<option value="'.$value.'">'.$value.'</option>';
+                    } 
+                  }  
+                ?>
               </select>
               <span class="insurer-error" style="color:red; display:none;">Выберите хотя бы одного страховщика</span>
             </div>
@@ -132,15 +133,14 @@
 
                 <hr class="text-grey-4">
 
-                <div class="flex justify-between items-center py-1.5">
+                <!-- <div class="flex justify-between items-center py-1.5">
                   <div class="form-group">
                     <div class="checkbox-wrap">
                       <input type="checkbox" name="service-doctor-home" data-service="doctor-home">
                     </div>
                     <label for="service-doctor-home" class="cursor-pointer">Вызов врача на дом</label>
                   </div>
-                </div>
-
+                </div> -->
                 
               </div>
             </div>

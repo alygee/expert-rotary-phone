@@ -5,7 +5,25 @@
 
 function сity(){
   $csv_field = get_field('csv_file', 2);
-  
+
+  if (function_exists('get_unique_cities_from_db')) {
+      $db_rows = get_unique_cities_from_db();
+
+      if (!empty($db_rows) && is_array($db_rows)) {
+
+          // Вытаскиваем города из формата csv
+          $db_cities = array_column($db_rows, 'Город');
+
+          $db_cities = array_map('trim', $db_cities);
+          $db_cities = array_filter($db_cities);
+          $db_cities = array_values(array_unique($db_cities));
+
+          if (!empty($db_cities)) {
+              return $db_cities;
+          }
+      }
+  }  
+
   // Обработка разных форматов возвращаемых ACF значений (аналогично функции rez())
   $csv = '';
   
@@ -78,6 +96,33 @@ function сity(){
   $cities = array_unique($cities);
   $cities = array_values($cities);
   return $cities;
+}
+
+function insurance() {
+    if (!function_exists('get_unique_insurers_from_db')) {
+        return false;
+    }
+
+    $db_rows = get_unique_insurers_from_db();
+
+    if (empty($db_rows) || !is_array($db_rows)) {
+
+        if (defined('WP_DEBUG') && WP_DEBUG) {
+            error_log('insurance() - Данные из БД не получены или пусты');
+        }
+
+        return false;
+    }
+
+    // Достаём страховщиков из формата csv
+    $insurers = array_column($db_rows, 'Страховщик');
+
+    // Чистка данных
+    $insurers = array_map('trim', $insurers);
+    $insurers = array_filter($insurers);
+    $insurers = array_values(array_unique($insurers));
+
+    return $insurers;
 }
 
 

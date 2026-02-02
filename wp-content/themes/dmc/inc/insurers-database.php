@@ -714,6 +714,78 @@ function get_fallback_insurers_from_db($params = array()) {
     return $data;
 }
 
+function get_unique_cities_from_db(){
+    global $wpdb;
+
+    $table_name = $wpdb->prefix . 'insurers_data';
+
+    // Проверяем существование таблицы
+    $table_exists = $wpdb->get_var("SHOW TABLES LIKE '$table_name'") === $table_name;
+    if (!$table_exists) {
+        if (defined('WP_DEBUG') && WP_DEBUG && function_exists('error_log')) {
+            error_log('rez_from_db() - Таблица ' . $table_name . ' не существует');
+        }
+        return false;
+    }
+
+    // Получаем все записи из БД
+    $records = $wpdb->get_results("SELECT DISTINCT city FROM $table_name", ARRAY_A);
+
+    if ($records === false) {
+        if (defined('WP_DEBUG') && WP_DEBUG && function_exists('error_log')) {
+            error_log('rez_from_db() - Ошибка при получении данных: ' . $wpdb->last_error);
+        }
+        return false;
+    }
+
+    // Преобразуем формат БД в формат CSV (для совместимости с существующим кодом)
+    $data = array();
+    foreach ($records as $record) {
+        $row = array(
+            'Город' => $record['city'] ?? '',
+        );
+        $data[] = $row;
+    }
+
+    return $data;
+}
+
+function get_unique_insurers_from_db(){
+    global $wpdb;
+
+    $table_name = $wpdb->prefix . 'insurers_data';
+
+    // Проверяем существование таблицы
+    $table_exists = $wpdb->get_var("SHOW TABLES LIKE '$table_name'") === $table_name;
+    if (!$table_exists) {
+        if (defined('WP_DEBUG') && WP_DEBUG && function_exists('error_log')) {
+            error_log('rez_from_db() - Таблица ' . $table_name . ' не существует');
+        }
+        return false;
+    }
+
+    // Получаем все записи из БД
+    $records = $wpdb->get_results("SELECT DISTINCT insurer FROM $table_name", ARRAY_A);
+
+    if ($records === false) {
+        if (defined('WP_DEBUG') && WP_DEBUG && function_exists('error_log')) {
+            error_log('rez_from_db() - Ошибка при получении данных: ' . $wpdb->last_error);
+        }
+        return false;
+    }
+
+    // Преобразуем формат БД в формат CSV (для совместимости с существующим кодом)
+    $data = array();
+    foreach ($records as $record) {
+        $row = array(
+            'Страховщик' => $record['insurer'] ?? '',
+        );
+        $data[] = $row;
+    }
+
+    return $data;
+}
+
 // Хуки
 add_action('admin_init', 'insurers_create_table');
 add_action('admin_menu', 'insurers_add_admin_menu');
